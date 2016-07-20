@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+    <!-- Configure a proxy to the back-end services -->
+    <servlet>
+
+        <servlet-name>proxy</servlet-name>
+        <servlet-class>org.eclipse.jetty.proxy.ProxyServlet$Transparent</servlet-class>
+        <init-param>
+            <param-name>proxyTo</param-name>
+            <param-value>http://localhost:5000/</param-value>
+        </init-param>
+        <init-param>
+            <param-name>Prefix</param-name>
+            <param-value>/API</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+
+    <!--&lt;!&ndash; Make the proxy handle requests to /api/* &ndash;&gt;-->
+    <servlet-mapping>
+        <servlet-name>proxy</servlet-name>
+        <url-pattern>/API/*</url-pattern>
+    </servlet-mapping>
+
+    <!--<login-config>-->
+        <!--<auth-method>BASIC</auth-method>-->
+        <!--<realm-name>JCGRealm</realm-name>-->
+    <!--</login-config>-->
+
+    <!--<security-constraint>-->
+        <!--<display-name>authorization</display-name>-->
+        <!--<web-resource-collection>-->
+            <!--<web-resource-name>Secure resources</web-resource-name>-->
+            <!--<url-pattern>/partials/DataFilters</url-pattern>-->
+        <!--</web-resource-collection>-->
+        <!--<auth-constraint>-->
+            <!--<role-name>ADMIN</role-name>-->
+        <!--</auth-constraint>-->
+    <!--</security-constraint>-->
+
+    <!--<security-role>-->
+        <!--<role-name>ADMIN</role-name>-->
+        <!--<role-name>administator access</role-name>-->
+    <!--</security-role>-->
+
+</web-app>
