@@ -7,8 +7,7 @@ from api.Resources.Dataset import Dataset, DatasetList, DatasetStatus, DataServi
 from api.Resources.TwitterConsumer import TwitterConsumer, TwitterConsumerList
 from flask import Flask
 
-logging.basicConfig(level=logging.INFO)
-
+logging.basicConfig(level=logging.INFO, filename='api.log')
 app = Flask(__name__)
 api = flask_restful.Api(app)
 

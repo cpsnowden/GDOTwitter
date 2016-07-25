@@ -1,6 +1,6 @@
 import logging
 
-from AnalyticsService.Celery import app
+from AnalyticsService.CeleryApp import app
 from AnalyticsService.AnalyticsEngine import AnalyticsEngine
 from api.Objects.MetaData import AnalyticsMeta
 
