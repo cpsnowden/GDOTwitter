@@ -15,10 +15,6 @@ class Graph(AnalysisTemplate):
 
 
     __arguments = [{"name": "tweetLimit", "prettyName": "Tweet limit", "type": "integer", "default": -1},
-                   {"name": "startDateCutOff", "prettyName": "Start date cut-off", "type": "datetime",
-                    "default_dataset_field": "start_time"},
-                   {"name": "endDateCutOff", "prettyName": "End date cut-off", "type": "datetime",
-                    "default_dataset_field": "end_time"},
                    {"name": "layoutIterations", "prettyName": "Layout Iterations", "type": "integer",
                     "default": -1},
                    {"name": "LAYOUT_ALGO", "prettyName": "Layout Algorithm", "type": "enum", "options":
@@ -63,7 +59,7 @@ class Graph(AnalysisTemplate):
         analytics_meta.status = "EXPORTED"
         analytics_meta.save()
 
-        GraphUtils.fix_graphml_format(analytics_meta.db_ref, gridfs)
+        GraphUtils.fix_graphml_format_better(analytics_meta.db_ref, gridfs)
         cls._logger.info("Saved GDO fomatted graph %s", analytics_meta.db_ref)
         analytics_meta.status = "SAVED"
         analytics_meta.end_time = datetime.now()
@@ -87,7 +83,7 @@ class Graph(AnalysisTemplate):
         analytics_meta.status = "EXPORTED RAW"
         analytics_meta.save()
 
-        GraphUtils.fix_graphml_format(analytics_meta.db_ref, gridfs)
+        GraphUtils.fix_graphml_format_better(analytics_meta.db_ref, gridfs)
         cls._logger.info("Reformatted graph ready for layout %s", analytics_meta.db_ref)
         analytics_meta.status = "REFORMAT COMPLETE"
         analytics_meta.save()

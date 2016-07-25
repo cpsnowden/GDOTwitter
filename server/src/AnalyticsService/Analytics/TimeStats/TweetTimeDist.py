@@ -7,7 +7,7 @@ from AnalyticsService.Analytics.Analytics import Analytics
 from AnalyticsService.TwitterObj import Status
 
 
-class TimeDistribution(Analytics):
+class TweetTimeDistribution(Analytics):
     _logger = logging.getLogger(__name__)
 
     _options = {
@@ -18,13 +18,13 @@ class TimeDistribution(Analytics):
         "Month": "M"
     }
 
-    __type_name = "Time_Distribution"
+    __type_name = "Tweet Time Distribution"
     __arguments = [{"name":"timeInterval","prettyName":"Time interval","type": "enum", "options":_options.keys(),
                     "default":"Hour"}]
 
     @classmethod
     def get_args(cls):
-        return cls.__arguments + super(TimeDistribution, cls).get_args()
+        return cls.__arguments + super(TweetTimeDistribution, cls).get_args()
 
 
     @classmethod
@@ -55,8 +55,13 @@ class TimeDistribution(Analytics):
         df = pd.DataFrame(numpy.ones(len(index)), index=index, columns=["Count"])
         gb = df.groupby(pd.TimeGrouper(freq=time_quantum)).count()
 
-        data = gb.to_json(date_format='iso')
+        # data = gb.to_json(date_format='iso')
+        # gb = df.groupby(pd.TimeGrouper(freq=time_quantum)).sum()
 
-        cls.export_json(analytics_meta, json.dumps(data), gridfs)
+        gb.fillna(0.0, inplace=True)
+        gdb = '{"details":{"chartType":"line"},"data":' + gb.to_json(date_format='iso') + "}"
+
+
+        cls.export_json(analytics_meta, gdb, gridfs)
 
         return True

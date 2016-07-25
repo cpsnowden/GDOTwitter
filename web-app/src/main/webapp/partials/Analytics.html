@@ -110,7 +110,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <div class="input-group">
-                                        <div class="input-group-addon">Tags</div>
+                                            <div class="input-group-addon">Tags</div>
                                             <input type="text" class="form-control" ng-list=", "
                                                    ng-model="analyticsForm.order.specialised_args[option.name][key]['tags']">
                                         </div>
@@ -123,8 +123,12 @@
                                         </div>
                                     </div>
                                     <div class="col-xs-2" ng-show="option.variable">
-                                        <button type="button" class = "btn btn-danger" ng-click="removeChoice(option.name, key)"><i class="glyphicon glyphicon-minus"></i></button>
-                                        <button type="button" class="btn btn-default" ng-show="$last" ng-click="addNewChoice(option.name)"><i class="glyphicon glyphicon-plus"></i></button>
+                                        <button type="button" class="btn btn-danger"
+                                                ng-click="removeChoice(option.name, key)"><i
+                                                class="glyphicon glyphicon-minus"></i></button>
+                                        <button type="button" class="btn btn-default" ng-show="$last"
+                                                ng-click="addNewChoice(option.name)"><i
+                                                class="glyphicon glyphicon-plus"></i></button>
                                     </div>
                                 </div>
 
@@ -132,7 +136,6 @@
 
                             <hr ng-show="$last">
                         </div>
-
 
 
                         <button type="submit" class="btn btn-primary">Start</button>
@@ -210,11 +213,13 @@
                         <td style="width:8%">
                             <button class="btn"
                                     ng-class="{true:'btn-success', false: 'btn-info'}[analyticsForm.order.id==p.id]"
-                                    ng-click="orderAnalytics(p) "><i class="glyphicon glyphicon-pencil"></i></button>
-                            <button class="btn btn-success" ng-click="p.analytics=getAnalytics(p); expanded=!expanded;">
-                                <i
-                                        class="glyphicon"
-                                        ng-class="{'glyphicon-chevron-down':expanded&&p.analytics.length>0, 'glyphicon-chevron-right':!expanded || (p.analytics==null || p.analytics.length==0)}"></i>
+                                    ng-click="orderAnalytics(p) ">
+                                <i class="glyphicon glyphicon-pencil"></i>
+                            </button>
+                            <button class="btn btn-success"
+                                    ng-click="p.analytics=getAnalytics(p); expanded=!expanded;">
+                                <i class="glyphicon"
+                                   ng-class="{'glyphicon-chevron-down':expanded&&p.analytics.length>0, 'glyphicon-chevron-right':!expanded || (p.analytics==null || p.analytics.length==0)}"></i>
                             </button>
 
                         <td ng-bind="p['description']"></td>
@@ -225,7 +230,8 @@
                         <td ng-bind="p['end_time']"></td>
                         <td ng-bind="p['collection_size']"></td>
                     </tr>
-                    <tr ng-repeat-end ng-if="expanded && p.analytics.length != 0">
+                    <tr ng-repeat-end
+                        ng-if="expanded && p.analytics.length != 0">
 
                         <td colspan="8">
                             <table class="table  table-bordered">
@@ -243,11 +249,20 @@
                                 <tbody>
                                 <tr ng-repeat="a in p.analytics | orderBy:endDate:true">
                                     <td>
-                                        <button class="btn btn-success" ng-click="download(a)"
-                                                ng-show="a['status']=='SAVED'"><i
-                                                class="glyphicon glyphicon-download"></i></button>
-                                        <button class="btn btn-inverse" ng-click="delete(a,p)"><i
-                                                class="glyphicon glyphicon-trash"></i></button>
+                                        <button class="btn btn-success"
+                                                ng-click="download(a)"
+                                                ng-show="a['status']=='SAVED'">
+                                            <i class="glyphicon glyphicon-download"></i>
+                                        </button>
+                                        <button class="btn btn-success"
+                                                ng-click="chart(a)"
+                                                ng-show="a['status']=='SAVED' && a.classification=='Analytics'">
+                                            <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                                        </button>
+                                        <button class="btn btn-inverse"
+                                                ng-click="delete(a,p)">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </button>
                                     </td>
                                     <td style="width:45%" ng-bind="a['id']"></td>
                                     <td style="width:45%" ng-bind="a['type']"></td>

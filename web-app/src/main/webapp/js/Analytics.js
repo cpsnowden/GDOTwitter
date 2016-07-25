@@ -9,7 +9,7 @@ var myApp = angular.module('analytics', ['restangular','ngResource', 'ui.bootstr
 
     })
 
-    .controller('AnalyticsCtrl',function($scope, $window, $q, $interval, Restangular,uibDateParser) {
+    .controller('AnalyticsCtrl',function($scope, $window, $q, $interval, Restangular,uibDateParser, $location) {
 
     $scope.datasets = Restangular.all('dataset').getList({status:"READY_FOR_ANALYTICS"}).$object
 
@@ -31,6 +31,13 @@ var myApp = angular.module('analytics', ['restangular','ngResource', 'ui.bootstr
         $scope.datasets.forEach(function(e) {
             e.analytics = $scope.getAnalytics(e)
         })
+    };
+
+    $scope.chart = function(a){
+
+        // $window.open('http://localhost:8080/#/charts/' + a.datasetId + "/" + a.id, '_blank');
+        var url = 'http://' + $window.location.host + '#/charts/' + a.datasetId + "/" + a.id
+        $window.open(url, '_blank');
     }
 
     $scope.refreshTable = function(){
@@ -140,25 +147,29 @@ var myApp = angular.module('analytics', ['restangular','ngResource', 'ui.bootstr
 
     $scope.download = function(analytics) {
 
-        extensions = {
-            "Mention_Time_Graph":{"ext":".graphml","format":"text/xml"},
-            "Community_Graph_CL":{"ext":".graphml","format":"text/xml"},
-            "HashtagGraphRetweet":{"ext":".graphml","format":"text/xml"},
-            "HashtagGraphRetweetv2":{"ext":".graphml","format":"text/xml"},
-            "HashtagGraphRetweetNEW":{"ext":".graphml","format":"text/xml"},
-            "HashtagGraph":{"ext":".graphml","format":"text/xml"},
-            "Retweet_Time_Graph":{"ext":".graphml","format":"text/xml"},
-            "Retweet_Community_Graph":{"ext":".graphml","format":"text/xml"},
-            "Time_Distribution":{"ext":".json","format":"application/json"},
-            "Top_Users":{"ext":".json","format":"application/json"},
-            "Basic_Stats":{"ext":".json","format":"application/json"}
+        // extensions = {
+        //     "Mention_Time_Graph":{"ext":".graphml","format":"text/xml"},
+        //     "Community_Graph_CL":{"ext":".graphml","format":"text/xml"},
+        //     "HashtagGraphRetweet":{"ext":".graphml","format":"text/xml"},
+        //     "HashtagGraphRetweetv2":{"ext":".graphml","format":"text/xml"},
+        //     "HashtagGraphRetweetNEW":{"ext":".graphml","format":"text/xml"},
+        //     "HashtagGraph":{"ext":".graphml","format":"text/xml"},
+        //     "Retweet_Time_Graph":{"ext":".graphml","format":"text/xml"},
+        //     "Retweet_Community_Graph":{"ext":".graphml","format":"text/xml"},
+        //     "Time_Distribution":{"ext":".json","format":"application/json"},
+        //     "Top_Users":{"ext":".json","format":"application/json"},
+        //     "Basic_Stats":{"ext":".json","format":"application/json"}
+        // }
+                extensions = {
+            "Graph":{"ext":".graphml","format":"text/xml"},
+            "Analytics":{"ext":".json","format":"application/json"}
         }
 
         Restangular.one("dataset",analytics.datasetId).one("analytics",analytics.id).customGET("data").then(function(res) {
 
             data = res;
 
-            format = extensions[analytics.type]["format"];
+            format = extensions[analytics.classification]["format"];
 
             if(format == "application/json") {
                 data = Restangular.stripRestangular(data);
@@ -167,7 +178,7 @@ var myApp = angular.module('analytics', ['restangular','ngResource', 'ui.bootstr
 
             var file = new Blob([data],{type:format});
 
-            saveAs(file,analytics.db_ref + extensions[analytics.type]["ext"]);
+            saveAs(file,analytics.db_ref + extensions[analytics.classification]["ext"]);
         })
 
     };

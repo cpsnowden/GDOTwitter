@@ -1,85 +1,25 @@
-class CUser(object):
-    POSITIVE = 40
-    NEGATIVE = -40
-
-    def __init__(self, scores):
-        self.scores = scores
-        self.time_constant = 5.0
-        self.partisan = None
-        self.score = 0.0
-        self.scaler = 1.0
-
-    def said_these(self, hastags, time_step):
-
-        score = 0
-        for h in hastags:
-            score += self.scores.get(h.lower(), 0.0)
-
-        if score > 0:
-            self.add_positive(score, time_step)
-        elif score < 0:
-            self.add_negative(score, time_step)
-
-        return self.score
-
-    def add_positive(self, score, time_step):
-
-        if self.partisan is None or self.partisan == "Negative":
-            if self.partisan == "Negative":
-                self.scaler = 2.0
-            self.partisan = "Positive"
-
-        self.score += self.scaler * score * (self.POSITIVE - self.score) / 100
-
-    def add_negative(self, score, time_step):
-
-        if self.partisan is None or self.partisan == "Positive":
-            if self.partisan == "Positive":
-                self.scaler = 2.0
-            self.partisan = "Negative"
-
-        self.score += self.scaler * abs(score) * (self.NEGATIVE - self.score) / 100
-
-
-leave = {
-    "no2eu": 2,
-    "notoeu": 2,
-    "betteroffout": 2,
-    "voteout": 2,
-    "eureform": 2,
-    "britainout": 2,
-    "leaveeu": 2,
-    "voteleave": 2,
-    "beleave": 2,
-    "loveeuropeleaveeu": 2,
-}
-
-remain = {
-    "yes2eu": -2,
-    "yestoeu": -2,
-    "betteroffin": -2,
-    "votein": -2,
-    "ukineu": -2,
-    "bremain": -2,
-    "strongerin": -2,
-    "leadnotleave": -2,
-    "voteremain": -2,
-}
-
-tags = dict(leave.items() + remain.items())
-
 from AnalyticsService.Graphing.Time.TimeGraph import TimeGraph
 import logging
 from dateutil import parser
 from AnalyticsService.TwitterObj import Status, User
 import networkx as nx
+from AnalyticsService.Graphing.Classification.ClassificationSystem import ClassificationSystem
 
 
 class HashtagGraph(TimeGraph):
     _logger = logging.getLogger(__name__)
 
-    __type_name = "HashtagGraph"
-    __arguments = [{"name": "userLimit", "prettyName": "Number of users", "type": "integer", "default": 1000}]
+    __type_name = "Non-linkage User Hashtag Graph"
+    __arguments = [{"name": "userLimit", "prettyName": "Number of users", "type": "integer", "default": 1000},
+                   {"name": "hashtag_grouping", "prettyName": "Hashtag Groupings", "type": "dictionary_list",
+                    "variable": False, "default": [
+                       {"name": "Leave",
+                        "tags": ["no2eu", "notoeu", "betteroffout", "voteout", "eureform", "britainout",
+                                 "leaveeu", "voteleave", "beleave", "loveeuropeleaveeu"], "color": None},
+                       {"name": "Remain",
+                        "tags": ["yes2eu", "yestoeu", "betteroffin", "votein", "ukineu", "bremain",
+                                 "strongerin", "leadnotleave", "voteremain"], "color": None}]}
+                   ]
 
     _node_color = ("type", {"status": "blue", "source": "red", "target": "lime"})
     _edges_color = ("type", {"source": "gold", "target": "turquoise"})
@@ -107,6 +47,9 @@ class HashtagGraph(TimeGraph):
         start_date_co = parser.parse(args["startDateCutOff"])
         end_date_co = parser.parse(args["endDateCutOff"])
         limit = args["userLimit"]
+        htags = args["hashtag_grouping"]
+        tags = dict([(i, 2.0) for i in htags[0]["tags"]] +
+                    [(i, -2.0) for i in htags[1]["tags"]])
 
         user_ids = cls.get_top_users(db_col, limit, schema_id)
 
@@ -120,7 +63,7 @@ class HashtagGraph(TimeGraph):
             analytics_meta.save()
             return
 
-        graph = cls.build_graph(cursor, schema_id, time_interval)
+        graph = cls.build_graph(cursor, schema_id, time_interval, tags)
 
         cls._logger.info("Build graph %s", analytics_meta.id)
         analytics_meta.status = "BUILT"
@@ -147,10 +90,10 @@ class HashtagGraph(TimeGraph):
         return [user["_id"]["id"] for user in db_col.aggregate(query_top_retweeters, allowDiskUse=True)]
 
     @classmethod
-    def build_graph(cls, cursor, schema_id, time_interval):
+    def build_graph(cls, cursor, schema_id, time_interval, hashtags):
 
         history = {}
-        users = {}
+        classification_system = ClassificationSystem("BASIC", hashtags)
         graph = nx.DiGraph()
 
         start_date = Status(cursor[0], schema_id).get_created_at()
@@ -165,10 +108,7 @@ class HashtagGraph(TimeGraph):
             source_user = status.get_user()
             source_id = str(source_user.get_id())
 
-            if source_id not in users:
-                users[source_id] = CUser(tags)
-            cuser = users[source_id]
-            current_score = cuser.said_these(status.get_hashtags(), time_step)
+            current_score, _ = classification_system.consume(status)
 
             cls.add_user_node(graph, status, time_step, status_id, "source", history, current_score)
 

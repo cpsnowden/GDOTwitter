@@ -10,8 +10,7 @@ class TimeGraph(Graph):
     __arguments = [{"name": "timeLabelInterval", "prettyName": "Time between time indicator labels (hrs)",
                     "type": "integer", "default": 1.0},
                    {"name": "timeInterval", "prettyName": "Time interval to classify source of gravity (s)",
-                    "type": "integer", "default": 1.0}
-                   ]
+                    "type": "integer", "default": 1.0}]
 
     @classmethod
     def get_args(cls):

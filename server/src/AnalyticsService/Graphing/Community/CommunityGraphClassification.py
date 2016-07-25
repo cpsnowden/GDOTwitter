@@ -1,15 +1,14 @@
 import json
 import logging
 from collections import Counter
-from itertools import product
 
 import community
-
 import networkx as nx
-from AnalyticsService.Graphing.Classification.Classification import CommunityUser
+from dateutil import parser
+
+from AnalyticsService.Graphing.Classification.CommunityUser.CommunityUser import CommunityUser
 from AnalyticsService.Graphing.Community.CommunityGraph import CommunityGraph
 from AnalyticsService.TwitterObj import Status
-from dateutil import parser
 
 
 class CommunityGraphClassification(CommunityGraph):

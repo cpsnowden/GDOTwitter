@@ -2,17 +2,19 @@ import logging
 
 import networkx as nx
 from dateutil import parser
-
-
+import numpy as np
+from AnalyticsService.Graphing.Classification.ClassificationSystem import ClassificationSystem
 from AnalyticsService.Graphing.Time.TimeGraph import TimeGraph
 from AnalyticsService.TwitterObj import Status, User
-from AnalyticsService.Graphing.Classification.ClassificationSystem import ClassificationSystem
 
-class HashtagGraphRetweet(TimeGraph):
+
+class TimeHashtagRetweet(TimeGraph):
     _logger = logging.getLogger(__name__)
 
-    __type_name = "Hashtag Graph Retweet Three Node"
+    __type_name = "Time Hashtag Retweet"
     __arguments = [{"name": "userLimit", "prettyName": "Number of users", "type": "integer", "default": 1000},
+                   {"name": "tweetScoring", "prettyName": "Tweet Scoring System", "type": "enum", "options":
+                       ClassificationSystem.options},
                    {"name": "hashtag_grouping", "prettyName": "Hashtag Groupings", "type": "dictionary_list",
                     "variable": False, "default": [
                        {"name": "Leave",
@@ -22,8 +24,8 @@ class HashtagGraphRetweet(TimeGraph):
                         "tags": ["yes2eu", "yestoeu", "betteroffin", "votein", "ukineu", "bremain",
                                  "strongerin", "leadnotleave", "voteremain"], "color": None}]}]
 
-    _node_color = ("type", {"status": "blue", "source": "red", "target": "lime", "TimeIndicator": "purple"})
-    _edges_color = ("type", {"source": "gold", "target": "turquoise"})
+    _node_color = ("type", {"source": "red", "target": "lime", "TimeIndicator": "purple"})
+    _edges_color = ("type", {"retweet": "gold", "user": "steelblue"})
 
     @classmethod
     def get_color(cls):
@@ -31,7 +33,7 @@ class HashtagGraphRetweet(TimeGraph):
 
     @classmethod
     def get_args(cls):
-        return cls.__arguments + super(HashtagGraphRetweet, cls).get_args()
+        return cls.__arguments + super(TimeHashtagRetweet, cls).get_args()
 
     @classmethod
     def get_type(cls):
@@ -49,11 +51,11 @@ class HashtagGraphRetweet(TimeGraph):
         end_date_co = parser.parse(args["endDateCutOff"])
         limit = args["userLimit"]
         htags = args["hashtag_grouping"]
+        clasif_type = args["tweetScoring"]
         tags = dict([(i, 2.0) for i in htags[0]["tags"]] +
                     [(i, -2.0) for i in htags[1]["tags"]])
-
+        classification_system = ClassificationSystem(clasif_type, tags)
         cls._logger.info("Found tags :%s", tags)
-        classification_system = ClassificationSystem("BASIC", tags)
 
         user_ids = cls.get_top_users(db_col, limit, schema_id)
 
@@ -69,8 +71,8 @@ class HashtagGraphRetweet(TimeGraph):
 
         graph = cls.build_graph(cursor, schema_id, time_interval, classification_system)
         graph = cls.add_time_indicator_nodes(graph, args["timeLabelInterval"] * (60 * 60),
-                                             classification_system.user_model.POSITIVE + 10,
-                                             classification_system.user_model.NEGATIVE - 10)
+                                             20 + 5,
+                                             - 20 - 5)
 
         cls._logger.info("Build graph %s", analytics_meta.id)
         analytics_meta.status = "BUILT"
@@ -101,7 +103,6 @@ class HashtagGraphRetweet(TimeGraph):
     def build_graph(cls, cursor, schema_id, time_interval, classification_system):
 
         history = {}
-        users = {}
         graph = nx.DiGraph()
 
         start_date = Status(cursor[0], schema_id).get_created_at()
@@ -120,43 +121,39 @@ class HashtagGraphRetweet(TimeGraph):
             source_user = status.get_user()
             source_id = str(source_user.get_id())
 
-            current_score,_ = classification_system.consume(status)
+            current_score, tweet_score = classification_system.consume(status)
 
-            graph.add_node(status_id,
-                           label="twt:" + status.get_text().replace("\n", " "),
-                           type="status",
-                           date=str(status.get_created_at()),
-                           gravity_x=float(time_step),
-                           gravity_y=float(0.0),
-                           gravity_x_strength=float(10),
-                           gravity_y_strength=float(0.001))
 
             user = status.get_user()
             source_user_id = user.get_id()
-            node_id = str(source_user_id) + ":" + str(status_id)
+            source_node_id = str(source_user_id) + ":" + str(status_id)
+            gravity_y = 40 * ((1.0 / (1+np.exp(-float(current_score) / 10))) - 0.5)
 
-            graph.add_node(node_id,
+            graph.add_node(source_node_id,
                            label="usr:" + user.get_name(),
+                           tweet=status.get_text().replace("\n", " "),
                            type="source",
                            date=str(date),
+                           user_score = float(current_score),
+                           tweet_score = float(tweet_score),
                            gravity_x=float(time_step),
-                           gravity_y=float(current_score),
+                           gravity_y=float(gravity_y),
                            gravity_x_strength=float(10),
                            gravity_y_strength=float(10))
 
-            TimeGraph.link_node_to_history(graph, history, node_id, source_user_id)
-            graph.add_edge(node_id, status_id, type="source")
+            TimeGraph.link_node_to_history(graph, history, source_node_id, source_user_id)
 
             retweet = status.get_retweet_status()
             if retweet is not None:
                 user = retweet.get_user()
-                user_id = user.get_id()
+                user_id = str(user.get_id())
                 target_node_id = str(user_id) + ":" + str(status_id)
                 # Ignore the vain people retweeting themselves
                 if user_id != source_id:
                     graph.add_node(target_node_id,
                                    label="usr:" + user.get_name(),
                                    type="target",
+                                   tweet=status.get_text().replace("\n", " "),
                                    date=str(date),
                                    gravity_x=float(time_step),
                                    gravity_y=float(0.0),
@@ -165,7 +162,7 @@ class HashtagGraphRetweet(TimeGraph):
 
                     TimeGraph.link_node_to_history(graph, history, target_node_id, user_id)
 
-                    graph.add_edge(status_id, target_node_id, type="target")
+                    graph.add_edge(source_node_id, target_node_id, type="retweet")
 
             graph.graph["end_date"] = str(end_date)
             graph.graph["max_step"] = max_time_step

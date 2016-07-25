@@ -14,6 +14,34 @@ class GraphUtils(object):
     _logger = logging.getLogger(__name__)
 
     @classmethod
+    def fix_graphml_format_better(cls, name, gridfs):
+        cls._logger.info("Reformatting file to fix GDO graphml formatting using element tree")
+        replacements = {}
+        with gridfs.get_last_version(name) as f:
+            tree = ElementTree.parse(f)
+            f_id = f._id
+            for key_entry in tree.findall("{http://graphml.graphdrawing.org/xmlns}key"):
+                key_name = key_entry.attrib['attr.name']
+                id = key_entry.attrib['id']
+                key_entry.attrib['id'] = key_name
+                replacements[id] = key_name
+                cls._logger.info("Name: %s, Key %s", key_name, key_entry)
+            cls._logger.info("Dict %s", replacements)
+            root=tree.getroot()
+            for data_entry in root.iter("{http://graphml.graphdrawing.org/xmlns}data"):
+                found_key = data_entry.attrib['key']
+                data_entry.set('key', replacements[found_key])
+
+            ElementTree.register_namespace('', "http://graphml.graphdrawing.org/xmlns")
+
+        with gridfs.new_file(filename=name, content_type="text/xml") as des:
+            tree.write(des, encoding='utf-8', method='xml')
+
+        cls._logger.info("Deleting old version of file %s", f_id)
+        gridfs.delete(f_id)
+
+
+    @classmethod
     def fix_graphml_format(cls, name, gridfs):
 
         cls._logger.info("Reformatting file to fix GDO graphml formatting")

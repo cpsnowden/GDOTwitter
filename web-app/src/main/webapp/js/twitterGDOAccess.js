@@ -1,4 +1,4 @@
-var twitterGDOAccessApp = angular.module('twitterGDOAccess',['ngRoute','dataFilter','analytics','consumers','welcome']);
+var twitterGDOAccessApp = angular.module('twitterGDOAccess',['ngRoute','dataFilter','analytics','consumers','welcome','chartApp']);
 
     twitterGDOAccessApp.config(function($routeProvider, RestangularProvider) {
         $routeProvider
@@ -17,8 +17,13 @@ var twitterGDOAccessApp = angular.module('twitterGDOAccess',['ngRoute','dataFilt
 
             .when('/consumers', {
             templateUrl:'partials/TwitterConsumers.html'
-            });
+            })
 
+            .when('/charts/:dsid/:id', {
+            templateUrl:'partials/Charts.html',
+                controller:'chartController'
+            });
+        
         RestangularProvider.setBaseUrl('/API');
         RestangularProvider.setDefaultHeaders({Authorization: "Basic Y3BzMTVfYWRtaW46c2VjcmV0"});
 

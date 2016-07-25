@@ -1,28 +1,28 @@
-class CUser(object):
+class BasicUserModel(object):
     POSITIVE = 40
     NEGATIVE = -40
 
-    def __init__(self, scores):
-        self.scores = scores
+    def __init__(self, tweet_classifier):
+
+        self.tweet_classifier = tweet_classifier
         self.time_constant = 5.0
         self.partisan = None
         self.score = 0.0
         self.scaler = 1.0
 
-    def said_these(self, hastags, time_step):
+    def said(self, status):
 
-        score = 0
-        for h in hastags:
-                score += self.scores.get(h.lower(), 0.0)
+        score = self.tweet_classifier.predict(status).score
 
         if score > 0:
-            self.add_positive(score, time_step)
+            self.add_positive(score)
         elif score < 0:
-            self.add_negative(score, time_step)
+            self.add_negative(score)
 
-        return self.score
+        return score
 
-    def add_positive(self, score, time_step):
+
+    def add_positive(self, score):
 
         if self.partisan is None or self.partisan == "Negative":
             if self.partisan == "Negative":
@@ -31,7 +31,7 @@ class CUser(object):
 
         self.score += self.scaler * score * (self.POSITIVE - self.score) / 100
 
-    def add_negative(self, score, time_step):
+    def add_negative(self, score):
 
         if self.partisan is None or self.partisan == "Positive":
             if self.partisan == "Positive":
@@ -39,3 +39,6 @@ class CUser(object):
             self.partisan = "Negative"
 
         self.score += self.scaler * abs(score) * (self.NEGATIVE - self.score) / 100
+
+    def get_classification(self):
+        return self.score

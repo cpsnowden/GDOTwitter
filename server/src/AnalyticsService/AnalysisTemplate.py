@@ -6,7 +6,10 @@ import logging
 class AnalysisTemplate(object):
     _logger = logging.getLogger(__name__)
 
-    __arguments = []
+    __arguments = [{"name": "startDateCutOff", "prettyName": "Start date cut-off", "type": "datetime",
+                    "default_dataset_field": "start_time"},
+                   {"name": "endDateCutOff", "prettyName": "End date cut-off", "type": "datetime",
+                    "default_dataset_field": "end_time"}]
 
     @classmethod
     def get_args(cls):

@@ -1,18 +1,16 @@
 import logging
-from datetime import timedelta
 
 import networkx as nx
-import numpy as np
-from AnalyticsService.Graphing.Classification.Basic import CUser
-from AnalyticsService.Graphing.Time.TimeGraph import TimeGraph
-from AnalyticsService.TwitterObj import Status, User
 from dateutil import parser
 
+from AnalyticsService.Graphing.Classification.ClassificationSystem import ClassificationSystem
+from AnalyticsService.Graphing.Time.TimeGraph import TimeGraph
+from AnalyticsService.TwitterObj import Status, User
 
-class HashtagGraphRetweetv2(TimeGraph):
+class HashtagGraphRetweetTwoNode(TimeGraph):
     _logger = logging.getLogger(__name__)
 
-    __type_name = "HashtagGraphRetweetv2"
+    __type_name = "Hashtag Graph Retweet Two Node"
     __arguments = [{"name": "userLimit", "prettyName": "Number of users", "type": "integer", "default": 1000},
                    {"name": "hashtag_grouping", "prettyName": "Hashtag Groupings", "type": "dictionary_list",
                     "variable": False, "default": [
@@ -32,7 +30,7 @@ class HashtagGraphRetweetv2(TimeGraph):
 
     @classmethod
     def get_args(cls):
-        return cls.__arguments + super(HashtagGraphRetweetv2, cls).get_args()
+        return cls.__arguments + super(HashtagGraphRetweetTwoNode, cls).get_args()
 
     @classmethod
     def get_type(cls):
@@ -53,6 +51,7 @@ class HashtagGraphRetweetv2(TimeGraph):
         tags = dict([(i, 2.0) for i in htags[0]["tags"]] +
                     [(i, -2.0) for i in htags[1]["tags"]])
         cls._logger.info("Found tags :%s", tags)
+        classification_system = ClassificationSystem("BASIC", tags)
 
         user_ids = cls.get_top_users(db_col, limit, schema_id)
 
@@ -66,9 +65,10 @@ class HashtagGraphRetweetv2(TimeGraph):
             analytics_meta.save()
             return
 
-        graph = cls.build_graph(cursor, schema_id, time_interval, tags)
+        graph = cls.build_graph(cursor, schema_id, time_interval, classification_system)
         graph = cls.add_time_indicator_nodes(graph, args["timeLabelInterval"] * (60 * 60),
-                                             CUser.POSITIVE + 10, CUser.NEGATIVE - 10)
+                                             classification_system.user_model.POSITIVE + 10,
+                                             classification_system.user_model.NEGATIVE - 10)
 
         cls._logger.info("Build graph %s", analytics_meta.id)
         analytics_meta.status = "BUILT"
@@ -96,10 +96,9 @@ class HashtagGraphRetweetv2(TimeGraph):
         return [user["_id"]["id"] for user in db_col.aggregate(query_top_retweeters, allowDiskUse=True)]
 
     @classmethod
-    def build_graph(cls, cursor, schema_id, time_interval, tags):
+    def build_graph(cls, cursor, schema_id, time_interval, classification_system):
 
         history = {}
-        users = {}
         graph = nx.DiGraph()
 
         start_date = Status(cursor[0], schema_id).get_created_at()
@@ -118,11 +117,7 @@ class HashtagGraphRetweetv2(TimeGraph):
             source_user = status.get_user()
             source_id = str(source_user.get_id())
 
-            if source_id not in users:
-                users[source_id] = CUser(tags)
-            cuser = users[source_id]
-            current_score = cuser.said_these(status.get_hashtags(), time_step)
-
+            current_score,_ = classification_system.consume(status)
             user = status.get_user()
             source_user_id = user.get_id()
             source_node_id = str(source_user_id) + ":" + str(status_id)
