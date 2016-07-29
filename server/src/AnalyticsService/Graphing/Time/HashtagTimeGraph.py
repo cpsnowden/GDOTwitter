@@ -6,7 +6,7 @@ import networkx as nx
 from AnalyticsService.Graphing.Classification.ClassificationSystem import ClassificationSystem
 
 
-class HashtagGraph(TimeGraph):
+class HashtagTimeGraph(TimeGraph):
     _logger = logging.getLogger(__name__)
 
     __type_name = "Non-linkage User Hashtag Graph"
@@ -30,7 +30,7 @@ class HashtagGraph(TimeGraph):
 
     @classmethod
     def get_args(cls):
-        return cls.__arguments + super(HashtagGraph, cls).get_args()
+        return cls.__arguments + super(HashtagTimeGraph, cls).get_args()
 
     @classmethod
     def get_type(cls):

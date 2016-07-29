@@ -52,7 +52,7 @@ elif False:
     coocurences_array = np.zeros([n,n], dtype=int)
     import itertools
     import pprint
-    coocurrences = dict.fromkeys(itertools.combinations(top_hashtags,2), 0)
+    coocurrences = dict.fromkeys(itertools.combinations_with_replacement(top_hashtags,2), 0)
     indices = dict(zip(top_hashtags,range(len(top_hashtags))))
     pprint.pprint(indices)
     cursor = db_col.find({Status.SCHEMA_MAP[schema_id]["retweeted_status"]: {"$exists": False}, "lang": "en"})
@@ -72,10 +72,11 @@ elif False:
 
         htags = [i.lower() for i in s.get_hashtags()]
         thtags = list(set(htags) & top_hashtags)
-        if not (2 < len(thtags) <= 3):
-            continue
+        # if not (2 < len(thtags) <= 3):
+        #     continue
         print n, thtags
         for h1 in thtags:
+            coocurrences[(h1, h1)] += 1
             for h2 in thtags:
                 if h1 != h2:
                     if (h1,h2) in coocurrences:
@@ -110,7 +111,7 @@ else:
     idx_cols = col_sum.argsort()[::-1]
     idx_rows = row_sum.argsort()[::-1]
     # print idx_cols,idx_rows
-    d = d[:, idx_cols][idx_rows, :][:2000,:2000]
+    d = d[:, idx_cols][idx_rows, :][:50,:50]
     # print d.shape
     # print d
     # exit()
@@ -119,9 +120,10 @@ else:
     score = d / (row_sum + col_sum - d)
     score[~ np.isfinite(score)] = 0
     score *= 10
+    np.fill_diagonal(score, 0.0)
     # print score.shape
     # me= score.mean()
-    score[score < score.mean() + score.std() * 3.0] = 0.0
+    # score[score < score.mean() + score.std() * 3.0] = 0.0
     # print score.mean()
     import networkx as nx
     #
@@ -137,9 +139,9 @@ else:
     adjMatrix =  nx.adjacency_matrix(G)
     # np.savetxt("foo.csv", d, delimiter=",")
 
-
-    from sklearn.cluster import spectral_clustering
-
-    clstr =  spectral_clustering(adjMatrix, n_clusters=3)
-    import pprint
-    pprint.pprint(zip(labels,clstr))
+    #
+    # from sklearn.cluster import spectral_clustering
+    #
+    # clstr =  spectral_clustering(adjMatrix, n_clusters=3)
+    # import pprint
+    # pprint.pprint(zip(labels,clstr))

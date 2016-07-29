@@ -18,7 +18,7 @@ class Graph(AnalysisTemplate):
                    {"name": "layoutIterations", "prettyName": "Layout Iterations", "type": "integer",
                     "default": -1},
                    {"name": "LAYOUT_ALGO", "prettyName": "Layout Algorithm", "type": "enum", "options":
-                       ["FA2MS"], "default" : "FA2MS"}
+                       ["FA2MS", "OPENORD"], "default" : "FA2MS"}
                    ]
     @classmethod
     def get_args(cls):
@@ -71,7 +71,7 @@ class Graph(AnalysisTemplate):
             write_graphml(graph, f)
 
     @classmethod
-    def layout(cls, graph, analytics_meta, gridfs, args):
+    def layout(cls, graph, analytics_meta, gridfs, args, extra_params = None):
 
         n_iterations = args["layoutIterations"]
         if n_iterations <= 0:
@@ -91,6 +91,10 @@ class Graph(AnalysisTemplate):
         params = {"LAYOUT_ITERATIONS": args["layoutIterations"],
                   "LAYOUT_ALGO": args["LAYOUT_ALGO"]}
 
+        if extra_params is not None:
+            for i in extra_params.keys():
+                params[i] = extra_params[i]
+
         client = GephiRpcClient()
         result = json.loads(client.call(json.dumps({"GephiParameters": params, "fileName": analytics_meta.db_ref})))
         cls._logger.info("Result: %s", result)
@@ -100,4 +104,5 @@ class Graph(AnalysisTemplate):
         analytics_meta.save()
 
         with gridfs.get_last_version(analytics_meta.db_ref) as f:
+            print f._id
             return nx.read_graphml(f)

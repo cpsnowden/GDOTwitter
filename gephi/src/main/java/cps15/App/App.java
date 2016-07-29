@@ -4,6 +4,9 @@ import com.mongodb.MongoClient;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
+import cps15.App.LayoutAlg.LayoutArgs;
+import cps15.App.LayoutAlg.MsForceAtlas2Args;
+import cps15.App.LayoutAlg.OpenOrdArgs;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -43,10 +46,7 @@ public class App {
 
         try {
             gephi_worker.run();
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.log(Level.SEVERE, "Exception", e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             logger.log(Level.SEVERE, "Exception", e);
         }
@@ -83,9 +83,22 @@ public class App {
         try {
             GridFSDBFile file = gridFS.findOne(fileName);
 
-            GephiArguments gephiArguments = new GephiArguments().loadFromJSON((JSONObject) (arguments.get("GephiParameters")));
+            JSONObject gephiParams = (JSONObject) arguments.get("GephiParameters");
+            LayoutArgs layoutArgs;
+            String layoutName = (String) gephiParams.getOrDefault("LAYOUT_ALGO", "FA2MS");
 
-            GephiWorker gephiWorker = new GephiWorker(gephiArguments);
+            switch (layoutName) {
+                case OpenOrdArgs.LAYOUT_ALGO:
+                    layoutArgs = new OpenOrdArgs(gephiParams);
+                    break;
+                case MsForceAtlas2Args.LAYOUT_ALGO:
+                    layoutArgs = new MsForceAtlas2Args(gephiParams);
+                    break;
+                default:
+                    return getResponse(fileName, false, "Unknown layout algorithm");
+            }
+
+            GephiWorker gephiWorker = new GephiWorker(layoutArgs);
 
             //Error checking here
             gephiWorker.importFile(file.getInputStream());
@@ -96,6 +109,7 @@ public class App {
 
             return getResponse(fileName, true);
         } catch (Exception e) {
+            e.printStackTrace();
             return getResponse(fileName, false, e.getMessage());
         }
     }

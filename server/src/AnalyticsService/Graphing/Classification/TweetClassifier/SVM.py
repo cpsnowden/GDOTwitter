@@ -39,7 +39,7 @@ class TweetPreprocessor(BaseTokenizer):
         tokens = [i.lower() for i in tokens if i not in stopwords.words("english")]
         tokens = [i for i in tokens if self.txt_reg.match(i) and i not in ["rt"]]
         tokens = [i for i in tokens if not self.url_reg.match(i)]
-        # tokens = [i.lstrip("#") for i in tokens if self.hashtags.match(i)]
+        # tokens = [i for i in tokens if not self.hashtags.match(i)]
         # for t in tokens:
         #     token_temp = []
         #     if self.hashtags.match(t):
@@ -121,16 +121,23 @@ class SVMClassifier(object):
         true_labels = []
         predicted_labels = []
         for i, row in enumerate(data):
+            # if row[0] == "unknown":
+            #     continue
             if 0 < row_count < i:
                 break
             truth = self.class_mapping[row[0]]
             score, fv = self.get(row[1])
             predicted = score.classification
+            if abs(score.score) < 0.5:
+                predicted = 2
             predicted_labels.append(predicted)
             true_labels.append(truth)
+            print score.score, score.classification, predicted, truth
             if truth != predicted:
                 print "================================================================"
-                print "Truth:",self.reverse_mapping[truth],"Predicted:",self.reverse_mapping[predicted],row[1]
+                print "Truth:",self.reverse_mapping[truth],"Predicted:",self.reverse_mapping[predicted], score.score , \
+                    "-->" ,\
+                    row[1]
                 print fv
                 print "================================================================"
 
@@ -175,8 +182,8 @@ if __name__ == '__main__':
     #         writer.writerow(row)
     # exit()
     import pprint
-    classifier = SVMClassifier({"leave":0,"remain":1}, False)
-
+    classifier = SVMClassifier(OrderedDict([("leave",0),("remain",1), ("unknown",2)]), False)
+    print classifier.class_mapping.keys()
     # print classifier.tokenizer.tokenize("50,000 :),")
 
     classifier.train_from_csv("../TRAINING_DATA_OUT.csv", -1)
@@ -187,6 +194,8 @@ if __name__ == '__main__':
     pprint.pprint(classifier.get_features())
     print classifier.get_informative_features()
 
-    # print classifier.test_from_csv("../TEST_DATA.csv", -1)
+    # print classifier.test_from_csv("../../../labelling_text_BREXIT.dat", -1)
+    print classifier.test_from_csv("../TEST_DATA_OUT.csv", -1)
+
 
 

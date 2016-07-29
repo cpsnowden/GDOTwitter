@@ -19,9 +19,13 @@ var twitterGDOAccessApp = angular.module('twitterGDOAccess',['ngRoute','dataFilt
             templateUrl:'partials/TwitterConsumers.html'
             })
 
-            .when('/charts/:dsid/:id', {
+            .when('/charts/:dsid/:id/:fs?', {
             templateUrl:'partials/Charts.html',
                 controller:'chartController'
+            })
+
+            .otherwise({
+               redirectTo: '/'
             });
         
         RestangularProvider.setBaseUrl('/API');
@@ -29,10 +33,15 @@ var twitterGDOAccessApp = angular.module('twitterGDOAccess',['ngRoute','dataFilt
 
     });
 
-    twitterGDOAccessApp.controller('mainController', function($scope,$interval, Restangular) {
-        $scope.info = "Heloooooo";
+    twitterGDOAccessApp.factory("FullScreen", function() {
+        return {fsOn:false}
+    });
 
-        $scope.data_services = Restangular.all('data_service').getList().$object
+    twitterGDOAccessApp.controller('mainController', function($scope,$interval, Restangular, FullScreen) {
+
+        $scope.fsService = FullScreen;
+        $scope.fsService.fsOn = false;
+        $scope.data_services = Restangular.all('data_service').getList().$object;
 
         //var stop = $interval(function() {
         //    console.log("Refreshed!");
@@ -43,6 +52,4 @@ var twitterGDOAccessApp = angular.module('twitterGDOAccess',['ngRoute','dataFilt
         //$scope.$on('$destroy', function() {
         //    $interval.cancel(stop);
         //});
-
-
     });

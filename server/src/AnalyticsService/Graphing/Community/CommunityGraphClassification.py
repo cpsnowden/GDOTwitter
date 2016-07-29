@@ -38,7 +38,7 @@ class CommunityGraphClassification(CommunityGraph):
 
     @classmethod
     def get_args(cls):
-        return cls.__arguments + super(CommunityGraph, cls).get_args()
+        return cls.__arguments + super(CommunityGraphClassification, cls).get_args()
 
     @classmethod
     def get_type(cls):

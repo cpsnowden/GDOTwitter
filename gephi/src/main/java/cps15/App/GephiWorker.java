@@ -1,9 +1,10 @@
 package cps15.App;
 
-import cps15.ForceAtlas2MS.ForceAtlas2;
-import cps15.ForceAtlas2MS.ForceAtlas2Builder;
+import cps15.App.LayoutAlg.LayoutArgs;
+import cps15.App.LayoutAlg.Layouts;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
+import org.gephi.graph.api.Node;
 import org.gephi.graph.api.UndirectedGraph;
 import org.gephi.io.exporter.api.ExportController;
 import org.gephi.io.exporter.spi.CharacterExporter;
@@ -26,15 +27,15 @@ public class GephiWorker {
     private static final Logger logger = Logger.getLogger(GephiWorker.class.getName());
 
     private Workspace workspace;
-    private GephiArguments gephiArguments;
     private GraphModel graphModel;
+    private LayoutArgs layoutArgs;
 
-    public GephiWorker(GephiArguments gephiArguments) {
+    public GephiWorker(LayoutArgs layoutArgs) {
 
         ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
         this.workspace = pc.getCurrentWorkspace();
-        this.gephiArguments = gephiArguments;
+        this.layoutArgs = layoutArgs;
     }
 
     public boolean importFile(InputStream inputStream) {
@@ -53,50 +54,33 @@ public class GephiWorker {
         return true;
     }
 
-    public Layout get_layout(String layoutAlgo){
-
-        logger.info("Getting layout algorithm: " + layoutAlgo);
-
-        if(layoutAlgo.equals("FA2MS")) {
-
-            ForceAtlas2 layout = new ForceAtlas2Builder().buildLayout();
-            layout.setGraphModel(this.graphModel);
-            layout.initAlgo();
-            layout.resetPropertiesValues();
-            layout.setScalingRatio(this.gephiArguments.getLAYOUT_SCALE());
-            layout.setBarnesHutOptimize(this.gephiArguments.getBARNES_HUTT_OPTIMIZE());
-            layout.setBarnesHutTheta(this.gephiArguments.getBARNES_HUT_THETA());
-            layout.setStrongGravityMode(this.gephiArguments.getSTRONGER_GRAVITY());
-            layout.setGravity(this.gephiArguments.getGRAVITY());
-            layout.setAdjustSizes(this.gephiArguments.getADJUST_SIZES());
-            layout.setEdgeWeightInfluence(this.gephiArguments.getEDGE_WEIGHT_INFLUENCE());
-            layout.setThreadsCount(this.gephiArguments.getTHREADS_COUNT());
-            layout.setGravityXRatio(this.gephiArguments.getGravityXScaling());
-            layout.setGravityYRatio(this.gephiArguments.getGravityYScaling());
-            return layout;
-
-        } else {
-            return null;
-        }
-
-    }
 
     public void runLayout() {
 
         logger.info("Attempting to run layout");
-
-        Layout layout = get_layout(this.gephiArguments.getLayoutAlgo());
-        Long layout_iterations = this.gephiArguments.getLAYOUT_ITERATIONS();
-
-        logger.info("Running layout for " + layout_iterations + " steps");
-        for (int i = 0; i < layout_iterations; i++) {
-            layout.goAlgo();
-            if(i%100==0){
-                logger.info("Step " + i);
+        Layout layout = Layouts.getLayout(graphModel, layoutArgs);
+        Long layoutIterations = layoutArgs.getLayoutIterations();
+        logger.info("Running layout for " + layoutIterations + " steps");
+//        int j = 0;
+//        for(Node n: graphModel.getUndirectedGraph().getNodes()) {
+//            System.out.println(n.x());
+//            if(j++ > 10) break;
+//        }
+        if(null != layout) {
+            for (int i = 0; i < layoutIterations; i++) {
+                layout.goAlgo();
+                if (i % 100 == 0) {
+                    logger.info("Step " + i);
+                }
             }
+            layout.endAlgo();
+            logger.info("Finished running layout");
         }
-        layout.endAlgo();
-        logger.info("Finished running layout");
+//        j = 0;
+//        for(Node n: graphModel.getUndirectedGraph().getNodes()) {
+//            System.out.println(n.x());
+//            if(j++ > 10) break;
+//        }
     }
 
     public InputStream export() {

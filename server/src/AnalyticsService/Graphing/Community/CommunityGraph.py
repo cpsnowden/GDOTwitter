@@ -8,5 +8,5 @@ class CommunityGraph(Graph):
     __arguments = []
 
     @classmethod
-    def get_arguments(cls):
+    def get_args(cls):
         return cls.__arguments + super(CommunityGraph, cls).get_args()

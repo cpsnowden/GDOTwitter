@@ -34,7 +34,7 @@ class Hashtags(Analytics):
         return True
 
     @classmethod
-    def get_top_hashtags(cls, schema_id, limit, db_col):
+    def get_top_hashtags(cls, schema_id, limit, db_col, english = False):
         cls._logger.info("Attempting to get top hashtags")
 
         hashtag_key = Status.SCHEMA_MAP[schema_id]["hashtags"]

@@ -30,15 +30,15 @@
     <script src="js/Analytics.js"></script>
     <script src="js/TwitterConsumers.js"></script>
     <script src="js/Welcome.js"></script>
-
-
     <title>Twitter Data Collection</title>
 </head>
 
 <body ng-controller="mainController">
 
-<div id="wrap">
-    <div class="navbar navbar-inverse" role="navigation">
+<!--<div id="wrap">-->
+    <header ng-if="!fsService.fsOn">
+
+    <div class="navbar navbar-inverse" role="navigation" >
         <div class="container">
 
 
@@ -48,12 +48,9 @@
                     <li><a href="#datasets"><i class="fa fa-filter"></i> Datasets</a></li>
                     <li><a href="#analytics"><i class="fa fa-area-chart"></i> Analytics</a></li>
                     <li><a href="#consumers"><i class="fa fa-spinner" aria-hidden="true"></i> Consumers</a></li>
-                    <li><a href="#charts"><i class="fa fa-spinner" aria-hidden="true"></i> Charts</a></li>
-                    <li><a href="http://localhost:15672/#/" target="_blank"><i class="fa fa-cog" aria-hidden="true"></i></i> RabbitMQ</a></li>
+                    <!--<li><a href="http://localhost:15672/#/" target="_blank"><i class="fa fa-cog" aria-hidden="true"></i></i> RabbitMQ</a></li>-->
                 </ul>
             </div><!--//--></div>
-
-
     </div>
     <div class="container">
         <div class="row clearfix">
@@ -70,12 +67,12 @@
             </div>
         </div>
     </div>
-
+    </header>
     <div ng-view></div>
 
-</div>
+<!--</div>-->
 
-<div id="footer">
+<div id="footer" ng-if="!fsService.fsOn">
     <div class="container">
         <p class="text-muted">
             Imperial College KMPG GDO (cps15)

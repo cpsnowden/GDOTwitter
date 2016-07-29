@@ -3,10 +3,12 @@ from dateutil import parser
 
 class Status(object):
     T4J = dict(hashtags="hashtagEntities", mentions="userMentionEntities", user="user", text="text",
-               created_at="createdAt", id="id", retweeted_status="retweetedStatus", language="lang", ISO_date = "createdAt")
+               created_at="createdAt", id="id", retweeted_status="retweetedStatus", language="lang", ISO_date =
+               "createdAt", coordinates="geoLocation")
 
     RAW = dict(hashtags="entities.hashtags", mentions="entities.user_mentions", user="user", text="text",
-               created_at="created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date = "ISO_created_at")
+               created_at="created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date =
+               "ISO_created_at", coordinates="coordinates.coordinates")
 
     SCHEMA_MAP = {
         "T4J": T4J,
@@ -47,6 +49,38 @@ class Status(object):
         except KeyError:
             return None
 
+    def get_coordinates(self):
+        try:
+            return GeoLocation(self.get("coordinates"), self.SCHEMA_ID)
+        except KeyError:
+            return None
+
+class GeoLocation(object):
+
+    T4J = dict(longitude="longitude", latitude="latitude")
+    RAW = dict(longitude=0, latitude=1)
+
+    SCHEMA_MAP = {
+        "T4J": T4J,
+        "RAW": RAW
+    }
+
+    def __init__(self, json, schema_id):
+        self.item = DictionaryWrapper(json)
+        self.SCHEMA = self.SCHEMA_MAP[schema_id]
+        self.SCHEMA_ID = schema_id
+
+    def get(self, key):
+        return self.item.get(self.SCHEMA[key])
+
+    def get_latitude(self):
+        return self.get("latitude")
+
+    def get_longitude(self):
+        return self.get("longitude")
+
+    def __str__(self):
+        return str(self.get_longitude()) + "," + str(self.get_latitude())
 
 def conv_dt(raw):
     return raw
@@ -70,9 +104,10 @@ class TwitterDate(object):
 
 
 class User(object):
-    T4J = dict(id="id", name="screenName", follower_count="followersCount", friends_count="friendsCount", lang="lang")
+    T4J = dict(id="id", name="screenName", follower_count="followersCount", friends_count="friendsCount", lang="lang",
+               utc_offset="utcOffset", time_zone= "timeZone")
     RAW = dict(id="id", name="screen_name", follower_count="followers_count", friends_count="friends_count",
-               lang="lang")
+               lang="lang", utc_offset = "utc_offset", time_zone = "time_zone")
     SCHEMA_MAP = {
         "T4J": T4J,
         "RAW": RAW
@@ -101,6 +136,11 @@ class User(object):
     def get_lang(self):
         return self.get("lang")
 
+    def get_time_zone(self):
+        return self.get("time_zone")
+
+    def get_utc_offset(self):
+        return self.get("utc_offset")
 
 class UserMention(object):
     T4J = dict(id="id", name="screenName")

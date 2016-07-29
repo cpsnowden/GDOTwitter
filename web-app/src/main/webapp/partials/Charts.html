@@ -2,27 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- FusionCharts library-->
-    <title>Title</title>
 </head>
 <body>
-<div class = "container">
-    {{dsid}}
-    {{id}}
-    {{analytics_meta}}
-    <div ng-controller="chartController">
-        <button class="btn btn-success" ng-click="loadChart()"><i class="glyphicon glyphicon-download"></i>GET</button>
-        <fusioncharts ng-if="chartReady"
-        width="100%"
-        height="800"
-        type={{chartType}}
-        dataFormat='json'
+<div ng-class ="!fsService.fsOn ? 'container' : ''">
 
-        dataSource="{{dataSource}}">
-
+    <div ng-controller="chartController" data-ng-init="init()">
+        <div ng-show = "!chartReady || !fsService.fsOn" class="alert " role="alert" ng-class="!chartReady ? 'alert-info' : 'alert-success'">
+            <span ng-show = "!chartReady" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+            <span ng-show = "!chartReady">Loading... : (Dataset: {{dsid}}, id:{{id}})</span>
+            <span ng-show = "chartReady">Loaded: (Dataset: {{dsid}}, id:{{id}})</span>
+            <div class="pull-right"><button class="btn btn-default btn-sm"  ng-click="fsService.fsOn=true"><i class="glyphicon glyphicon-resize-full"></i></button></div>
+        </div>
+        <fusioncharts ng-if="chartReady" width="100%" height="800" type={{chartType}} dataFormat='json'
+                      dataSource="{{dataSource}}">
         </fusioncharts>
-        <!--<div fusioncharts width="400" height="300" type="column2d" , datasource="{{dataSource}}"></div>-->
-        <!--<p><a class="btn btn-default" ng-click="updateMyChartData()">Click me to change data</a></p>-->
     </div>
 </div>
 </body>

@@ -1,7 +1,7 @@
 from Database.Persistence import DatabaseManager
 from api.Objects.MetaData import DatasetMeta
 import logging
-
+from datetime import datetime
 
 class AnalysisTemplate(object):
     _logger = logging.getLogger(__name__)
@@ -20,6 +20,7 @@ class AnalysisTemplate(object):
         cls.write_json(json, analytics_meta.db_ref, gridfs)
         cls._logger.info("Saved analytics %s", analytics_meta.db_ref)
         analytics_meta.status = "SAVED"
+        analytics_meta.end_time = datetime.now()
         analytics_meta.save()
 
     @classmethod
@@ -41,8 +42,9 @@ class AnalysisTemplate(object):
 
     @classmethod
     def join_keys(cls, *keys):
+        print keys
         return ".".join(keys)
 
     @classmethod
     def dollar_join_keys(cls, *keys):
-        return "$" + cls.join_keys(keys)
+        return "$" + cls.join_keys(*keys)
