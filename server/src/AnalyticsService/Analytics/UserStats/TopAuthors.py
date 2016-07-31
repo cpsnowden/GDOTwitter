@@ -23,9 +23,7 @@ class TopAuthors(Analytics):
     ####################################################################################################################
 
     @classmethod
-    def get(cls, analytics_meta):
-
-        gridfs, db_col, args, schema_id = cls.setup(analytics_meta)
+    def get(cls, analytics_meta, gridfs, db_col, args, schema_id):
 
         original_author_limit = args["topOriginalAuthorLimit"]
 

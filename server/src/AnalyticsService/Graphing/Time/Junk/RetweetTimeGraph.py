@@ -38,9 +38,8 @@ class RetweetTimeGraph(TimeGraph):
     bottomPolarisingUser = None
 
     @classmethod
-    def get(cls, analytics_meta):
+    def get(cls, analytics_meta, gridfs, db_col, args, schema_id):
 
-        gridfs, db_col, args, schema_id = cls.setup(analytics_meta)
 
         time_interval = args["timeInterval"]
         tweet_limit = args["tweetLimit"]

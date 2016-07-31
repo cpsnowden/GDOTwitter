@@ -28,17 +28,6 @@ class AnalysisTemplate(object):
         with gridfs.new_file(filename=name, content_type="text/json") as f:
             f.write(data)
 
-    @classmethod
-    def setup(cls, analytics_meta):
-        dataset_meta = DatasetMeta.objects.get(id=analytics_meta.dataset_id)
-        dbm = DatabaseManager()
-        db_col = dbm.data_db.get_collection(dataset_meta.db_col)
-
-        args = analytics_meta.specialised_args
-
-        cls._logger.info("Found arguments %s", args)
-
-        return dbm.gridfs, db_col, args, dataset_meta.schema
 
     @classmethod
     def join_keys(cls, *keys):

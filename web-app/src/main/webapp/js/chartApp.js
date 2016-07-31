@@ -17,7 +17,7 @@ chartApp.controller('chartController', ['$scope', '$routeParams', 'Restangular',
         $scope.init = function () {
 
             $scope.analytics_meta = getAnalyticsDetails($scope.id, $scope.dsid);
-            console.log($scope.analytics_meta)
+            console.log($scope.analytics_meta);
 
             $scope.fsService.fsOn = !!("fs" in $routeParams && $routeParams.fs != "");
             loadChart($scope.id, $scope.dsid);
@@ -40,6 +40,9 @@ chartApp.controller('chartController', ['$scope', '$routeParams', 'Restangular',
                         break;
                     case "line":
                         done = get_line_graph(result);
+                        break;
+                    case "time":
+                        done = get_time_graph(result);
                         break;
                     case "bar":
                         done = get_bar_chart(result);
@@ -83,6 +86,36 @@ chartApp.controller('chartController', ['$scope', '$routeParams', 'Restangular',
 
         };
 
+        var map_time_data = function(raw) {
+
+            var category = [];
+            var temp_values = {};
+            angular.forEach(raw.categories, function (value, index) {
+                category.push({"label": value});
+                temp_values[value] = 0;
+            });
+
+            var datasets = [];
+
+            angular.forEach(raw.values, function (series_data, index) {
+                var ttemp_values = angular.copy(temp_values);
+                angular.forEach(series_data["data"], function (y, index) {
+                    ttemp_values[y["dt"]] = y["count"];
+
+                });
+                var series = {"seriesname": series_data["_id"], "data": []};
+                for (var key in ttemp_values) {
+                    if (ttemp_values.hasOwnProperty(key)) {
+                        series.data.push({"value": ttemp_values[key]});
+                    }
+                }
+                datasets.push(series)
+            });
+            
+            $scope.dataSource.dataset = datasets;
+            $scope.dataSource.categories = [{"category": category}];
+        };
+
 
         var get_bar_chart = function (data) {
             $scope.chartType = "bar2d";
@@ -108,6 +141,21 @@ chartApp.controller('chartController', ['$scope', '$routeParams', 'Restangular',
                 "exportEnabled": "1"
             };
             map_line_data(data.data);
+            return true;
+        };
+
+         var get_time_graph = function (data) {
+            $scope.chartType = "zoomline";
+            $scope.dataSource.chart = {
+                "drawAnchors": false,
+                "labelStep": 6,
+                "slantLabels": true,
+                "showValues": "0",
+                "theme": "fint",
+                "caption": $scope.analytics_meta.type,
+                "exportEnabled": "1"
+            };
+            map_time_data(data.data);
             return true;
         };
 

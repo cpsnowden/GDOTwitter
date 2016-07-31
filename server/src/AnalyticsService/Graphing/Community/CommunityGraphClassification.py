@@ -48,9 +48,7 @@ class CommunityGraphClassification(CommunityGraph):
 
 
     @classmethod
-    def get(cls, analytics_meta):
-
-        gridfs, db_col, args, schema_id = cls.setup(analytics_meta)
+    def get(cls, analytics_meta, gridfs, db_col, args, schema_id):
 
         tweet_limit = args["tweetLimit"]
         start_date_co = parser.parse(args["startDateCutOff"])

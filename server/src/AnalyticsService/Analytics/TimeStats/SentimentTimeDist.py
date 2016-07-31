@@ -38,11 +38,10 @@ class SentimentTimeDistribution(Analytics):
     ####################################################################################################################
 
     @classmethod
-    def get(cls, analytics_meta):
+    def get(cls, analytics_meta, gridfs, db_col, args, schema_id):
 
         tb = Blobber(tokenizer=TweetPreprocessor(), analyzer=NaiveBayesAnalyzer())
 
-        gridfs, db_col, args, schema_id = cls.setup(analytics_meta)
 
         time_interval = args["timeInterval"]
 

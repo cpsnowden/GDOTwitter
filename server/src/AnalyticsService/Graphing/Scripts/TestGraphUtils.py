@@ -68,9 +68,9 @@ def createRandomGraph(nNodes, nEdges, path):
 
     nx.write_graphml(G, path)
 
-def create_graphs():
-    for i in xrange(2,8):
-        n_nodes = 10 ** i
+def create_graphs(_range):
+    for i in _range:
+        n_nodes = i
         n_edges = n_nodes * 2
 
         createRandomGraph(n_nodes, n_edges, str(n_nodes) + "_" + str(n_edges) + ".graphml")
@@ -81,17 +81,20 @@ def test_path(path, n = 1):
     for n in xrange(n):
         results.append(test_instance(path))
 
-    new = np.array([i[0] for i in results]).mean()
-    old = np.array([i[1] for i in results]).mean()
-    print "Results new:", new, "old:", old
+    new = [i[0] for i in results]
+    # old = [i[1] for i in results]
+    old = [i[1] for i in results]
+    print "Results new:", np.mean(new), "old:", np.mean(old)
     return new, old
 
 def test_instance(path):
     if random.random() <= 0.5:
         new = test_new(path)
-        old = test_old(path)
+        # old = test_old(path)
+        old = 0
     else:
-        old = test_old(path)
+        # old = test_old(path)
+        old = 0
         new = test_new(path)
 
     return new,old
@@ -113,19 +116,21 @@ def test_new(path):
     os.remove(out_path)
     return new
 
-def test(out = 8):
+def test(range):
     results = []
-    for i in xrange(2, out):
-        n_nodes = 10 ** i
-        n_edges = n_nodes * 2
+    import json
+    with open("test_results.dat","w") as f:
+        for i in range:
+            n_nodes = i
+            n_edges = n_nodes * 2
 
-        new, old = test_path(str(n_nodes) + "_" + str(n_edges) + ".graphml", 5)
-        results.append({"nodes": n_nodes, "edges": n_edges, "newT": new, "oldT": old})
-
-    return results
+            new, old = test_path(str(n_nodes) + "_" + str(n_edges) + ".graphml", 2)
+            results = {"nodes": n_nodes, "edges": n_edges, "newT": new, "oldT": old}
+            f.write(json.dumps(results )+ "\n")
+        return results
 
 # test_path("100_50.graphml",2)
-
-test(out = 7)
+# create_graphs(xrange(200000,1000000,100000))
+test(xrange(400000,1000000,100000))
 # create_graphs()
 # createRandomGraph(100,50,"100_50.graphml")

@@ -9,6 +9,7 @@ from nltk.corpus import wordnet as wn
 from nltk.tokenize import TweetTokenizer
 from sklearn import metrics
 from sklearn import svm
+from sklearn import cross_validation
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from textblob.base import BaseTokenizer
 from AnalyticsService.Graphing.Classification.TweetClassifier.TweetScore import TweetScore
@@ -115,21 +116,44 @@ class SVMClassifier(object):
 
         self.train(text, labels)
 
+
+    def cross_validate(self, path):
+
+        self._logger.info("Attempting to get training data from training file: " + path)
+        data = csv.reader(open(path, 'rb'), delimiter=',', quotechar='|')
+        labels = []
+        text = []
+        try:
+            for i, row in enumerate(data):
+                labels.append(row[0])
+                text.append(row[1])
+        except IndexError:
+            print i
+            exit()
+
+        label_numbers = [self.class_mapping[i] for i in labels]
+        training_data = self.cv.fit_transform(text)
+
+        scores = cross_validation.cross_val_score(self.clf, training_data, label_numbers, cv = 3)
+        print scores
+
+
+
     def test_from_csv(self, path, row_count = -1):
 
         data = csv.reader(open(path, 'rb'), delimiter=',', quotechar='|')
         true_labels = []
         predicted_labels = []
         for i, row in enumerate(data):
-            # if row[0] == "unknown":
-            #     continue
+            if row[0] == "unknown":
+                continue
             if 0 < row_count < i:
                 break
             truth = self.class_mapping[row[0]]
             score, fv = self.get(row[1])
             predicted = score.classification
-            if abs(score.score) < 0.5:
-                predicted = 2
+            # if abs(score.score) < 0.5:
+            #     predicted = 2
             predicted_labels.append(predicted)
             true_labels.append(truth)
             print score.score, score.classification, predicted, truth
@@ -142,7 +166,6 @@ class SVMClassifier(object):
                 print "================================================================"
 
         return metrics.classification_report(true_labels, predicted_labels, target_names=self.class_mapping.keys())
-
 
     def get_informative_features(self, n = 30):
 
@@ -182,20 +205,19 @@ if __name__ == '__main__':
     #         writer.writerow(row)
     # exit()
     import pprint
-    classifier = SVMClassifier(OrderedDict([("leave",0),("remain",1), ("unknown",2)]), False)
-    print classifier.class_mapping.keys()
+    classifier = SVMClassifier(OrderedDict([("leave",0),("remain",1)]),False)
+    #, ("unknown",2)]), False)
+    # print classifier.class_mapping.keys()
     # print classifier.tokenizer.tokenize("50,000 :),")
 
     classifier.train_from_csv("../TRAINING_DATA_OUT.csv", -1)
-
-
-
-
-    pprint.pprint(classifier.get_features())
+    # classifier.cross_validate("../TRAINING_DATA_OUT.csv")
+    #
+    # pprint.pprint(classifier.get_features())
     print classifier.get_informative_features()
-
-    # print classifier.test_from_csv("../../../labelling_text_BREXIT.dat", -1)
-    print classifier.test_from_csv("../TEST_DATA_OUT.csv", -1)
-
-
+    #
+    print classifier.test_from_csv("../../../labelling_text_BREXIT.dat", -1)
+    # print classifier.test_from_csv("../TEST_DATA_OUT.csv", -1)
+    #
+    #
 

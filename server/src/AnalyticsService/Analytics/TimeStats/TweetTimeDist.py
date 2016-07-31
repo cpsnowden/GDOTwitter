@@ -34,9 +34,7 @@ class TweetTimeDistribution(Analytics):
     ####################################################################################################################
 
     @classmethod
-    def get(cls, analytics_meta):
-
-        gridfs, db_col, args, schema_id = cls.setup(analytics_meta)
+    def get(cls, analytics_meta, gridfs, db_col, args, schema_id):
 
         time_interval = args["timeInterval"]
 

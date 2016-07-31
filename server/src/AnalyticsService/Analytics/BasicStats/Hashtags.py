@@ -21,9 +21,8 @@ class Hashtags(Analytics):
     ####################################################################################################################
 
     @classmethod
-    def get(cls, analytics_meta):
+    def get(cls, analytics_meta, gridfs, db_col, args, schema_id):
 
-        gridfs, db_col, args, schema_id = cls.setup(analytics_meta)
 
         hashtag_limit = args["topHashtagLimit"]
 

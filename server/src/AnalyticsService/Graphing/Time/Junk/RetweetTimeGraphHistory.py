@@ -51,9 +51,7 @@ class RetweetTimeGraphHistory(TimeGraph):
     exponent = 2
 
     @classmethod
-    def get(cls, analytics_meta):
-
-        gridfs, db_col, args, schema_id = cls.setup(analytics_meta)
+    def get(cls, analytics_meta, gridfs, db_col, args, schema_id):
 
         time_interval = args["timeInterval"]
         tweet_limit = args["tweetLimit"]

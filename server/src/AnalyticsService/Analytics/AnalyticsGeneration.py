@@ -18,13 +18,18 @@ from AnalyticsService.Analytics.TimeStats.SentimentTimeDist import SentimentTime
 from AnalyticsService.Analytics.TimeStats.HashtagSentimentTimeDistribution import HashtagSentimentTimeDistribution
 from AnalyticsService.Analytics.TimeStats.TimeZoneTimeDist import TimeZoneTimeDist
 
-
+from AnalyticsService.Analytics.TimeStats.TD_Hashtags import TD_Hashtags
+from AnalyticsService.Analytics.TimeStats.TD_TotalTweets import TD_TotalTweets
+from AnalyticsService.Analytics.TimeStats.TD_TimeZone import TD_TimeZone
 class AnalyticsGeneration(AnalysisGeneration):
     _logger = logging.getLogger(__name__)
 
     @classmethod
     def get_options(cls):
-        return [Languages,
+        return [TD_TotalTweets,
+                TD_Hashtags,
+                TD_TimeZone,
+                Languages,
                 Original,
                 Hashtags,
                 TimeZone,

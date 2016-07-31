@@ -1,7 +1,8 @@
 import logging
+from api.Objects.MetaData import DatasetMeta
+from Database.Persistence import DatabaseManager
 
-
-class AnalysisGeneration(object):
+class   AnalysisGeneration(object):
     _logger = logging.getLogger(__name__)
 
     @classmethod
@@ -12,8 +13,8 @@ class AnalysisGeneration(object):
                                           lambda x: cls._logger.error("Unknown type specified %s", analytics_meta))
 
         cls._logger.info("Attempting construction of type %s", graph_type)
-
-        return func(analytics_meta)
+        gridfs, db_col, args, schema_id = cls.setup(analytics_meta)
+        return func(analytics_meta, gridfs, db_col, args, schema_id)
 
     @classmethod
     def get_option_details(cls):
@@ -36,3 +37,15 @@ class AnalysisGeneration(object):
     @classmethod
     def get_classification(cls):
         return "Unspecified"
+
+    @classmethod
+    def setup(cls, analytics_meta):
+        dataset_meta = DatasetMeta.objects.get(id=analytics_meta.dataset_id)
+        dbm = DatabaseManager()
+        db_col = dbm.data_db.get_collection(dataset_meta.db_col)
+
+        args = analytics_meta.specialised_args
+
+        cls._logger.info("Found arguments %s", args)
+
+        return dbm.gridfs, db_col, args, dataset_meta.schema
