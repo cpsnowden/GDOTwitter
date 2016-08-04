@@ -1,10 +1,11 @@
 import json
 import logging
 
-import Util
+from AnalyticsService import Util
 from AnalyticsService.Analytics.Analytics import Analytics
-from AnalyticsService.TwitterObj import Status
 from AnalyticsService.Analytics.BasicStats.Hashtags import Hashtags
+from AnalyticsService.TwitterObj import Status
+
 
 class TD_Hashtags(Analytics):
     _logger = logging.getLogger(__name__)
@@ -62,10 +63,14 @@ class TD_Hashtags(Analytics):
             for x in l["data"]:
                 x_values.add(x["dt"])
 
-        result = {"details" : {"chartType": "time"},
-                  "data": {"categories": sorted(x_values),
-                           "values": result_lst}}
+        result = {"details": {"chartType": "msline",
+                            "chartProperties":{"yAxisName":"Tweets per " + time_interval.lower(),
+                                             "xAxisName":"Date (UTC)",
+                                             "caption":"Top " + str(limit) + " hashtag time interval",
+                                             "labelStep": int(len(x_values) / 20.0)}},
+                  "data": {"categories": sorted(x_values), "values": result_lst}}
 
+        cls.create_chart(gridfs, analytics_meta, result)
         cls.export_json(analytics_meta, json.dumps(result, default = Util.date_encoder), gridfs)
 
         return True

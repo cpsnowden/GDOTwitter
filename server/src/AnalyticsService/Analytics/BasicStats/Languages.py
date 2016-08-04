@@ -33,8 +33,11 @@ class Languages(Analytics):
 
         languages = db_col.aggregate(query, allowDiskUse=True)
 
-        data = {"details": {"chartType":"pie"}, "data":list(languages)}
+        result = {"details": {"chartType": "doughnut2d",
+                              "chartProperties": {"defaultCenterLabel": "Languages"}},
+                  "data": list(languages)}
 
-        cls.export_json(analytics_meta, json.dumps(data), gridfs)
+        cls.create_chart(gridfs,analytics_meta, result)
+        cls.export_json(analytics_meta, json.dumps(result), gridfs)
 
         return True

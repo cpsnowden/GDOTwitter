@@ -44,8 +44,11 @@ class TimeZone(Analytics):
             elif c["_id"] == 0:
                 c["_id"] = "UTC"
 
-        data = {"details": {"chartType":"pie"}, "data":utc_offsets}
+        result = {"details": {"chartType": "doughnut2d",
+                              "chartProperties": {"defaultCenterLabel": "Time Zones"}},
+                  "data": utc_offsets}
 
-        cls.export_json(analytics_meta, json.dumps(data), gridfs)
+        cls.create_chart(gridfs, analytics_meta, result)
+        cls.export_json(analytics_meta, json.dumps(result), gridfs)
 
         return True

@@ -1,7 +1,7 @@
 import json
 import logging
 
-import Util
+from AnalyticsService import Util
 from AnalyticsService.Analytics.Analytics import Analytics
 from AnalyticsService.TwitterObj import Status, User
 
@@ -13,8 +13,7 @@ class TD_TimeZone(Analytics):
 
     __type_name = "TZ Time Distribution"
     __arguments = [{"name": "timeInterval", "prettyName": "Time interval", "type": "enum", "options": _options,
-                    "default": "Hour"},
-                   {"name": "hashtagLimit", "prettyName": "Number of top hashtags", "type": "integer", "default": 10}]
+                    "default": "Hour"}]
 
     @classmethod
     def get_args(cls):
@@ -30,7 +29,6 @@ class TD_TimeZone(Analytics):
     def get(cls, analytics_meta, gridfs, db_col, args, schema_id):
 
         time_interval = args["timeInterval"]
-        limit = args["hashtagLimit"]
 
         if time_interval not in cls._options:
             cls._logger.exception("Wrong time quantum given")
@@ -66,8 +64,14 @@ class TD_TimeZone(Analytics):
             elif series_name == 0:
                 l["_id"] = "UTC"
 
-        result = {"details" : {"chartType": "time"},
+        result = {"details": {"chartType": "msline",
+                              "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
+                                                  "xAxisName": "Date (UTC)",
+                                                  "caption": "Time zone tweet rate interval",
+                                                  "labelStep": min(1,int(len(x_values) / 20.0))}},
                   "data": {"categories": sorted(x_values), "values": result_lst}}
+
+        cls.create_chart(gridfs, analytics_meta, result)
 
         cls.export_json(analytics_meta, json.dumps(result, default = Util.date_encoder), gridfs)
 

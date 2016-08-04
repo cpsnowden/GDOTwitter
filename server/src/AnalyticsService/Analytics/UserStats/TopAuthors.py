@@ -28,8 +28,14 @@ class TopAuthors(Analytics):
         original_author_limit = args["topOriginalAuthorLimit"]
 
         data = cls.get_top_authors(schema_id, original_author_limit, db_col)
-        result = {"details": {"chartType": "bar"}, "data": data}
 
+        result = {"details": {"chartType": "bar2d",
+                              "chartProperties": {"yAxisName": "Number of Tweets",
+                                                  "xAxisName": "Author",
+                                                  "caption": "Top " + str(original_author_limit) + " authors"}},
+                  "data": data}
+
+        cls.create_chart(gridfs, analytics_meta, result)
         cls.export_json(analytics_meta, json.dumps(result), gridfs)
 
         return True

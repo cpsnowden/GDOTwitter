@@ -29,9 +29,13 @@ class Original(Analytics):
         retweeted = db_col.find({Status.SCHEMA_MAP[schema_id]["retweeted_status"]: {"$exists": False}}).count()
 
         distribution = [{"_id":"retweets","count": retweeted},{"_id":"non_retweets","count": total - retweeted}]
-        data = {"details": {"chartType": "pie"}, "data": distribution}
 
 
-        cls.export_json(analytics_meta, json.dumps(data), gridfs)
+        result = {"details": {"chartType": "doughnut2d",
+                              "chartProperties": {"defaultCenterLabel": "Original Tweets"}},
+                  "data": distribution}
+
+        cls.create_chart(gridfs, analytics_meta, result)
+        cls.export_json(analytics_meta, json.dumps(result), gridfs)
 
         return True

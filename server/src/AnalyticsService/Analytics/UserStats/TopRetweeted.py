@@ -28,7 +28,15 @@ class TopRetweeted(Analytics):
         retweeted_limit = args["topRetweetedLimit"]
 
         data = cls.get_top_retweeted(schema_id, retweeted_limit, db_col)
-        result = {"details": {"chartType": "bar"}, "data": data}
+
+        result = {"details": {"chartType": "bar2d",
+                              "chartProperties": {"yAxisName": "Number of retweeted statuses",
+                                                  "xAxisName": "User",
+                                                  "caption": "Top " + str(retweeted_limit) + " retweeting users"}},
+                  "data": data}
+
+        cls.create_chart(gridfs, analytics_meta, result)
+
         cls.export_json(analytics_meta, json.dumps(result), gridfs)
 
         return True

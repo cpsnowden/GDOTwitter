@@ -1,9 +1,10 @@
 from string import Template
 import os
 from collections import OrderedDict
-
+import AnalyticsService.Util
+import logging
 DIR_NAME = os.path.dirname(__file__)
-
+logger = logging.getLogger(__name__)
 import json
 #
 # dataSource = {
@@ -2158,8 +2159,13 @@ def GetHTML(dataSource, type, width=1920, height=1080):
         if property not in dataSource["chart"]:
             dataSource["chart"][property] = default_chart_properties[property]
 
+    logger.info("Using chart format: " + str(dataSource["chart"]))
+
     s = Template(open(os.path.join(DIR_NAME, "Templates", "Chart.html")).read())
-    return s.safe_substitute({'dataSource': json.dumps(dataSource), "height": height, "width": width, "type": type})
+    return s.safe_substitute({'dataSource': json.dumps(dataSource, default=AnalyticsService.Util.date_encoder),
+                              "height": height,
+                              "width": width,
+                              "type": type})
 
 
 def CreateChart(data):

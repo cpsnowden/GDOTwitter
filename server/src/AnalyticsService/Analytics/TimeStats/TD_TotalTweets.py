@@ -1,7 +1,7 @@
 import json
 import logging
 
-import Util
+from AnalyticsService import Util
 from AnalyticsService.Analytics.Analytics import Analytics
 from AnalyticsService.TwitterObj import Status
 
@@ -47,10 +47,15 @@ class TD_TotalTweets(Analytics):
         for l in result_lst:
             x_values.add(l["dt"])
 
-        result = {"details" : {"chartType": "time"},
-                  "data": {"categories": sorted(x_values),
-                           "values":[{"_id": "ALL",
-                                      "data":result_lst}]}}
+        result = {"details": {"chartType": "msline",
+                              "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
+                                                  "xAxisName": "Date (UTC)",
+                                                  "caption": "Tweet Rate over Time",
+                                                  "labelStep": min(1,int(len(x_values) / 20.0))}},
+                "data": {"categories": sorted(x_values),"values":[{"_id": "ALL","data":result_lst}]}}
+
+
+        cls.create_chart(gridfs, analytics_meta, result)
 
         cls.export_json(analytics_meta, json.dumps(result, default = Util.date_encoder), gridfs)
 

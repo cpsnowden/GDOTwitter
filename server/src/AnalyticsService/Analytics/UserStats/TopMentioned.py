@@ -27,7 +27,14 @@ class TopMentioned(Analytics):
 
         mention_limit = args["topMentionedLimit"]
         data = cls.get_top_mentioned(schema_id, mention_limit, db_col)
-        result = {"details": {"chartType": "bar"}, "data": data}
+        result = {"details": {"chartType": "bar2d",
+                              "chartProperties": {"yAxisName": "Number of Times Mentioned",
+                                                  "xAxisName": "User",
+                                                  "caption": "Top " + str(mention_limit) + " hashtags"}},
+                  "data": data}
+
+        cls.create_chart(gridfs, analytics_meta, result)
+
         cls.export_json(analytics_meta, json.dumps(result), gridfs)
 
         return True
