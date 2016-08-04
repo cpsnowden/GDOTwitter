@@ -2,7 +2,7 @@ from Database.Persistence import DatabaseManager
 from api.Objects.MetaData import DatasetMeta
 import logging
 from datetime import datetime
-
+from AnalyticsService.Charting.Charting import CreateChart
 class AnalysisTemplate(object):
     _logger = logging.getLogger(__name__)
 
@@ -15,10 +15,16 @@ class AnalysisTemplate(object):
     def get_args(cls):
         return cls.__arguments
 
+
+
     @classmethod
     def export_json(cls, analytics_meta, json, gridfs):
-        cls.write_json(json, analytics_meta.db_ref, gridfs)
-        cls._logger.info("Saved analytics %s", analytics_meta.db_ref)
+
+        analytics_meta.raw_id = "RAW_" + analytics_meta.db_ref
+        analytics_meta.save()
+
+        cls.write_json(json, analytics_meta.raw_id, gridfs)
+        cls._logger.info("Saved analytics %s", analytics_meta.raw_id)
         analytics_meta.status = "SAVED"
         analytics_meta.end_time = datetime.now()
         analytics_meta.save()
@@ -28,6 +34,22 @@ class AnalysisTemplate(object):
         with gridfs.new_file(filename=name, content_type="text/json") as f:
             f.write(data)
 
+
+    @classmethod
+    def create_chart(cls, gridfs, analytics_meta, data):
+
+        analytics_meta.status = "MAKING CHART"
+        analytics_meta.save()
+
+        analytics_meta.chart_id = "CHART_" + analytics_meta.db_ref
+
+        html = CreateChart(data)
+
+        with gridfs.new_file(filename=analytics_meta.chart_id, content_type="text/html") as f:
+            f.write(html)
+
+        analytics_meta.status = "CHART SAVED"
+        analytics_meta.save()
 
     @classmethod
     def join_keys(cls, *keys):

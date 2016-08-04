@@ -3,15 +3,14 @@
 var myApp = angular.module('analytics', ['restangular','ngResource', 'ui.bootstrap','ngRoute'])
 
     .config(function(RestangularProvider) {
-        //RestangularProvider.setFullResponse(true);
-    RestangularProvider.setBaseUrl('/API');
-    RestangularProvider.setDefaultHeaders({Authorization:  "Basic Y3BzMTVfYWRtaW46c2VjcmV0"});
-
+        RestangularProvider.setBaseUrl('/API');
+        RestangularProvider.setFullResponse(true);
+        RestangularProvider.setDefaultHeaders({Authorization:  "Basic Y3BzMTVfYWRtaW46c2VjcmV0"});
     })
 
     .controller('AnalyticsCtrl',function($scope, $window, $q, $interval, Restangular,uibDateParser, $location) {
 
-    $scope.datasets = Restangular.all('dataset').getList({status:"READY_FOR_ANALYTICS"}).$object
+    $scope.datasets = Restangular.all('dataset').getList({status:"READY_FOR_ANALYTICS"}).$object;
 
     $scope.sortType = 'endDate';
     $scope.sortReverse = false;
@@ -35,8 +34,8 @@ var myApp = angular.module('analytics', ['restangular','ngResource', 'ui.bootstr
 
     $scope.chart = function(a){
 
-        // $window.open('http://localhost:8080/#/charts/' + a.datasetId + "/" + a.id, '_blank');
-        var url = 'http://' + $window.location.host + '#/charts/' + a.datasetId + "/" + a.id
+        // $window.open('http://localhost:8080/#/charts/' + a.dataset_id + "/" + a.id, '_blank');
+        var url = 'http://' + $window.location.host + '#/charts/' + a.dataset_id + "/" + a.id;
         $window.open(url, '_blank');
     }
 
@@ -83,7 +82,7 @@ var myApp = angular.module('analytics', ['restangular','ngResource', 'ui.bootstr
 
         console.log(order);
         Restangular.one("dataset",order.id).post("analytics",order);
-        $scope.analyticsForm.dataset.analytics = $scope.getAnalytics($scope.analyticsForm.dataset)
+        $scope.analyticsForm.dataset.analytics = $scope.getAnalytics($scope.analyticsForm.dataset);
         $scope.cancel()
 
     };
@@ -91,7 +90,7 @@ var myApp = angular.module('analytics', ['restangular','ngResource', 'ui.bootstr
     $scope.get_options = function() {
         Restangular.all('analytics_options').getList().then(
             function(options){
-                $scope.analyticsForm.options = Restangular.stripRestangular(options)
+                $scope.analyticsForm.options = Restangular.stripRestangular(options.data)
             }
         )
     };
@@ -120,14 +119,14 @@ var myApp = angular.module('analytics', ['restangular','ngResource', 'ui.bootstr
 
     $scope.selectType = function() {
 
-        type = $scope.analyticsForm.order.type
-        types = $scope.analyticsForm.subTypes
+        type = $scope.analyticsForm.order.type;
+        types = $scope.analyticsForm.subTypes;
         for (var i = 0; i < types.length; i++) {
-            option = types[i]
+            option = types[i];
             if (option.type == type) {
-                $scope.analyticsForm.specialised_args = option.args
+                $scope.analyticsForm.specialised_args = option.args;
                 for(var j=0;j < option.args.length; j++) {
-                    setting = option.args[j]
+                    setting = option.args[j];
                     if(setting.type == "datetime") {
                         $scope.analyticsForm.order.specialised_args[setting.name] = new Date(
                             $scope.analyticsForm.dataset[setting.default_dataset_field]
@@ -143,48 +142,40 @@ var myApp = angular.module('analytics', ['restangular','ngResource', 'ui.bootstr
                 }
             }
         }
-    }
+    };
 
     $scope.download = function(analytics) {
 
-        // extensions = {
-        //     "Mention_Time_Graph":{"ext":".graphml","format":"text/xml"},
-        //     "Community_Graph_CL":{"ext":".graphml","format":"text/xml"},
-        //     "HashtagGraphRetweet":{"ext":".graphml","format":"text/xml"},
-        //     "HashtagGraphRetweetv2":{"ext":".graphml","format":"text/xml"},
-        //     "HashtagGraphRetweetNEW":{"ext":".graphml","format":"text/xml"},
-        //     "HashtagGraph":{"ext":".graphml","format":"text/xml"},
-        //     "Retweet_Time_Graph":{"ext":".graphml","format":"text/xml"},
-        //     "Retweet_Community_Graph":{"ext":".graphml","format":"text/xml"},
-        //     "Time_Distribution":{"ext":".json","format":"application/json"},
-        //     "Top_Users":{"ext":".json","format":"application/json"},
-        //     "Basic_Stats":{"ext":".json","format":"application/json"}
-        // }
-                extensions = {
-            "Graph":{"ext":".graphml","format":"text/xml"},
-            "Analytics":{"ext":".json","format":"application/json"}
-        }
+        Restangular.one("dataset",analytics.dataset_id).one("analytics",analytics.id).customGET("data").then(function(res) {
 
-        Restangular.one("dataset",analytics.datasetId).one("analytics",analytics.id).customGET("data").then(function(res) {
+            console.log(res);
+            options = Restangular.stripRestangular(res.data);
+            console.log(options);
 
-            data = res;
+            angular.forEach(options, function (url, key) {
+                if(url != null) {
+                    console.log("Requesting " + key + " " + url);
+                    Restangular.oneUrl("temp", url).get().then(function (result) {
+                        console.log(result)
+                        console.log(result.headers("Content-Disposition"))
+                        var fname = result.headers("Content-Disposition").split(';')[1].trim().split("=")[1].trim();
+                        console.log(fname)
+                        data = result.data
+                        if(result.headers("mimetype") == "application/json"){
+                            data = Restangular.stripRestangular(data)
+                            data = JSON.stringify(data)
+                        }
+                        console.log("Saving " + fname)
+                        saveAs(new Blob([data], {type: result.headers("mimetype")}), fname);
 
-            format = extensions[analytics.classification]["format"];
-
-            if(format == "application/json") {
-                data = Restangular.stripRestangular(data);
-                data = JSON.stringify(data)
-            }
-
-            var file = new Blob([data],{type:format});
-
-            saveAs(file,analytics.db_ref + extensions[analytics.classification]["ext"]);
+                    })
+                }
+            });
         })
-
     };
 
     $scope.delete = function(analytics,dataset) {
-        Restangular.one("dataset",analytics.datasetId).one('analytics',analytics.id).remove().then(function(){
+        Restangular.one("dataset",analytics.dataset_id).one('analytics',analytics.id).remove().then(function(){
             dataset.analytics = $scope.getAnalytics(dataset)
         });
     };

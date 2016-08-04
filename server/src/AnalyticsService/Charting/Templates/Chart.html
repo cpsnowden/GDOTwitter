@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>My first chart using FusionCharts Suite XT</title>
+<script type="text/javascript" src="http://static.fusioncharts.com/code/latest/fusioncharts.js"></script>
+<script type="text/javascript" src="http://static.fusioncharts.com/code/latest/themes/fusioncharts.theme.fint.js?cacheBust=56"></script>
+<script type="text/javascript">
+  FusionCharts.ready(function(){
+    var fusioncharts = new FusionCharts({
+    type: "$type",
+    renderAt: 'chart-container',
+    width: "$width",
+    height: "$height",
+    dataFormat: 'json',
+    dataSource: $dataSource,
+}
+);
+    fusioncharts.render();
+});
+</script>
+</head>
+<body bgcolor="#000000">
+  <div id="chart-container">FusionCharts XT will load here!</div>
+</body>
+</html>

@@ -27,7 +27,13 @@ class Hashtags(Analytics):
         hashtag_limit = args["topHashtagLimit"]
 
         d = cls.get_top_hashtags(schema_id, hashtag_limit, db_col)
-        result = {"details": {"chartType": "bar"}, "data": d}
+        result = {"details": {"chartType":"bar2d",
+                              "chartProperties": {"yAxisName": "Number of Occurences",
+                                                  "xAxisName":"Hashtag",
+                                                  "caption":"Top " + str(hashtag_limit) + " hashtags"}},
+                  "data": d}
+
+        cls.create_chart(gridfs, analytics_meta, result)
         cls.export_json(analytics_meta, json.dumps(result), gridfs)
 
         return True

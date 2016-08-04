@@ -1,8 +1,7 @@
 import datetime
 
-from mongoengine import connect, Document, StringField, ListField, DateTimeField, LongField, DictField
 from flask_restful import fields
-import json
+from mongoengine import connect, Document, StringField, ListField, DateTimeField, LongField, DictField
 
 connect("Meta", alias="meta_data_db")
 
@@ -32,11 +31,13 @@ class AnalyticsMeta(Document):
     id = StringField(primary_key=True)
     start_time = DateTimeField(required=True, default=datetime.datetime.now())
     end_time = DateTimeField()
-    meta = {"db_alias": "meta_data_db"}
     specialised_args = DictField()
-
+    chart_id = StringField()
+    graph_id = StringField()
+    raw_id = StringField()
+    meta = {"db_alias": "meta_data_db"}
 
 
 class DictionaryWrap(fields.Raw):
     def format(self, value):
-        return json.dumps(value)
+        return value

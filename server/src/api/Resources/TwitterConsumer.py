@@ -2,16 +2,16 @@ from api.Auth import Resource
 from flask_restful import marshal_with, fields, abort
 
 twitter_consumer_meta = {
-    "id": fields.Integer(attribute="consumer_id"),
+    "id": fields.Integer(attribute="id"),
     "pid": fields.Integer,
     "alive": fields.Boolean,
-    "url": fields.Url("consumer")
+    "uri_base": fields.Url("twitterConsumer")
 }
 
 
 class TwitterConsumerMeta(object):
-    def __init__(self, consumer_id, pid, alive):
-        self.consumer_id = consumer_id
+    def __init__(self, id, pid, alive):
+        self.id = id
         self.alive = alive
         self.pid = pid
 
@@ -42,13 +42,13 @@ class TwitterConsumer(Resource):
         self.twitter_service = kwargs["twitter_service"]
 
     @marshal_with(twitter_consumer_meta)
-    def get(self, consumer_id):
+    def get(self, id):
 
         try:
-            _, c = self.twitter_service.router.routers[int(consumer_id)]
-            return TwitterConsumerMeta(consumer_id, c.ident, c.is_alive())
+            _, c = self.twitter_service.router.routers[id]
+            return TwitterConsumerMeta(id, c.ident, c.is_alive())
         except KeyError:
-            abort(404, message="Consumer {} does not exist".format(consumer_id))
+            abort(404, message="Consumer {} does not exist".format(id))
 
     def delete(self, consumer_id):
 

@@ -1,7 +1,7 @@
 from api.Auth import Resource
 from api.Objects.MetaData import DatasetMeta
 from api.Utils import MetaID
-from flask_restful import reqparse, marshal_with, fields, abort
+from flask_restful import reqparse, marshal_with, fields, abort, marshal
 from flask import jsonify
 from mongoengine.queryset import DoesNotExist
 import logging
@@ -16,13 +16,15 @@ dataset_meta_fields = {
     "status": fields.String,
     "db_col": fields.String,
     "collection_size": fields.Integer(attribute="collection_size"),
-    "schema": fields.String
+    "schema": fields.String,
+    "uri_base": fields.Url("dataSet"),
+    "uri_status": fields.Url("dataSetStatus"),
+    "uri_analytics": fields.Url("analyticsList"),
 }
 
 status_meta_fields = {
     "status": fields.String
 }
-
 
 class DataServiceR(Resource):
     logger = logging.getLogger(__name__)
@@ -36,29 +38,28 @@ class DataServiceR(Resource):
         return jsonify(status)
 
 
-class Dataset(Resource):
+class DataSet(Resource):
     logger = logging.getLogger(__name__)
 
     def __init__(self, **kwargs):
         self.data_service = kwargs["data_service"]
 
     @marshal_with(dataset_meta_fields)
-    def get(self, dataset_id):
+    def get(self, id):
 
         try:
-            return DatasetMeta.objects.get(id=dataset_id)
+            return DatasetMeta.objects.get(id=id)._data
         except DoesNotExist:
-            abort(404, message="Dataset {} does not exist".format(dataset_id))
+            abort(404, message="Dataset {} does not exist".format(id))
 
-    def delete(self, dataset_id):
+    def delete(self, id):
 
         try:
-            found = DatasetMeta.objects.get(id=dataset_id)
+            found = DatasetMeta.objects.get(id=id)
             self.data_service.delete(found)
             found.delete()
         except DoesNotExist:
-            abort(404, message="Dataset {} does not exist".format(dataset_id))
-
+            abort(404, message="Dataset {} does not exist".format(id))
         return "", 204
 
 
@@ -115,9 +116,9 @@ class DatasetList(Resource):
                 statuses.append("STOPPED")
                 statuses.append("FINISHED")
 
-            return list(DatasetMeta.objects(status__in=statuses))
+            return [i._data for i in DatasetMeta.objects(status__in=statuses)]
         else:
-            return list(DatasetMeta.objects)
+            return [i._data for  i in DatasetMeta.objects]
 
     @marshal_with(dataset_meta_fields)
     def post(self):
