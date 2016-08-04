@@ -35,8 +35,9 @@ var myApp = angular.module('analytics', ['restangular','ngResource', 'ui.bootstr
     $scope.chart = function(a){
 
         // $window.open('http://localhost:8080/#/charts/' + a.dataset_id + "/" + a.id, '_blank');
-        var url = 'http://' + $window.location.host + '#/charts/' + a.dataset_id + "/" + a.id;
+        var url = 'http://' + $window.location.host + '#/chartsIFrame/' + a.dataset_id + "/" + a.id;
         $window.open(url, '_blank');
+
     }
 
     $scope.refreshTable = function(){

@@ -1,4 +1,4 @@
-var twitterGDOAccessApp = angular.module('twitterGDOAccess',['ngRoute','dataFilter','analytics','consumers','welcome','chartApp']);
+var twitterGDOAccessApp = angular.module('twitterGDOAccess',['ngRoute','dataFilter','analytics','consumers','welcome','chartApp','chartIFrameApp']);
 
     twitterGDOAccessApp.config(function($routeProvider, RestangularProvider) {
         $routeProvider
@@ -22,6 +22,11 @@ var twitterGDOAccessApp = angular.module('twitterGDOAccess',['ngRoute','dataFilt
             .when('/charts/:dsid/:id/:fs?', {
             templateUrl:'partials/Charts.html',
                 controller:'chartController'
+            })
+
+            .when('/chartsIFrame/:dsid/:id/:fs?', {
+            templateUrl:'partials/ChartIFrame.html',
+                controller:'chartIFrameController'
             })
 
             .otherwise({

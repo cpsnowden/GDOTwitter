@@ -2117,10 +2117,10 @@ def CreateTimeDate(chartData):
 
 def CreatePieChart(chartData):
     plot_data = [{"label": i["_id"], "value": i["count"]} for i in chartData["data"]]
-    chartData["details"]["startingAngle"] = "310"
-    chartData["details"]["decimals"] = "0"
-    chartData["details"]["showLegend"] = "1"
-    chartData["details"]["labelFontColor"] = "#FFFFFF"
+    chartData["details"]["chartProperties"]["startingAngle"] = "310"
+    chartData["details"]["chartProperties"]["decimals"] = "0"
+    chartData["details"]["chartProperties"]["showLegend"] = "1"
+    chartData["details"]["chartProperties"]["labelFontColor"] = "#FFFFFF"
     chartData["details"]["chartProperties"]["labelFontSize"] = "20"
     chartData["details"]["chartProperties"]["centerLabelColor"] = "#FFFFFF"
     chartData["details"]["chartProperties"]["centerLabelFontSize"] = "30"
@@ -2132,7 +2132,7 @@ def CreateRankingChart(chartData):
     return GetHTML({"chart": chartData["details"]["chartProperties"], "data": plot_data}, "bar2d")
 
 
-def GetHTML(dataSource, type, width=1920, height=1080):
+def GetHTML(dataSource, type, width="100%", height="100%"):
     default_chart_properties = {
         "bgColor": "#000000,#000000",
         "canvasBgAlpha": "0",
@@ -2176,15 +2176,6 @@ def CreateChart(data):
     }
     return options[data["details"]["chartType"]](data)
 
-#
-# with open("out.html", "w") as f:
-# #     f.write(CreateChart(d))
-#
-# import codecs
-# with codecs.open("out.dat","w",encoding="utf-8") as f:
-#     f.write("u'input'"
-    #
-    # )
 if __name__ == "__main__":
 
     from AnalyticsService.TwitterObj import Status
