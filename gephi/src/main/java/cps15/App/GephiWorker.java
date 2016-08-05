@@ -4,7 +4,6 @@ import cps15.App.LayoutAlg.LayoutArgs;
 import cps15.App.LayoutAlg.Layouts;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
-import org.gephi.graph.api.Node;
 import org.gephi.graph.api.UndirectedGraph;
 import org.gephi.io.exporter.api.ExportController;
 import org.gephi.io.exporter.spi.CharacterExporter;
