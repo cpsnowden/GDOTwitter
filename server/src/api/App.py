@@ -1,3 +1,5 @@
+from logging.handlers import RotatingFileHandler
+
 import flask_restful
 import yaml
 from DataService.DataService import DataService
@@ -9,6 +11,14 @@ from api.Resources.TwitterConsumer import TwitterConsumer, TwitterConsumerList
 from flask import Flask
 
 logging.basicConfig(level=logging.INFO, filename='api.log')
+
+my_handler = RotatingFileHandler('server.log', mode='a', maxBytes=5 * 1024 * 1024,
+                                 backupCount=2, encoding=None, delay=0)
+log_formatter = logging.Formatter('%(asctime)s %(levelname)s %(funcName)s(%(lineno)d) %(message)s')
+my_handler.setFormatter(log_formatter)
+my_handler.setLevel(logging.INFO)
+logging.getLogger("root").addHandler(my_handler)
+
 app = Flask(__name__)
 api = flask_restful.Api(app, prefix="/API")
 
