@@ -1,10 +1,20 @@
 import datetime
-
+import yaml
 from flask_restful import fields
 from mongoengine import connect, Document, StringField, ListField, DateTimeField, LongField, DictField
 
-connect("Meta", alias="meta_data_db")
 
+with open("config.yml", 'r') as config_file:
+    cfg = yaml.load(config_file)
+mongo_settings = cfg["mongo"]
+
+connect("Meta",
+        alias="meta_data_db",
+        host = mongo_settings["host"],
+        port = mongo_settings["port"],
+        username=mongo_settings["username"],
+        password=mongo_settings["password"],
+        authentication_source="admin")
 
 class DatasetMeta(Document):
     description = StringField(required=True)
@@ -16,7 +26,7 @@ class DatasetMeta(Document):
     start_time = DateTimeField(required=True, default=datetime.datetime.now())
     end_time = DateTimeField()
     collection_size = LongField(default=0)
-    schema = StringField(default="RAW", choices=["RAW","T4J"])
+    schema = StringField(default="RAW", choices=["RAW", "T4J"])
 
     meta = {"db_alias": "meta_data_db"}
 

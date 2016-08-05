@@ -1,6 +1,6 @@
 package cps15.App;
 
-import com.mongodb.MongoClient;
+import com.mongodb.*;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
@@ -11,7 +11,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,22 +28,58 @@ public class App {
     private static final Logger logger = Logger.getLogger(App.class.getName());
     private static final String MONGO_HOST = "";
     private static final String MONGO_DB = "FILE_DATA";
+    private static final String DEFAULT_CONFIG_FILE = "config.properties";
 
     private JSONParser jsonParser;
     private GridFS gridFS;
     private RabbitMQWrapper rabbitMQWrapper;
     private boolean healthy = true;
 
+    private static String userName;
+    private static String password;
+    private static String host;
+    private static int port;
+    private static String authDB;
+
     public static void main(String[] args){
+
+        Properties prop = new Properties();
+        InputStream input = null;
+        String configFile = DEFAULT_CONFIG_FILE;
+
+        if(args.length > 0) {
+            configFile = args[0];
+        }
+        logger.info("Using config file: " + configFile);
+
+        try{
+            input = new FileInputStream(configFile);
+            prop.load(input);
+            userName = prop.getProperty("username");
+            password = prop.getProperty("password");
+            host = prop.getProperty("host", "localhost");
+            authDB = prop.getProperty("authDB", "admin");
+            port = Integer.parseInt(prop.getProperty("port", "27017"));
+            logger.info("Username: " + userName + ",host: " + host + ",authDB: " + authDB + ",port: " + port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(input!= null) {
+                try{
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+
+                logger.severe("Could not load mongo username and password");
+            }
+        }
 
         App gephi_worker = null;
         try {
-            gephi_worker = new App();
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.log(Level.SEVERE, "Exception", e);
-            return;
-        } catch (TimeoutException e) {
+            gephi_worker = new App(host, port,userName, password, authDB);
+        } catch (IOException | TimeoutException e) {
             e.printStackTrace();
             logger.log(Level.SEVERE, "Exception", e);
             return;
@@ -53,10 +94,25 @@ public class App {
 
     }
 
-    public App() throws IOException, TimeoutException {
+    public App(String userName, String password) throws IOException, TimeoutException {
+        this("localhost",27017, userName, password, "admin");
+    }
+
+    public App(String host, int port, String userName, String password, String authDB) throws IOException, TimeoutException {
 
         jsonParser = new JSONParser();
-        gridFS = new GridFS(new MongoClient().getDB(MONGO_DB));
+        MongoCredential credential = MongoCredential.createCredential(userName, authDB, password.toCharArray());
+        DB db = new MongoClient(new ServerAddress(host, port), Arrays.asList(credential)).getDB(MONGO_DB);
+
+        try {
+            db.command("ping");
+        } catch (MongoTimeoutException e) {
+            logger.severe("Could not ping the mongo host");
+            throw new MongoTimeoutException("!!");
+        }
+        logger.info("Managed to ping the host");
+
+        gridFS = new GridFS(db);
         rabbitMQWrapper = new RabbitMQWrapper();
 
     }

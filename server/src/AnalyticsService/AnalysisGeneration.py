@@ -1,6 +1,11 @@
 import logging
 from api.Objects.MetaData import DatasetMeta
 from Database.Persistence import DatabaseManager
+import yaml
+
+with open("config.yml", 'r') as config_file:
+    cfg = yaml.load(config_file)
+mongo_settings = cfg["mongo"]
 
 class   AnalysisGeneration(object):
     _logger = logging.getLogger(__name__)
@@ -41,7 +46,7 @@ class   AnalysisGeneration(object):
     @classmethod
     def setup(cls, analytics_meta):
         dataset_meta = DatasetMeta.objects.get(id=analytics_meta.dataset_id)
-        dbm = DatabaseManager()
+        dbm = DatabaseManager(mongo_settings["username"], mongo_settings["password"], mongo_settings["host"], mongo_settings["port"])
         db_col = dbm.data_db.get_collection(dataset_meta.db_col)
 
         args = analytics_meta.specialised_args

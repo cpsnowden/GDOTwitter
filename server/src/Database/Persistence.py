@@ -2,13 +2,18 @@ from pymongo import MongoClient
 import gridfs
 import logging
 
+
 class DatabaseManager(object):
     logger = logging.getLogger(__name__)
 
-    def __init__(self, url=None):
-        self.client = MongoClient(url, connect=False)
+    def __init__(self, uname, pwd, host, port):
+        print uname, host, pwd, port
+        self.client = MongoClient(host, port,  connect=False)
         self.data_db = self.client.get_database("DATA")
-        self.gridfs = gridfs.GridFS(self.client.get_database("FILE_DATA"))
+        self.data_db.authenticate(uname, pwd, source="admin")
+        self.fdb = self.client.get_database("FILE_DATA")
+        self.fdb.authenticate(uname, pwd, source="admin")
+        self.gridfs = gridfs.GridFS(self.fdb)
 
     def deleteGridFSFile(self, fName):
 
