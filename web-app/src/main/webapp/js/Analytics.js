@@ -180,9 +180,9 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
             // }, {label: 'Nope', result: 'no'}]);
             // msgbox.open().then(function (result) {
             //     if (result === 'yes') {
-            //         Restangular.one("dataset", analytics.dataset_id).one('analytics', analytics.id).remove().then(function () {
-            //             dataset.analytics = $scope.getAnalytics(dataset)
-            //         });
+                    Restangular.one("dataset", analytics.dataset_id).one('analytics', analytics.id).remove().then(function () {
+                        dataset.analytics = $scope.getAnalytics(dataset)
+                    });
             //     }
             // })
         };
