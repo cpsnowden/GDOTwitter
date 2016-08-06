@@ -41,7 +41,7 @@ class TopHashtags(Analytics):
 
         hashtag_key = Util.dollar_join_keys(Status.SCHEMA_MAP[schema]["hashtags"])
         query = [
-            {"$unwind": "$" + hashtag_key},
+            {"$unwind":  hashtag_key},
             {"$group": {"_id": {"$toLower": hashtag_key + '.' + 'text'}, "count": {"$sum": 1}}},
             {"$sort": {"count": -1}},
             {"$limit": limit}]
