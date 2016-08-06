@@ -79,7 +79,8 @@ api.add_resource(DataServiceR,
                  resource_class_kwargs={'data_service': data_service},
                  endpoint = "dataServiceList")
 
-api.add_resource(AnalyticsOptions, '/analytics_options')
+api.add_resource(AnalyticsOptions, '/analytics_options',
+                 endpoint = "analyticsOptions")
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)

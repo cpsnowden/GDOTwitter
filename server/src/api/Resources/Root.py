@@ -7,8 +7,10 @@ root_fields = {
     "uri_data_set": fields.Url("dataSetList", scheme="http"),
     "uri_twitter_consumer": fields.Url("twitterConsumerList", scheme="http"),
     "uri_data_service": fields.Url("dataServiceList", scheme="http"),
+    "uri_analysis_options": fields.Url("analyticsOptions", scheme="http"),
     "msg": fields.String
 }
+
 
 class RootResource(Resource):
     logger = logging.getLogger(__name__)

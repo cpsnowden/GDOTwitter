@@ -32,3 +32,11 @@ def get_date_projection(key, level):
     secondary_projection = {"date": {"$subtract": ["$date", {"$add": addition}]}}
 
     return first_projection , secondary_projection
+
+
+
+def join_keys(*keys):
+    return ".".join(keys)
+
+def dollar_join_keys(*keys):
+    return "$" + join_keys(*keys)

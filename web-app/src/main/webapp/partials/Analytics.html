@@ -251,12 +251,12 @@
                                     <td>
                                         <button class="btn btn-success"
                                                 ng-click="download(a)"
-                                                ng-show="a['status']=='SAVED'">
+                                                ng-show="a['status']=='FINISHED'">
                                             <i class="glyphicon glyphicon-download"></i>
                                         </button>
                                         <button class="btn btn-success"
                                                 ng-click="chart(a)"
-                                                ng-show="a['status']=='SAVED' && a.classification=='Analytics'">
+                                                ng-show="a['status']=='FINISHED' && a.classification=='Analytics'">
                                             <i class="fa fa-bar-chart" aria-hidden="true"></i>
                                         </button>
                                         <button class="btn btn-inverse"

@@ -15,18 +15,18 @@ class ClassificationSystem(object):
     options = ["SVM", "BASIC"]
     users = {}
 
-    def __init__(self, option, hashtags):
-        self.classification_type = option
+    def __init__(self, classification_type, hashtags):
+        self.classification_type = classification_type
 
         self.tweet_classifier = None
 
-        if option == "SVM":
+        if classification_type == "SVM":
             self.user_model = SVMUserModel
             self._logger.info("Using SVM User Model")
             self.tweet_classifier = SVMClassifier({"leave": -1, "remain": 1}, False)
             self.tweet_classifier.train_from_csv(os.path.join(DIR_NAME,"TRAINING_DATA_OUT.csv"), -1)
 
-        elif option == "BASIC":
+        elif classification_type == "BASIC":
             self._logger.info("Using Basic User Model")
             self.user_model = BasicUserModel
             self.tweet_classifier = BasicScoringSystem(hashtags)

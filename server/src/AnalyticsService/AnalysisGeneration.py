@@ -7,7 +7,7 @@ with open("config.yml", 'r') as config_file:
     cfg = yaml.load(config_file)
 mongo_settings = cfg["mongo"]
 
-class   AnalysisGeneration(object):
+class AnalysisGeneration(object):
     _logger = logging.getLogger(__name__)
 
     @classmethod

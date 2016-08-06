@@ -2,7 +2,7 @@ from AnalyticsService.Graphing.Classification.TweetClassifier.TweetScore import 
 
 
 class BasicScoringSystem(object):
-    def __init__(self, hashtags):
+    def __init__(self, class_labels, hashtags):
         self.hashtags = hashtags
 
     def predict(self, status):

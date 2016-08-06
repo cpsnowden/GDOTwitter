@@ -1,8 +1,9 @@
-from Database.Persistence import DatabaseManager
-from api.Objects.MetaData import DatasetMeta
 import logging
 from datetime import datetime
-from AnalyticsService.Charting.Charting import CreateChart
+
+from AnalysisEngine.Charting.Charting import create_chart
+
+
 class AnalysisTemplate(object):
     _logger = logging.getLogger(__name__)
 
@@ -43,7 +44,7 @@ class AnalysisTemplate(object):
 
         analytics_meta.chart_id = "CHART_" + analytics_meta.db_ref
 
-        html = CreateChart(data)
+        html = create_chart(data)
 
         with gridfs.new_file(filename=analytics_meta.chart_id, content_type="text/html") as f:
             f.write(html)

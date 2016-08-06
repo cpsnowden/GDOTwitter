@@ -1,15 +1,15 @@
 import logging
 
-import gridfs
-import api.Utils.MetaID as MetaID
 from flask import make_response
+from flask import request
 from flask_restful import reqparse, marshal_with, fields, abort
 from mongoengine.queryset import DoesNotExist
-from flask import request
-from AnalyticsService.AnalyticsTasks import get_analytics
-from AnalyticsService.AnalyticsEngine import AnalyticsEngine
+
+import api.Utils.MetaID as MetaID
 from api.Auth import Resource
 from api.Objects.MetaData import AnalyticsMeta, DatasetMeta, DictionaryWrap
+from AnalysisEngine.AnalysisRouter import AnalysisRouter
+from AnalysisEngine.AnalysisTasks import get_analytics
 
 analytics_meta_fields = {
     "type": fields.String,
@@ -107,6 +107,7 @@ class Analytics(Resource):
             found = AnalyticsMeta.objects.get(id=id, dataset_id=dataset_id)
         except DoesNotExist:
             abort(404, message="Analytics {} does not exist".format(id))
+            return
 
         if found.chart_id is not None:
             r = self.dbm.deleteGridFSFile(found.chart_id)
@@ -130,6 +131,7 @@ class AnalyticsData(Resource):
             found = AnalyticsMeta.objects.get(id=id, dataset_id=dataset_id)
         except DoesNotExist:
             abort(404, message="Analytics {} does not exist".format(id))
+            return
 
         return AnalyticsDataOpt(request.path, found.chart_id, found.raw_id, found.graph_id)
 
@@ -149,6 +151,7 @@ class AnalyticsDownload(Resource):
             found = AnalyticsMeta.objects.get(id=id, dataset_id=dataset_id)
         except DoesNotExist:
             abort(404, message="Analytics {} does not exist".format(id))
+            return
 
         args = self.parser.parse_args()
         dataType = args["type"]
@@ -183,4 +186,4 @@ class AnalyticsOptions(Resource):
     logging = logging.getLogger(__name__)
 
     def get(self):
-        return AnalyticsEngine.get_details()
+        return AnalysisRouter.get_details()

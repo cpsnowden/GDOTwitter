@@ -16,7 +16,8 @@ for i in range(len(tableau20)):
     tableau20[i] = (r / 255., g / 255., b / 255.)
 
 #######################################################################################################################
-path = "/Users/ChrisSnowden/Dropbox/1_Imperial College/Individual Project/FinalReport/Data/Brexit_Large_TweetRate.json"
+# path = "/Users/ChrisSnowden/Dropbox/1_Imperial College/Individual Project/FinalReport/Data/Brexit_Large_TweetRate.json"
+path =  "/Users/ChrisSnowden/IndividualProject/GDOTwitter/DATA/hourlyBrexit.dat"
 raw_data = []
 with open(path) as f:
     for l in f:
@@ -27,8 +28,9 @@ counts = np.array([i["count"] for i in raw_data]).astype(float) / 10e3
 
 y, zz, mean1, mean2 = ChangePoint.step4(counts)
 
-fig, axs = plt.subplots(nrows=2, sharex=True)
-ax1 = axs[0]
+fig, axs = plt.subplots(nrows=1, sharex=True)
+# ax1 = axs[0]
+ax1 =axs
 xfmt = md.DateFormatter('%Y-%m-%d\n %H:%M:%S')
 
 ax1.xaxis.set_major_formatter(xfmt)
@@ -36,10 +38,10 @@ ax1.plot(time,counts)
 ax1.set_ylabel("Tweets per day /10e3")
 print len(time),len(y)
 
-ax2 = axs[1]
-ax2.plot(time[1:],y)
-ax2.set_ylabel("logP")
-ax2.set_xlabel("Date")
+# ax2 = axs[1]
+# ax2.plot(time[1:],y)
+# ax2.set_ylabel("logP")
+# ax2.set_xlabel("Date")
 plt.show()
 
 #19th February "https://www.theguardian.com/world/live/2016/feb/19/eu-summit-all-night-negotiations-deal-cameron-live
