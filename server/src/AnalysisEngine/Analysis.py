@@ -75,8 +75,8 @@ class Analysis(object):
             end = self.args["endDateCutOff"]
         else:
             self._logger.info("Using string datetime conversion")
-            start = parser.parser(self.args["startDateCutOff"])
-            end = parser.parser(self.args["endDateCutOff"])
+            start = parser.parse(self.args["startDateCutOff"])
+            end = parser.parse(self.args["endDateCutOff"])
 
         query[Status.SCHEMA_MAP[self.schema]["ISO_date"]] = {"$gte": start,
                                                              "$lte": end}
