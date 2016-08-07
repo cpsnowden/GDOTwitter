@@ -8,7 +8,8 @@ root_fields = {
     "uri_twitter_consumer": fields.Url("twitterConsumerList", scheme="http"),
     "uri_data_service": fields.Url("dataServiceList", scheme="http"),
     "uri_analysis_options": fields.Url("analyticsOptions", scheme="http"),
-    "msg": fields.String
+    "msg": fields.String,
+    "healthy": fields.Boolean
 }
 
 
@@ -18,4 +19,4 @@ class RootResource(Resource):
     @marshal_with(root_fields)
     def get(self):
         address = request.remote_addr
-        return {"msg": "Welcome " + address + " to the GDO Twitter API"}
+        return {"msg": "Welcome " + address + " to the GDO Twitter API", "healthy":True}
