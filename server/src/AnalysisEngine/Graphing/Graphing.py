@@ -83,7 +83,7 @@ class Graphing(Analysis):
         self.analytics_meta.status = "LAYOUT COMPLETE"
         self.analytics_meta.save()
 
-        with self.col.gridfs.get_last_version(self.analytics_meta.graph_id) as f:
+        with self.dbm.gridfs.get_last_version(self.analytics_meta.graph_id) as f:
             return nx.read_graphml(f)
 
     def finalise_graph(self, G, color = None):
