@@ -42,7 +42,8 @@ class HashtagTrendReweet(TrendGraph):
     def process(self):
 
         time_interval = self.args["timeInterval"]
-        limit = self.args["Limit"]
+        tweet_limit = self.args["Limit"]
+        top_user_limit = self.args["userLimit"]
         hashtag_args = self.args["hashtag_grouping"]
         classification_type = self.args["tweetScoring"]
         class_labels = {hashtag_args[0]["name"]: -1, hashtag_args[1]["name"]: 1}
@@ -50,11 +51,11 @@ class HashtagTrendReweet(TrendGraph):
                                  [(i, 1) for i in hashtag_args[1]["tags"]])
         classification_system = ClassificationSystem(classification_type, class_labels, hashtag_groupings)
 
-        user_ids = HashtagTrend.get_top_users(self.schema, limit, self.col)
+        user_ids = HashtagTrend.get_top_users(self.schema, top_user_limit, self.col)
 
         query = self.get_time_bounded_query({Util.join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                                             User.SCHEMA_MAP[self.schema]["id"]): {"$in": user_ids}})
-        cursor = self.get_sorted_cursor(query, limit)
+        cursor = self.get_sorted_cursor(query, tweet_limit)
         if cursor is None:
             self.analytics_meta.status = "NO DATA IN RANGE"
             self.analytics_meta.save()

@@ -41,6 +41,7 @@ class HashtagTrendReweet2(TrendGraph):
 
         time_interval = self.args["timeInterval"]
         limit = self.args["Limit"]
+        top_user_limit = self.args["userLimit"]
         hashtag_args = self.args["hashtag_grouping"]
 
         class_labels = {hashtag_args[0]["name"]: -1, hashtag_args[1]["name"]: 1}
@@ -48,7 +49,7 @@ class HashtagTrendReweet2(TrendGraph):
                                  [(i, 1) for i in hashtag_args[1]["tags"]])
         classification_system = ClassificationSystem("BASIC", class_labels, hashtag_groupings)
 
-        user_ids = HashtagTrend.get_top_users(self.schema, limit, self.col)
+        user_ids = HashtagTrend.get_top_users(self.schema, top_user_limit, self.col)
 
         query = self.get_time_bounded_query({Util.join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                                             User.SCHEMA_MAP[self.schema]["id"]): {"$in": user_ids}})
