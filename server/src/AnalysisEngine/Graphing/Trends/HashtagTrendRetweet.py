@@ -51,6 +51,7 @@ class HashtagTrendReweet(TrendGraph):
                                  [(i, 1) for i in hashtag_args[1]["tags"]])
         classification_system = ClassificationSystem(classification_type, class_labels, hashtag_groupings)
 
+        self._logger.info("Getting top users")
         user_ids = HashtagTrend.get_top_users(self.schema, top_user_limit, self.col)
 
         query = self.get_time_bounded_query({Util.join_keys(Status.SCHEMA_MAP[self.schema]["user"],

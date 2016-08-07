@@ -115,6 +115,7 @@ class HashtagTrend(TrendGraph):
     @staticmethod
     def get_top_users(schema, limit, col):
 
+
         user_id_key = Util.dollar_join_keys(Status.SCHEMA_MAP[schema]["user"],
                                             User.SCHEMA_MAP[schema]["id"])
 
