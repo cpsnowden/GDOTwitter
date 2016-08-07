@@ -30,7 +30,7 @@ class Analysis(object):
     def __init__(self, analytics_meta):
 
         dataset_meta = DatasetMeta.objects.get(id=analytics_meta.dataset_id)
-        self.analytics_meta  = analytics_meta
+        self.analytics_meta = analytics_meta
         self.dbm = DatabaseManager(cfg["username"], cfg["password"], cfg["host"], cfg["port"])
         self.col = self.dbm.data_db.get_collection(dataset_meta.db_col)
         self.args = self.parse_args(analytics_meta.specialised_args, dataset_meta)
@@ -85,16 +85,15 @@ class Analysis(object):
 
     def get_sorted_cursor(self, query, limit, projection=None):
 
-        if projection is None:
-            projection = {}
-        self._logger.info("Querying DATA database, collection %s with query %s", self.col.name, query)
+        self._logger.info("Querying DATA database, collection %s with query %s and projection %s", self.col.name,
+                          query, projection)
 
-        # if limit > 0:
-        cursor = self.col.find(query, projection).limit(limit) \
-            .sort(Status.SCHEMA_MAP[self.schema]["ISO_date"], pymongo.ASCENDING)
-        # else:
-        #     cursor = self.col.find(query) \
-        #         .sort(Status.SCHEMA_MAP[self.schema]["ISO_date"], pymongo.ASCENDING)
+        if projection is None:
+            cursor = self.col.find(query).limit(limit) \
+                .sort(Status.SCHEMA_MAP[self.schema]["ISO_date"], pymongo.ASCENDING)
+        else:
+            cursor = self.col.find(query, projection).limit(limit) \
+                .sort(Status.SCHEMA_MAP[self.schema]["ISO_date"], pymongo.ASCENDING)
 
         cusor_size = cursor.count(with_limit_and_skip=True)
 
@@ -113,7 +112,7 @@ class Analysis(object):
         self.analytics_meta.raw_id = "RAW_" + self.analytics_meta.db_ref
 
         with self.dbm.gridfs.new_file(filename=self.analytics_meta.raw_id, content_type="text/json") as f:
-            f.write(json.dumps(data, default = Util.date_encoder))
+            f.write(json.dumps(data, default=Util.date_encoder))
 
         self.analytics_meta.status = "SAVED"
         self.analytics_meta.end_time = datetime.now()
