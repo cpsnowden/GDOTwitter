@@ -30,7 +30,7 @@ class HashtagTrendReweet(TrendGraph):
 
     @classmethod
     def get_type(cls):
-        return "Hashtag User Trend Retweet 2 Graph"
+        return "Hashtag User Trend Retweet SVM Graph"
 
     @classmethod
     def get_args(cls):
