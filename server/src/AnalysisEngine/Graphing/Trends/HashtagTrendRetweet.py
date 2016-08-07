@@ -12,7 +12,7 @@ class HashtagTrendReweet(TrendGraph):
     _logger = logging.getLogger(__name__)
     __arguments = [dict(name="userLimit", prettyName="Number of users", type="integer", default=1000),
                    dict(name="tweetScoring", prettyName="Tweet Scoring System", type="enum",
-                        options=ClassificationSystem.options),
+                        options=ClassificationSystem.options, default = "BASIC"),
                    dict(name="hashtag_grouping", prettyName="Hashtag Groupings", type="dictionary_list", variable=False,
                         default=[
                             dict(name="Leave",
