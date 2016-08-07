@@ -94,7 +94,8 @@ class RetweetCommunity(Graphing):
 
             if source_user_id not in users:
                 users[source_user_id] = CommunityUser(classification_scores=hashtag_scores)
-                G.add_node(source_user_id, name=source_user.get_name())
+                G.add_node(source_user_id, username = source_user.get_name(),
+                           node_type="user")
 
             source_user_obj = users[source_user_id]
             source_user_obj.said(status)
@@ -108,7 +109,7 @@ class RetweetCommunity(Graphing):
 
                 if retweeted_user_id not in users:
                     users[retweeted_user_id] = CommunityUser(classification_scores=hashtag_scores)
-                    G.add_node(retweeted_user_id, name=retweeted_user.get_name())
+                    G.add_node(retweeted_user_id, username = retweeted_user.get_name(), node_type="user")
 
                 user_obj = users[retweeted_user_id]
                 user_obj.retweeted_by(source_user_obj)
@@ -130,7 +131,7 @@ class RetweetCommunity(Graphing):
 
                     if mentioned_user_id not in users:
                         users[mentioned_user_id] = CommunityUser(classification_scores=hashtag_scores)
-                        G.add_node(mentioned_user_id, name=mention.get_name())
+                        G.add_node(mentioned_user_id, username=mention.get_name(), node_type="user")
 
                     user_obj = users[mentioned_user_id]
                     user_obj.mentioned()

@@ -65,8 +65,10 @@ class BasicRetweet(Graphing):
 
             if source_user_id not in retweeted and source_user_id not in retweeters:
                 G.add_node(source_user_id,
-                               label=source_user.get_name(),
-                               type="retweeter")
+                           username = source_user.get_name(),
+                           node_type = "user",
+                           label=source_user.get_name(),
+                           type="retweeter")
 
             retweeters.add(source_user_id)
 
@@ -78,8 +80,10 @@ class BasicRetweet(Graphing):
 
             if target_user_id not in retweeted and target_user_id not in retweeters:
                 G.add_node(target_user_id,
-                               label=target_user.get_name(),
-                               type="retweeted")
+                           username = target_user.get_name(),
+                           node_type = "user",
+                           label=target_user.get_name(),
+                           type="retweeted")
 
             if target_user_id in retweeters:
                 G.node[target_user_id]["type"] = "both"

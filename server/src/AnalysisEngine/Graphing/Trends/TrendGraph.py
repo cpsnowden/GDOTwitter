@@ -69,11 +69,12 @@ class TrendGraph(Graphing):
 
             for i in np.arange(min_gravity_x, max_gravity_x, float(self.args["timeLabelInterval"]) / self.args["timeInterval"]):
                 G.add_node("TimeInd_T:" + str(start_date + timedelta(seconds=i)), type="TimeIndicator",
+                           node_type="time", time = str(start_date + timedelta(seconds=i)),
                                gravity_x=float(i), gravity_x_strength=float(100),
                                gravity_y=float(max_gravity_y + 10), gravity_y_strength=float(100))
 
-                G.add_node("TimeInd_B:" + str(start_date + timedelta(seconds=i)), type="TimeIndicator",
-                               gravity_x=float(i), gravity_x_strength=float(100),
+                G.add_node("TimeInd_B:" + str(start_date + timedelta(seconds=i)), type="TimeIndicator", node_type =
+                "time", time = str(start_date + timedelta(seconds=i)),gravity_x=float(i), gravity_x_strength=float(100),
                                gravity_y=float(min_gravity_y - 10), gravity_y_strength=float(100))
 
         return G
