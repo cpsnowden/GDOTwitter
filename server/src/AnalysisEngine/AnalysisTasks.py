@@ -9,9 +9,10 @@ logger = logging.getLogger(__name__)
 @app.task
 def get_analytics(analytics_id):
 
-    logger.info("Attempting to get analytics")
+    logger.info("Attempting to get analytics: "+ analytics_id)
 
     analytics_meta = AnalyticsMeta.objects.get(id=analytics_id)
+    logger.info(analytics_meta.classification + " " + analytics_meta.type)
 
     result = AnalysisRouter.process(analytics_meta)
 
