@@ -65,8 +65,10 @@ class TrendGraph(Graphing):
                 elif node["gravity_y"] < min_gravity_y:
                     min_gravity_y = node["gravity_y"]
 
-            self._logger.info("Max_x: %d, Min_x: %d, Max_y: %d, Min_y: %d", max_gravity_x, min_gravity_x, max_gravity_y,
-                              min_gravity_y)
+            self._logger.info("Max_x: %d, Min_x: %d, Max_y: %d, Min_y: %d, Step: %d", max_gravity_x, min_gravity_x,
+                              max_gravity_y,
+                              min_gravity_y,
+                              float(self.args["timeLabelInterval"]) / self.args["timeInterval"])
 
             for i in np.arange(min_gravity_x, max_gravity_x,
                                float(self.args["timeLabelInterval"]) / self.args["timeInterval"]):
