@@ -24,7 +24,7 @@ class DatabaseManager(object):
         except ConfigurationError:
             self.logger.critical("Cannot connect to " + data_db_credentials["host"])
 
-        self.fdb = self.data_db_client.get_database("FILE_DATA")
+        self.fdb = self.managementDB_client.get_database("FILE_DATA")
         self.fdb.authenticate(management_db_credentials["username"],
                               management_db_credentials["password"],
                               source="admin")
