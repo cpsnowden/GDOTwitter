@@ -2,6 +2,7 @@ package cps15.App;
 
 import cps15.App.LayoutAlg.LayoutArgs;
 import cps15.App.LayoutAlg.Layouts;
+import cps15.App.LayoutAlg.OpenOrdArgs;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.UndirectedGraph;
@@ -11,6 +12,7 @@ import org.gephi.io.exporter.spi.Exporter;
 import org.gephi.io.importer.api.Container;
 import org.gephi.io.importer.api.ImportController;
 import org.gephi.io.processor.plugin.DefaultProcessor;
+import org.gephi.layout.plugin.AutoLayout;
 import org.gephi.layout.spi.Layout;
 import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
@@ -20,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 public class GephiWorker {
@@ -66,8 +69,13 @@ public class GephiWorker {
 //            System.out.println(n.x());
 //            if(j++ > 10) break;
 //        }
+
         if(null != layout) {
             for (int i = 0; i < layoutIterations; i++) {
+                if(!layout.canAlgo()) {
+                    logger.info("Stopping algorithm at step " + i);
+                    break;
+                }
                 layout.goAlgo();
                 if (i % 100 == 0) {
                     logger.info("Step " + i);
