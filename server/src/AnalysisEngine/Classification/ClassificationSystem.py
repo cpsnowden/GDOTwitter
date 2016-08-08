@@ -1,11 +1,9 @@
 import logging
 import os
 
-from AnalyticsService.Graphing.Classification.TweetClassifier.Basic import BasicScoringSystem
-from AnalyticsService.Graphing.Classification.TweetClassifier.SVM import SVMClassifier
-from AnalyticsService.Graphing.Classification.User.Basic import BasicUserModel
-from AnalyticsService.Graphing.Classification.User.ModelUser import SVMUserModel
-
+from AnalysisEngine.Classification.TweetClassifier.SVM import SVMClassifier
+from AnalysisEngine.Classification.TweetClassifier.Basic import Basic
+from AnalysisEngine.Classification.UserModel.UserModel import BasicUser, MovingAverageModel
 DIR_NAME = os.path.dirname(__file__)
 
 
@@ -22,12 +20,12 @@ class ClassificationSystem(object):
         self.tweet_classifier = None
 
         if option == "SVM":
-            self.user_model = SVMUserModel
+            self.user_model = MovingAverageModel
             self.tweet_classifier = SVMClassifier(class_labels,
                                                   os.path.join(DIR_NAME, "Training","TRAINING_DATA_OUT.csv"))
         elif option == "BASIC":
-            self.user_model = BasicUserModel
-            self.tweet_classifier = BasicScoringSystem(class_labels, data)
+            self.user_model = BasicUser
+            self.tweet_classifier = Basic(class_labels, data)
 
     def consume(self, status):
 

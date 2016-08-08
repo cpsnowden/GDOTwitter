@@ -2,7 +2,7 @@ from AnalysisEngine.Classification.TweetClassifier.TweetClassifier import TweetC
 
 
 class Basic(TweetClassifier):
-    def __init__(self, hashtags):
+    def __init__(self, class_labels, hashtags):
         self.hashtags = hashtags
 
     def predict(self, status):

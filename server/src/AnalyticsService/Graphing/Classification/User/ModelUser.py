@@ -5,7 +5,7 @@ class SVMUserModel(object):
         self.h_length = 10
 
     def said(self, status):
-        tweet_score,_ = self.classifier.predict(status.get_text())
+        tweet_score = self.classifier.predict(status.get_text())
         self.history.append(tweet_score)
         return tweet_score.score
 
