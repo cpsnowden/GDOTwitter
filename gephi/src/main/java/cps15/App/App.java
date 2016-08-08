@@ -103,7 +103,7 @@ public class App {
         jsonParser = new JSONParser();
         MongoCredential credential = MongoCredential.createCredential(userName, authDB, password.toCharArray());
         DB db = new MongoClient(new ServerAddress(host, port), Arrays.asList(credential)).getDB(MONGO_DB);
-
+        logger.info("Found collections " + db.getCollectionNames());
         try {
             db.command("ping");
         } catch (MongoTimeoutException e) {
