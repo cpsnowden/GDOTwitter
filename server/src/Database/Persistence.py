@@ -6,13 +6,23 @@ import logging
 class DatabaseManager(object):
     logger = logging.getLogger(__name__)
 
-    def __init__(self, user_name, pwd, host, port):
-        self.logger.info("Mongo: host %s, port %d, username %s", host, port, user_name)
-        self.client = MongoClient(host, port,  connect=False)
-        self.data_db = self.client.get_database("DATA")
-        self.data_db.authenticate(user_name, pwd, source="admin")
-        self.fdb = self.client.get_database("FILE_DATA")
-        self.fdb.authenticate(user_name, pwd, source="admin")
+    def __init__(self, data_db_credentials, management_db_credentials):
+        self.logger.info("Mongo: datadb %s, management db %s", data_db_credentials, management_db_credentials)
+
+        self.data_db_client = MongoClient(data_db_credentials["host"],
+                                          data_db_credentials["port"],
+                                          connect=False)
+        self.managementDB_client = MongoClient(management_db_credentials["host"],
+                                               management_db_credentials["port"],
+                                               connect=False)
+
+        self.data_db = self.data_db_client.get_database("DATA")
+        self.data_db.authenticate(data_db_credentials["username"], data_db_credentials["password"], source="admin")
+
+        self.fdb = self.data_db_client.get_database("FILE_DATA")
+        self.fdb.authenticate(management_db_credentials["username"],
+                              management_db_credentials["password"],
+                              source="admin")
         self.gridfs = gridfs.GridFS(self.fdb)
 
     def deleteGridFSFile(self, file_name):

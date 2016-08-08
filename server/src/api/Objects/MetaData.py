@@ -6,14 +6,14 @@ from mongoengine import connect, Document, StringField, ListField, DateTimeField
 
 with open("config.yml", 'r') as config_file:
     cfg = yaml.load(config_file)
-mongo_settings = cfg["mongo"]
+management_db = cfg["mongo"]["managementDb"]
 
 connect("Meta",
         alias="meta_data_db",
-        host = mongo_settings["host"],
-        port = mongo_settings["port"],
-        username=mongo_settings["username"],
-        password=mongo_settings["password"],
+        host = management_db["host"],
+        port = management_db["port"],
+        username=management_db["username"],
+        password=management_db["password"],
         authentication_source="admin")
 
 class DatasetMeta(Document):
