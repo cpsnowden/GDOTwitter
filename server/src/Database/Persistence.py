@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from pymongo.errors import ConfigurationError
 import gridfs
 import logging
 
@@ -18,11 +19,20 @@ class DatabaseManager(object):
 
         self.data_db = self.data_db_client.get_database("DATA")
         self.data_db.authenticate(data_db_credentials["username"], data_db_credentials["password"], source="admin")
+        try:
+            self.data_db.command("ping")
+        except ConfigurationError:
+            self.logger.critical("Cannot connect to " + data_db_credentials["host"])
 
         self.fdb = self.data_db_client.get_database("FILE_DATA")
         self.fdb.authenticate(management_db_credentials["username"],
                               management_db_credentials["password"],
                               source="admin")
+        try:
+            self.fdb.command("ping")
+        except ConfigurationError:
+            self.logger.critical("Cannot connect to " + management_db_credentials["host"])
+
         self.gridfs = gridfs.GridFS(self.fdb)
 
     def deleteGridFSFile(self, file_name):
