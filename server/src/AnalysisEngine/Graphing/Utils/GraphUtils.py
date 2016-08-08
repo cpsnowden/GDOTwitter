@@ -25,8 +25,8 @@ class GraphUtils(object):
                 id = key_entry.attrib['id']
                 key_entry.attrib['id'] = key_name
                 replacements[id] = key_name
-                cls._logger.info("Name: %s, Key %s", key_name, key_entry)
-            cls._logger.info("Dict %s", replacements)
+                # cls._logger.info("Name: %s, Key %s", key_name, key_entry)
+            # cls._logger.info("Dict %s", replacements)
             root=tree.getroot()
             for data_entry in root.iter("{http://graphml.graphdrawing.org/xmlns}data"):
                 found_key = data_entry.attrib['key']

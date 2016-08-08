@@ -12,7 +12,7 @@ from Database.Persistence import DatabaseManager
 from api.Objects.MetaData import DatasetMeta
 
 with open("config.yml", 'r') as config_file:
-    cfg = yaml.load(config_file)["mongo"]
+    mongo_settings = yaml.load(config_file)["mongo"]
 
 
 class Analysis(object):
@@ -31,7 +31,7 @@ class Analysis(object):
 
         dataset_meta = DatasetMeta.objects.get(id=analytics_meta.dataset_id)
         self.analytics_meta = analytics_meta
-        self.dbm = DatabaseManager(cfg["username"], cfg["password"], cfg["host"], cfg["port"])
+        self.dbm = DatabaseManager(mongo_settings["dataDb"], mongo_settings["managementDb"])
         self.col = self.dbm.data_db.get_collection(dataset_meta.db_col)
         self.args = self.parse_args(analytics_meta.specialised_args, dataset_meta)
         self.schema = dataset_meta.schema

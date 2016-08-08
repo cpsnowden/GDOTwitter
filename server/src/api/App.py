@@ -25,7 +25,7 @@ with open("config.yml", 'r') as config_file:
     cfg = yaml.load(config_file)
 mongo_settings = cfg["mongo"]
 
-dbm = DatabaseManager(mongo_settings["username"], mongo_settings["password"], mongo_settings["host"], mongo_settings["port"])
+dbm = DatabaseManager(mongo_settings["dataDb"], mongo_settings["managementDb"])
 data_service = DataService(dbm, cfg["data_service_cfg"])
 
 api.add_resource(RootResource,
@@ -83,4 +83,4 @@ api.add_resource(AnalyticsOptions, '/analytics_options',
                  endpoint = "analyticsOptions")
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=False, host = "0.0.0.0")

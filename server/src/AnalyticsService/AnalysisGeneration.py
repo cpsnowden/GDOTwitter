@@ -46,7 +46,7 @@ class AnalysisGeneration(object):
     @classmethod
     def setup(cls, analytics_meta):
         dataset_meta = DatasetMeta.objects.get(id=analytics_meta.dataset_id)
-        dbm = DatabaseManager(mongo_settings["username"], mongo_settings["password"], mongo_settings["host"], mongo_settings["port"])
+        dbm = DatabaseManager(mongo_settings["dataDb"], mongo_settings["managementDb"])
         db_col = dbm.data_db.get_collection(dataset_meta.db_col)
 
         args = analytics_meta.specialised_args
