@@ -66,16 +66,30 @@ class TrendGraph(Graphing):
                     min_gravity_y = node["gravity_y"]
 
             self._logger.info("Max_x: %d, Min_x: %d, Max_y: %d, Min_y: %d", max_gravity_x, min_gravity_x, max_gravity_y,
-                          min_gravity_y)
+                              min_gravity_y)
 
-            for i in np.arange(min_gravity_x, max_gravity_x, float(self.args["timeLabelInterval"]) / self.args["timeInterval"]):
-                G.add_node("TimeInd_T:" + str(start_date + timedelta(seconds=i)), type="TimeIndicator",
-                           node_type="time", time = str(start_date + timedelta(seconds=i)),
-                               gravity_x=float(i), gravity_x_strength=float(100),
-                               gravity_y=float(max_gravity_y + 10), gravity_y_strength=float(100))
+            for i in np.arange(min_gravity_x, max_gravity_x,
+                               float(self.args["timeLabelInterval"]) / self.args["timeInterval"]):
+                G.add_node("TimeInd_T:" + str(start_date + timedelta(seconds=i)),
+                           type="TimeIndicator",
+                           node_type="time",
+                           time=str(start_date + timedelta(seconds=i)),
+                           x=float(i),
+                           y=float(max_gravity_y + 10),
+                           gravity_x=float(i),
+                           gravity_x_strength=float(100),
+                           gravity_y=float(max_gravity_y + 10),
+                           gravity_y_strength=float(100))
 
-                G.add_node("TimeInd_B:" + str(start_date + timedelta(seconds=i)), type="TimeIndicator", node_type =
-                "time", time = str(start_date + timedelta(seconds=i)),gravity_x=float(i), gravity_x_strength=float(100),
-                               gravity_y=float(min_gravity_y - 10), gravity_y_strength=float(100))
+                G.add_node("TimeInd_B:" + str(start_date + timedelta(seconds=i)),
+                           type="TimeIndicator",
+                           node_type="time",
+                           time=str(start_date + timedelta(seconds=i)),
+                           x=float(i),
+                           y=float(max_gravity_y + 10),
+                           gravity_x=float(i),
+                           gravity_x_strength=float(100),
+                           gravity_y=float(min_gravity_y - 10),
+                           gravity_y_strength=float(100))
 
         return G
