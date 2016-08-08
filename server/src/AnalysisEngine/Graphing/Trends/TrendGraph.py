@@ -81,7 +81,8 @@ class TrendGraph(Graphing):
                            gravity_x=float(i),
                            gravity_x_strength=float(100),
                            gravity_y=float(max_gravity_y + 10),
-                           gravity_y_strength=float(100))
+                           gravity_y_strength=float(100),
+                           size = float(10.0))
 
                 G.add_node("TimeInd_B:" + str(start_date + timedelta(seconds=i)),
                            type="TimeIndicator",
@@ -92,6 +93,7 @@ class TrendGraph(Graphing):
                            gravity_x=float(i),
                            gravity_x_strength=float(100),
                            gravity_y=float(min_gravity_y - 10),
-                           gravity_y_strength=float(100))
+                           gravity_y_strength=float(100),
+                           size = float(10.0))
 
         return G
