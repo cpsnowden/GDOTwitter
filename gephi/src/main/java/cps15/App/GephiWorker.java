@@ -25,13 +25,14 @@ import java.util.logging.Logger;
 public class GephiWorker {
     private static final Logger logger = Logger.getLogger(GephiWorker.class.getName());
 
+    private ProjectController pc;
     private Workspace workspace;
     private GraphModel graphModel;
     private LayoutArgs layoutArgs;
 
     public GephiWorker(LayoutArgs layoutArgs) {
 
-        ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
+        pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
         this.workspace = pc.getCurrentWorkspace();
         this.layoutArgs = layoutArgs;
@@ -80,6 +81,11 @@ public class GephiWorker {
 //            System.out.println(n.x());
 //            if(j++ > 10) break;
 //        }
+    }
+
+    public void clearWorkspace() {
+        pc.closeCurrentWorkspace();
+        this.workspace = pc.newWorkspace(pc.getCurrentProject());
     }
 
     public InputStream export() {

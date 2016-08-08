@@ -162,6 +162,7 @@ public class App {
 
             GridFSInputFile gridFSInputFile = gridFS.createFile(gephiWorker.export(), fileName);
             gridFSInputFile.save();
+            gephiWorker.clearWorkspace();
 
             return getResponse(fileName, true);
         } catch (Exception e) {
