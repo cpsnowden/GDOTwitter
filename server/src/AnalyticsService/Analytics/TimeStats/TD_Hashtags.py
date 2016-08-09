@@ -1,10 +1,10 @@
 import json
 import logging
 
-from AnalyticsService import Util
+from AnalysisEngine import Util
+from AnalysisEngine.TwitterObj import Status
 from AnalyticsService.Analytics.Analytics import Analytics
 from AnalyticsService.Analytics.BasicStats.Hashtags import Hashtags
-from AnalyticsService.TwitterObj import Status
 
 
 class TD_Hashtags(Analytics):

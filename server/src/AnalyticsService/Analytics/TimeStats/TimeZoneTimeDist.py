@@ -2,8 +2,8 @@ import logging
 
 import pandas as pd
 
+from AnalysisEngine.TwitterObj import Status, User
 from AnalyticsService.Analytics.Analytics import Analytics
-from AnalyticsService.TwitterObj import Status, User
 
 
 class TimeZoneTimeDist(Analytics):

@@ -1,7 +1,10 @@
-from pymongo import MongoClient
 import csv
-from AnalyticsService.TwitterObj import Status
 import sys
+
+from pymongo import MongoClient
+
+from AnalysisEngine.TwitterObj import Status
+
 reload(sys)  # just to be sure
 sys.setdefaultencoding('utf-8')
 

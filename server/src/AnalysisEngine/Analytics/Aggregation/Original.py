@@ -1,7 +1,7 @@
 import logging
 
 from AnalysisEngine.Analytics.Analytics import Analytics
-from AnalyticsService.TwitterObj import Status, User
+from AnalysisEngine.TwitterObj import Status
 
 
 class Original(Analytics):

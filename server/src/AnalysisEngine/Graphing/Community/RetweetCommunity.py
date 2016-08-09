@@ -6,9 +6,9 @@ from itertools import product
 import community
 import networkx as nx
 
-from AnalysisEngine.Graphing.Graphing import Graphing
 from AnalysisEngine.Classification.CommunityUser.CommunityUser import CommunityUser
-from AnalyticsService.TwitterObj import Status
+from AnalysisEngine.Graphing.Graphing import Graphing
+from AnalysisEngine.TwitterObj import Status
 
 
 class RetweetCommunity(Graphing):

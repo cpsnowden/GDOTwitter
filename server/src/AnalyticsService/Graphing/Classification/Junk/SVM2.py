@@ -35,7 +35,7 @@ remain = {
 # leave = {"voteleave"}
 # remain = {"voteremain"}
 
-from AnalyticsService.TwitterObj import Status
+from AnalysisEngine.TwitterObj import Status
 import random
 # print c.count()
 leave_c = 0

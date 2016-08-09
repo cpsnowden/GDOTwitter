@@ -1,8 +1,8 @@
 import json
 import logging
 
+from AnalysisEngine.TwitterObj import Status, UserMention
 from AnalyticsService.Analytics.Analytics import Analytics
-from AnalyticsService.TwitterObj import Status, User, UserMention
 
 
 class TopMentioned(Analytics):

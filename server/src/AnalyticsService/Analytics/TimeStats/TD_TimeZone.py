@@ -1,9 +1,9 @@
 import json
 import logging
 
-from AnalyticsService import Util
+from AnalysisEngine import Util
+from AnalysisEngine.TwitterObj import Status, User
 from AnalyticsService.Analytics.Analytics import Analytics
-from AnalyticsService.TwitterObj import Status, User
 
 
 class TD_TimeZone(Analytics):

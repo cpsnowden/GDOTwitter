@@ -1,11 +1,10 @@
-from AnalyticsService.TwitterObj import Status
-from AnalyticsService.Graphing.Classification.User.ModelUser import SVMUserModel
-from AnalyticsService.Graphing.Classification.User.Basic import BasicUserModel
-from AnalyticsService.Graphing.Classification.TweetClassifier.Basic import BasicScoringSystem
-from AnalyticsService.Graphing.Classification.TweetClassifier.SVM import SVMClassifier
 import logging
 import os
 
+from AnalyticsService.Graphing.Classification.TweetClassifier.Basic import BasicScoringSystem
+from AnalyticsService.Graphing.Classification.TweetClassifier.SVM import SVMClassifier
+from AnalyticsService.Graphing.Classification.User.Basic import BasicUserModel
+from AnalyticsService.Graphing.Classification.User.ModelUser import SVMUserModel
 
 DIR_NAME = os.path.dirname(__file__)
 

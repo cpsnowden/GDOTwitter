@@ -6,9 +6,9 @@ import community
 import networkx as nx
 from dateutil import parser
 
+from AnalysisEngine.TwitterObj import Status
 from AnalyticsService.Graphing.Classification.CommunityUser.CommunityUser import CommunityUser
 from AnalyticsService.Graphing.Community.CommunityGraph import CommunityGraph
-from AnalyticsService.TwitterObj import Status
 
 
 class CommunityGraphClassification(CommunityGraph):

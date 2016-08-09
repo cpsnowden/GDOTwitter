@@ -2,10 +2,10 @@ import logging
 
 import networkx as nx
 
-from AnalysisEngine.Graphing.Trends.TrendGraph import TrendGraph
-from AnalyticsService import Util
+from AnalysisEngine import Util
 from AnalysisEngine.Classification.ClassificationSystem import ClassificationSystem
-from AnalyticsService.TwitterObj import Status, User
+from AnalysisEngine.Graphing.Trends.TrendGraph import TrendGraph
+from AnalysisEngine.TwitterObj import Status, User
 
 
 class HashtagTrend(TrendGraph):

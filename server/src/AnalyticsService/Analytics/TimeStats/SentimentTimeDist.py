@@ -1,13 +1,11 @@
-from textblob.sentiments import NaiveBayesAnalyzer
-from textblob import TextBlob, Blobber
-
-import json
 import logging
 
-import numpy
 import pandas as pd
+from textblob import Blobber
+from textblob.sentiments import NaiveBayesAnalyzer
+
+from AnalysisEngine.TwitterObj import Status
 from AnalyticsService.Analytics.Analytics import Analytics
-from AnalyticsService.TwitterObj import Status
 from AnalyticsService.Graphing.Classification.TweetClassifier.SVM import TweetPreprocessor
 
 

@@ -1,10 +1,11 @@
 import logging
 
 import networkx as nx
+from dateutil import parser
+
+from AnalysisEngine.TwitterObj import Status, User
 from AnalyticsService.Graphing.Classification.TweetClassifier import TweetClassifier
 from AnalyticsService.Graphing.Time.TimeGraph import TimeGraph
-from AnalyticsService.TwitterObj import Status, User
-from dateutil import parser
 
 
 class MentionTimeGraph(TimeGraph):

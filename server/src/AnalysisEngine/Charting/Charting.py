@@ -4,7 +4,7 @@ import os
 from collections import OrderedDict
 from string import Template
 
-import AnalyticsService.Util
+import AnalysisEngine.Util
 
 DIR_NAME = os.path.dirname(__file__)
 logger = logging.getLogger(__name__)
@@ -77,7 +77,7 @@ def get_html(data_source, type, width="100%", height="100%"):
     logger.info("Using chart format: " + str(data_source["chart"]))
 
     s = Template(open(os.path.join(DIR_NAME, "Templates", "Chart.html")).read())
-    return s.safe_substitute({'dataSource': json.dumps(data_source, default=AnalyticsService.Util.date_encoder),
+    return s.safe_substitute({'dataSource': json.dumps(data_source, default=AnalysisEngine.Util.date_encoder),
                               "height": height,
                               "width": width,
                               "type": type})

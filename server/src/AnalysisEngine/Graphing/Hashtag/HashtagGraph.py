@@ -1,10 +1,10 @@
 import logging
 
-from AnalysisEngine.Graphing.Graphing import Graphing
-from AnalyticsService.TwitterObj import Status, User
-from AnalyticsService import Util
-import numpy as np
 import networkx as nx
+import numpy as np
+
+from AnalysisEngine.Graphing.Graphing import Graphing
+from AnalysisEngine.TwitterObj import Status
 
 class HashtagGraph(Graphing):
     _logger = logging.getLogger(__name__)

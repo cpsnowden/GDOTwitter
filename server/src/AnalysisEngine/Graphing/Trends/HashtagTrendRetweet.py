@@ -2,11 +2,12 @@ import logging
 
 import networkx as nx
 
+from AnalysisEngine import Util
+from AnalysisEngine.Classification.ClassificationSystem import ClassificationSystem
 from AnalysisEngine.Graphing.Trends.HashtagTrend import HashtagTrend
 from AnalysisEngine.Graphing.Trends.TrendGraph import TrendGraph
-from AnalyticsService import Util
-from AnalyticsService.TwitterObj import Status, User
-from AnalysisEngine.Classification.ClassificationSystem import ClassificationSystem
+from AnalysisEngine.TwitterObj import Status, User
+
 
 class HashtagTrendReweet(TrendGraph):
     _logger = logging.getLogger(__name__)

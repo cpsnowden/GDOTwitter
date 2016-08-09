@@ -1,8 +1,7 @@
-from AnalyticsService.TwitterObj import Status
 import pandas as pd
 from pymongo import MongoClient
-import numpy
 
+from AnalysisEngine.TwitterObj import Status
 
 time_quantum = "min"
 db_col = MongoClient().get_database("DATA").get_collection("Brexit_old")

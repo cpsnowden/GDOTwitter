@@ -7,12 +7,17 @@ class Status(object):
                "createdAt", coordinates="geoLocation")
 
     RAW = dict(hashtags="entities.hashtags", mentions="entities.user_mentions", user="user", text="text",
-               created_at="created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date =
+               created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date =
                "ISO_created_at", coordinates="coordinates.coordinates")
+
+    GNIP = dict(hashtags="entities-hashtags", mentions="entities-user_mentions", user=None, text="clean-text",
+               created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date=
+               "ISO_created_at")
 
     SCHEMA_MAP = {
         "T4J": T4J,
-        "RAW": RAW
+        "RAW": RAW,
+        "GNIP": GNIP
     }
 
     def __init__(self, json, schema_id):
@@ -38,7 +43,8 @@ class Status(object):
         return self.get("text")
 
     def get_created_at(self):
-        return TwitterDate(self.get("created_at"), self.SCHEMA_ID).get_date_time()
+        return self.get("created_at")
+        #TwitterDate(self.get("created_at"), self.SCHEMA_ID).get_date_time()
 
     def get_id(self):
         return self.get("id")
@@ -82,25 +88,25 @@ class GeoLocation(object):
     def __str__(self):
         return str(self.get_longitude()) + "," + str(self.get_latitude())
 
-def conv_dt(raw):
-    return raw
-
-
-def conv_json_dt(raw):
-    return parser.parse(raw)
-
-class TwitterDate(object):
-    SCHEMA_MAP = {
-        "T4J": conv_dt,
-        "RAW": conv_json_dt
-    }
-
-    def __init__(self, raw, schema_id):
-        self.SCHEMA_ID = schema_id
-        self.raw = raw
-
-    def get_date_time(self):
-        return self.SCHEMA_MAP[self.SCHEMA_ID](self.raw)
+# def conv_dt(raw):
+#     return raw
+#
+#
+# def conv_json_dt(raw):
+#     return parser.parse(raw)
+#
+# class TwitterDate(object):
+#     SCHEMA_MAP = {
+#         "T4J": conv_dt,
+#         "RAW": conv_json_dt
+#     }
+#
+#     def __init__(self, raw, schema_id):
+#         self.SCHEMA_ID = schema_id
+#         self.raw = raw
+#
+#     def get_date_time(self):
+#         return self.SCHEMA_MAP[self.SCHEMA_ID](self.raw)
 
 
 class User(object):

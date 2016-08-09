@@ -6,7 +6,7 @@ from textblob.sentiments import NaiveBayesAnalyzer
 
 from AnalysisEngine.Analytics.TimeAggregation.TimeAggregation import TimeAggregation
 from AnalysisEngine.Classification.TweetClassifier.SVM import TweetPreprocessor
-from AnalyticsService.TwitterObj import Status
+from AnalysisEngine.TwitterObj import Status
 
 
 class TD_Sentiment(TimeAggregation):

@@ -1,8 +1,9 @@
+import json
+
+import numpy as np
 from pymongo import MongoClient
 
-from AnalyticsService.TwitterObj import Status
-import json
-import numpy as np
+from AnalysisEngine.TwitterObj import Status
 
 if False:
     schema_id = "RAW"

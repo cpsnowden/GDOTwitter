@@ -1,8 +1,9 @@
 import logging
 
+from AnalysisEngine import Util
 from AnalysisEngine.Analytics.Analytics import Analytics
-from AnalyticsService.TwitterObj import Status
-from AnalyticsService import Util
+from AnalysisEngine.TwitterObj import Status
+
 
 class TopHashtags(Analytics):
     _logger = logging.getLogger(__name__)

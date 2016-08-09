@@ -1,8 +1,10 @@
 import time
+
 import requests
-from tzwhere import tzwhere
-from AnalyticsService.TwitterObj import Status, User
 from pymongo import MongoClient
+
+from AnalysisEngine.TwitterObj import Status
+
 api_key = "AIzaSyDigmTpI9nc7y7qTt7WheHBesBfEM_kh8E"
 timestamp = time.time()
 # api_response = requests.get('https://maps.googleapis.com/maps/api/timezone/json?location={0},{1}&timestamp={2}&key={3}'.format(latitude,longitude,timestamp,api_key))

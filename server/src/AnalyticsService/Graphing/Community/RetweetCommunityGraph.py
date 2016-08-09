@@ -1,9 +1,10 @@
 import logging
 
 import networkx as nx
-from AnalyticsService.Graphing.Community.CommunityGraph import CommunityGraph
-from AnalyticsService.TwitterObj import Status
 from dateutil import parser
+
+from AnalysisEngine.TwitterObj import Status
+from AnalyticsService.Graphing.Community.CommunityGraph import CommunityGraph
 
 
 class RetweetCommunityGraph(CommunityGraph):

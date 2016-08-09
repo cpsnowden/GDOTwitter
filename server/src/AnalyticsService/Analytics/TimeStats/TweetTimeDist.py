@@ -1,10 +1,10 @@
-import json
 import logging
 
 import numpy
 import pandas as pd
+
+from AnalysisEngine.TwitterObj import Status
 from AnalyticsService.Analytics.Analytics import Analytics
-from AnalyticsService.TwitterObj import Status
 
 
 class TweetTimeDistribution(Analytics):

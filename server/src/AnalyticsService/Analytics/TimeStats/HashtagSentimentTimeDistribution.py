@@ -1,16 +1,14 @@
 import logging
 
 import pandas as pd
+from dateutil.tz import tzutc
+from textblob import Blobber
+from textblob.sentiments import NaiveBayesAnalyzer
 
+from AnalysisEngine.TwitterObj import Status
 from AnalyticsService.Analytics.Analytics import Analytics
 from AnalyticsService.Analytics.BasicStats.Hashtags import Hashtags
-from AnalyticsService.TwitterObj import Status
-import json
-from dateutil.tz import tzutc
-import numpy as np
 from AnalyticsService.Graphing.Classification.TweetClassifier.SVM import TweetPreprocessor
-from textblob.sentiments import NaiveBayesAnalyzer
-from textblob import TextBlob, Blobber
 UTC = tzutc()
 from itertools import product
 

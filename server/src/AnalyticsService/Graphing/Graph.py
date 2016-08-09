@@ -1,14 +1,16 @@
-import logging
 import json
-import networkx as nx
+import logging
 from datetime import datetime
 
-from AnalyticsService.Graphing.GraphUtils import GraphColor, GraphUtils
-from AnalyticsService.TwitterObj import Status
-from AnalyticsService.AnalysisTemplate import AnalysisTemplate
-from pymongo import ASCENDING
+import networkx as nx
 from networkx import write_graphml
+from pymongo import ASCENDING
+
+from AnalysisEngine.TwitterObj import Status
+from AnalyticsService.AnalysisTemplate import AnalysisTemplate
 from AnalyticsService.Graphing.GephiRPC.GephiRPC import GephiRpcClient
+from AnalyticsService.Graphing.GraphUtils import GraphColor, GraphUtils
+
 
 class Graph(AnalysisTemplate):
     _logging = logging.getLogger(__name__)

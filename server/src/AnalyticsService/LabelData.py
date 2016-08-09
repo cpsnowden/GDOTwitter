@@ -1,7 +1,9 @@
-from pymongo import MongoClient
-from TwitterObj import Status
 import csv
-import progressbar
+
+from pymongo import MongoClient
+
+from AnalysisEngine.TwitterObj import Status
+
 keys = ["a","d","q"]
 client = MongoClient()
 

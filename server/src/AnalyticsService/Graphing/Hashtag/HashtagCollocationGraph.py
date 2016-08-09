@@ -3,8 +3,8 @@ import logging
 import networkx as nx
 import numpy as np
 
+from AnalysisEngine.TwitterObj import Status
 from AnalyticsService.Graphing.Graph import Graph
-from AnalyticsService.TwitterObj import Status
 
 
 class HashtagCollocationGraph(Graph):

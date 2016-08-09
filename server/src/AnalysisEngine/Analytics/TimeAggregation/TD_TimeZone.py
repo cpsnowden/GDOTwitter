@@ -1,8 +1,8 @@
 import logging
 
+from AnalysisEngine import Util
 from AnalysisEngine.Analytics.TimeAggregation.TimeAggregation import TimeAggregation
-from AnalyticsService import Util
-from AnalyticsService.TwitterObj import Status, User
+from AnalysisEngine.TwitterObj import Status, User
 
 
 class TD_TimeZone(TimeAggregation):

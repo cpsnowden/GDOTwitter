@@ -1,9 +1,9 @@
 import logging
 
+from AnalysisEngine import Util
 from AnalysisEngine.Analytics.Aggregation.TopHashtags import TopHashtags
 from AnalysisEngine.Analytics.TimeAggregation.TimeAggregation import TimeAggregation
-from AnalyticsService import Util
-from AnalyticsService.TwitterObj import Status
+from AnalysisEngine.TwitterObj import Status
 
 
 class TD_Hashtags(TimeAggregation):

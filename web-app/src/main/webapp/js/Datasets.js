@@ -11,7 +11,7 @@ var myApp = angular.module('dataFilter', ['restangular', 'ngResource', 'ui.boots
     .controller('DataFilterCtrl', function ($scope, $window, $q, $interval, Restangular) {
 
 
-        $scope.datasets = Restangular.all('dataset').getList().$object
+        $scope.datasets = Restangular.all('dataset').getList().$object;
 
         $scope.sortType = 'endDate';
         $scope.sortReverse = false;
@@ -47,7 +47,7 @@ var myApp = angular.module('dataFilter', ['restangular', 'ngResource', 'ui.boots
         //$interval($scope.refreshTable, 10000);
 
         $scope.addDataset = function (dataset) {
-            console.log(dataset)
+            console.log(dataset);
             if (dataset != undefined) {
                 if (typeof(dataset.tags) == "string") {
                 dataset.tags = dataset.tags.split(/[ ,]+/);
@@ -76,7 +76,7 @@ var myApp = angular.module('dataFilter', ['restangular', 'ngResource', 'ui.boots
             $scope.datasetForm.dataset = new_dataset;
 
 
-        }
+        };
 
         $scope.startDataset = function (dataset) {
 

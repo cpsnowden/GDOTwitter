@@ -1,8 +1,9 @@
 import logging
 
+from AnalysisEngine import Util
 from AnalysisEngine.Analytics.Analytics import Analytics
-from AnalyticsService.TwitterObj import Status, User
-from AnalyticsService import Util
+from AnalysisEngine.TwitterObj import Status, User
+
 
 class TimeZone(Analytics):
     _logger = logging.getLogger(__name__)
@@ -22,7 +23,7 @@ class TimeZone(Analytics):
     def process(self):
 
         utc_offset_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["user"],
-                                              User.SCHEMA_MAP[self.schema]["utc_offset"])
+                                               User.SCHEMA_MAP[self.schema]["utc_offset"])
 
         query = [{"$group": {"_id": utc_offset_key, "count": {"$sum": 1}}},
                  {"$sort": {"count": -1}}]

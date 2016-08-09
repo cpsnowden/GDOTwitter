@@ -1,11 +1,14 @@
 import json
 import logging
 import multiprocessing
-from dateutil import parser
 import os
+
 import pika
+from dateutil import parser
 from pymongo.errors import DuplicateKeyError
-from AnalyticsService.TwitterObj import Status
+
+from AnalysisEngine.TwitterObj import Status
+
 
 class RouterManager(object):
     logger = logging.getLogger(__name__)

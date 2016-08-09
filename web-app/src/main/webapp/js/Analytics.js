@@ -36,12 +36,12 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
             var url = 'http://' + $window.location.host + '#/chartsIFrame/' + a.dataset_id + "/" + a.id;
             $window.open(url, '_blank');
 
-        }
+        };
 
         $scope.refreshTable = function () {
             $scope.datasets = Restangular.all('dataset').getList({status: "READY_FOR_ANALYTICS"}).$object
 
-        }
+        };
 
         ////$interval($scope.refreshSubTable, 10000);
         //var stop = $interval(function() {
@@ -56,7 +56,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
 
         $scope.getAnalytics = function (dataset) {
             return Restangular.one("dataset", dataset.id).getList('analytics').$object
-        }
+        };
 
         $scope.cancel = function () {
             $scope.analyticsForm = {
@@ -101,7 +101,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
 
         $scope.removeChoice = function (name, n) {
             console.log($scope.analyticsForm.order.specialised_args[name].splice(n, 1))
-        }
+        };
 
         $scope.selectClass = function () {
 

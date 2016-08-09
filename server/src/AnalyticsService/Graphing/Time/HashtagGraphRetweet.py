@@ -3,10 +3,9 @@ import logging
 import networkx as nx
 from dateutil import parser
 
-
-from AnalyticsService.Graphing.Time.TimeGraph import TimeGraph
-from AnalyticsService.TwitterObj import Status, User
+from AnalysisEngine.TwitterObj import Status, User
 from AnalyticsService.Graphing.Classification.ClassificationSystem import ClassificationSystem
+from AnalyticsService.Graphing.Time.TimeGraph import TimeGraph
 
 class HashtagGraphRetweet(TimeGraph):
     _logger = logging.getLogger(__name__)

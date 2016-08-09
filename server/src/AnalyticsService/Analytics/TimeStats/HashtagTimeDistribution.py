@@ -1,13 +1,12 @@
 import logging
 
 import pandas as pd
+from dateutil.tz import tzutc
 
+from AnalysisEngine.TwitterObj import Status
 from AnalyticsService.Analytics.Analytics import Analytics
 from AnalyticsService.Analytics.BasicStats.Hashtags import Hashtags
-from AnalyticsService.TwitterObj import Status
-import json
-from dateutil.tz import tzutc
-import numpy as np
+
 UTC = tzutc()
 
 class HashtagTimeDistribution(Analytics):

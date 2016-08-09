@@ -1,8 +1,9 @@
 import json
 import logging
 
-from AnalyticsService.TwitterObj import Status
+from AnalysisEngine.TwitterObj import Status
 from AnalyticsService.Analytics.Analytics import Analytics
+
 
 class Languages(Analytics):
     _logger = logging.getLogger(__name__)

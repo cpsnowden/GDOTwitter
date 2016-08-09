@@ -3,7 +3,7 @@ import logging
 import networkx as nx
 
 from AnalysisEngine.Graphing.Graphing import Graphing
-from AnalyticsService.TwitterObj import Status
+from AnalysisEngine.TwitterObj import Status
 
 class BasicRetweet(Graphing):
     _logger = logging.getLogger(__name__)

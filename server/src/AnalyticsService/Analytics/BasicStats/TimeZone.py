@@ -1,8 +1,9 @@
 import json
 import logging
 
-from AnalyticsService.TwitterObj import User, Status
+from AnalysisEngine.TwitterObj import User, Status
 from AnalyticsService.Analytics.Analytics import Analytics
+
 
 class TimeZone(Analytics):
     _logger = logging.getLogger(__name__)

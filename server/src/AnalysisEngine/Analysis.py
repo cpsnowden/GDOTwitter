@@ -2,12 +2,14 @@ import abc
 import json
 import logging
 from datetime import datetime
-from dateutil import parser
-import yaml
+
 import pymongo
+import yaml
+from dateutil import parser
+
+from AnalysisEngine import Util
 from AnalysisEngine.Charting.Charting import create_chart
-from AnalyticsService import Util
-from AnalyticsService.TwitterObj import Status
+from AnalysisEngine.TwitterObj import Status
 from Database.Persistence import DatabaseManager
 from api.Objects.MetaData import DatasetMeta
 

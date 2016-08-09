@@ -1,8 +1,9 @@
 import logging
 
+from AnalysisEngine import Util
 from AnalysisEngine.Analytics.Analytics import Analytics
-from AnalyticsService.TwitterObj import Status, User
-from AnalyticsService import Util
+from AnalysisEngine.TwitterObj import Status, User
+
 
 class TopRetweeted(Analytics):
     _logger = logging.getLogger(__name__)

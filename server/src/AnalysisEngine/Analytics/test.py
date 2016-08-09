@@ -1,8 +1,6 @@
 import datetime
-from AnalyticsService import Util
-import json
+
 import pandas as pd
-from collections import OrderedDict
 
 dates =  [datetime.datetime(2011,01,01), datetime.datetime(2012,01,01)]
 sentiment = {"neg":[0,1],"pos":[2,0]}
