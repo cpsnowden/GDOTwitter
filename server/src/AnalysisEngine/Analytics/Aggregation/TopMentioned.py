@@ -25,8 +25,8 @@ class TopMentioned(Analytics):
         limit = self.args["Limit"]
 
         mention_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["mentions"])
-        user_name_key = Util.dollar_join_keys(mention_key,
-                                              UserMention.SCHEMA_MAP[self.schema]["name"])
+        user_name_key = Util.join_keys(mention_key,
+                                       UserMention.SCHEMA_MAP[self.schema]["name"])
 
         query = [
             {"$unwind": mention_key},

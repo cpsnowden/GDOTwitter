@@ -80,16 +80,16 @@ class DatasetStatus(Resource):
             abort(404, message="Dataset {} does not exist".format(dataset_id))
 
     @marshal_with(status_meta_fields)
-    def put(self, dataset_id):
+    def put(self, id):
         args = self.parser.parse_args()
         status = args["status"]
 
         try:
-            found = DatasetMeta.objects.get(id=dataset_id)
+            found = DatasetMeta.objects.get(id=id)
             self.data_service.handle_status(found, status)
             return found, 201
         except DoesNotExist:
-            abort(404, message="Dataset {} does not exist".format(dataset_id))
+            abort(404, message="Dataset {} does not exist".format(id))
 
 
 class DatasetList(Resource):

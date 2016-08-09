@@ -60,6 +60,9 @@ def create_ranking_chart(chart_data):
 def get_html(data_source, type, width="100%", height="100%"):
     default_chart_properties = {
         "bgColor": "#000000,#000000",
+        "captionHorizontalPadding": "2",
+        "captionOnTop": "0",
+        "captionAlignment": "right",
         "canvasBgAlpha": "0",
         "bgAlpha": "100",
         "theme": "fint",
