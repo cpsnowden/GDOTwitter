@@ -29,7 +29,8 @@ class TopHashtags(Analytics):
         result = {"details": {"chartType": "bar2d",
                               "chartProperties": {"yAxisName": "Number of Occurences",
                                                   "xAxisName": "Hashtag",
-                                                  "caption": "Top " + str(limit) + " hashtags"}},
+                                                  "caption": self.dataset_meta.description,
+                                                  "subcaption": "Top " + str(limit) + " hashtags"}},
                   "data": data}
 
         self.export_chart(result)

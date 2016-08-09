@@ -39,7 +39,8 @@ class TopMentioned(Analytics):
         result = {"details": {"chartType": "bar2d",
                               "chartProperties": {"yAxisName": "Number of Times Mentioned",
                                                   "xAxisName": "User",
-                                                  "caption": "Top " + str(limit) + " mentioned users"}},
+                                                  "caption": self.dataset_meta.description,
+                                                  "subcaption": "Top " + str(limit) + " mentioned users"}},
                   "data": list(data)}
 
         self.export_chart(result)

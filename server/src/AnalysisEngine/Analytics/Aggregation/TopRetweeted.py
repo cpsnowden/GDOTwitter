@@ -39,7 +39,8 @@ class TopRetweeted(Analytics):
         result = {"details": {"chartType": "bar2d",
                               "chartProperties": {"yAxisName": "Number of Retweeted Statuses",
                                                   "xAxisName": "User",
-                                                  "caption": "Top " + str(limit) + " retweeted users"}},
+                                                  "caption": self.dataset_meta.description,
+                                                  "subcaption": "Top " + str(limit) + " retweeted users"}},
                   "data": list(data)}
 
         self.export_chart(result)

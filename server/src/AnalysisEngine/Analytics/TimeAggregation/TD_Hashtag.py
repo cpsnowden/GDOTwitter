@@ -63,7 +63,8 @@ class TD_Hashtags(TimeAggregation):
         result = {"details": {"chartType": "msline",
                               "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
                                                   "xAxisName": "Date (UTC)",
-                                                  "caption": "Top " + str(limit) + " hashtag time interval",
+                                                  "caption": self.dataset_meta.description,
+                                                  "subcaption": "Top " + str(limit) + " hashtag time interval",
                                                   "labelStep": int(len(x_values) / 20.0)}},
                   "data": {"categories": sorted(x_values), "values": result_lst}}
 

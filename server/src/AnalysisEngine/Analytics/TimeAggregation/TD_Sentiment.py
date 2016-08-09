@@ -80,7 +80,8 @@ class TD_Sentiment(TimeAggregation):
         result = {"details": {"chartType": "msline",
                               "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
                                                   "xAxisName": "Date (UTC)",
-                                                  "caption": "Sentiment Time Distribution",
+                                                  "caption": self.dataset_meta.description,
+                                                  "subcaption": "Sentiment Time Distribution",
                                                   "labelStep": int(len(x_values) / 20.0)}},
                   "data": {"categories": sorted(x_values), "values": data}}
 

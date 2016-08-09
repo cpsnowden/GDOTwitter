@@ -42,6 +42,16 @@ def create_pie_chart(chart_data):
     return get_html({"chart": chart_data["details"]["chartProperties"], "data": plot_data}, "doughnut2d")
 
 
+def create_3d_pie_chart(chart_data):
+    plot_data = [{"label": i["_id"], "value": i["count"]} for i in chart_data["data"]]
+    chart_data["details"]["chartProperties"]["startingAngle"] = "310"
+    chart_data["details"]["chartProperties"]["decimals"] = "0"
+    chart_data["details"]["chartProperties"]["showLegend"] = "1"
+    chart_data["details"]["chartProperties"]["labelFontColor"] = "#FFFFFF"
+    chart_data["details"]["chartProperties"]["labelFontSize"] = "20"
+    return get_html({"chart": chart_data["details"]["chartProperties"], "data": plot_data}, "doughnut3d")
+
+
 def create_ranking_chart(chart_data):
     plot_data = [{"label": i["_id"], "value": i["count"]} for i in chart_data["data"]]
     return get_html({"chart": chart_data["details"]["chartProperties"], "data": plot_data}, "bar2d")
@@ -82,12 +92,69 @@ def get_html(data_source, type, width="100%", height="100%"):
                               "width": width,
                               "type": type})
 
+
 def create_chart(data):
     options = {
         "msline": create_time_graph,
         "bar2d": create_ranking_chart,
-        "doughnut2d": create_pie_chart
+        "doughnut2d": create_pie_chart,
+        "doughnut3d": create_3d_pie_chart,
     }
     return options[data["details"]["chartType"]](data)
 
 
+if __name__ == "__main__":
+    d = {
+        "data": [
+            {
+                "_id": "imwithher",
+                "count": 47964
+            },
+            {
+                "_id": "feelthebern",
+                "count": 39029
+            },
+            {
+                "_id": "makeamericagreatagain",
+                "count": 36757
+            },
+            {
+                "_id": "trump2016",
+                "count": 17056
+            },
+            {
+                "_id": "bernieorbust",
+                "count": 10287
+            },
+            {
+                "_id": "trumptrain",
+                "count": 8181
+            },
+            {
+                "_id": "neverhillary",
+                "count": 7692
+            },
+            {
+                "_id": "stillsanders",
+                "count": 7272
+            },
+            {
+                "_id": "stoptpp",
+                "count": 5530
+            },
+            {
+                "_id": "americafirst",
+                "count": 5195
+            }
+        ],
+        "details": {
+            "chartType": "doughnut2d",
+            "chartProperties": {"yAxisName": "Number of Occurences",
+                                "xAxisName": "Hashtag",
+                                "caption": "blash",
+                                "subcaption": "Top Hashtags"}
+        }
+    }
+    html = create_chart(d)
+    with open("out.html", "w") as f:
+        f.write(html)

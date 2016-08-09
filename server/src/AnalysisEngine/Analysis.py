@@ -31,12 +31,12 @@ class Analysis(object):
 
     def __init__(self, analytics_meta):
 
-        dataset_meta = DatasetMeta.objects.get(id=analytics_meta.dataset_id)
+        self.dataset_meta = DatasetMeta.objects.get(id=analytics_meta.dataset_id)
         self.analytics_meta = analytics_meta
         self.dbm = DatabaseManager(mongo_settings["dataDb"], mongo_settings["managementDb"])
-        self.col = self.dbm.data_db.get_collection(dataset_meta.db_col)
-        self.args = self.parse_args(analytics_meta.specialised_args, dataset_meta)
-        self.schema = dataset_meta.schema
+        self.col = self.dbm.data_db.get_collection(self.dataset_meta.db_col)
+        self.args = self.parse_args(analytics_meta.specialised_args, self.dataset_meta)
+        self.schema = self.dataset_meta.schema
         self._logger.info("Attempting to run %s with arguments %s", self.get_type, self.args)
 
     @abc.abstractmethod

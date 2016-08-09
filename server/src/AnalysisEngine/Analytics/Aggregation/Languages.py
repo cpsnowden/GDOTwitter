@@ -30,8 +30,9 @@ class Languages(Analytics):
 
         data = self.col.aggregate(query, allowDiskUse=True)
 
-        result = {"details": {"chartType": "doughnut2d",
-                              "chartProperties": {"defaultCenterLabel": "Languages"}},
+        result = {"details": {"chartType": "doughnut3d",
+                              "chartProperties": {"caption": self.dataset_meta.description,
+                                                  "subcaption": "Languages"}},
                   "data": list(data)}
 
         self.export_chart(result)

@@ -63,7 +63,8 @@ class TD_TimeZone(TimeAggregation):
         result = {"details": {"chartType": "msline",
                               "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
                                                   "xAxisName": "Date (UTC)",
-                                                  "caption": "Time zone tweet rate interval",
+                                                  "caption": self.dataset_meta.description,
+                                                  "subcaption": "Time zone tweet rate interval",
                                                   "labelStep": min(1, int(len(x_values) / 20.0))}},
                   "data": {"categories": sorted(x_values), "values": result_lst}}
 

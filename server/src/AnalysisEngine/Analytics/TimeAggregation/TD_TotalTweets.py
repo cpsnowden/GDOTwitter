@@ -43,7 +43,8 @@ class TD_TotalTweets(TimeAggregation):
         result = {"details": {"chartType": "msline",
                               "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
                                                   "xAxisName": "Date (UTC)",
-                                                  "caption": "Tweet Rate over Time",
+                                                  "caption": self.dataset_meta.description,
+                                                  "subcaption": "Tweet Rate over Time",
                                                   "labelStep": min(1, int(len(x_values) / 20.0))}},
                   "data": {"categories": sorted(x_values), "values": [{"_id": "ALL", "data": result_lst}]}}
 

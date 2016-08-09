@@ -41,8 +41,9 @@ class TimeZone(Analytics):
             elif c["_id"] == 0:
                 c["_id"] = "UTC"
 
-        result = {"details": {"chartType": "doughnut2d",
-                              "chartProperties": {"defaultCenterLabel": "Time Zones"}},
+        result = {"details": {"chartType": "doughnut3d",
+                              "chartProperties": {"caption": self.dataset_meta.description,
+                                                  "subcaption": "Time Zones"}},
                   "data": utc_offsets}
 
         self.export_chart(result)

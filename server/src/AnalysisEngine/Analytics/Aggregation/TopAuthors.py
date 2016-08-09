@@ -38,7 +38,8 @@ class TopAuthors(Analytics):
         result = {"details": {"chartType": "bar2d",
                               "chartProperties": {"yAxisName": "Number of Tweets",
                                                   "xAxisName": "Author",
-                                                  "caption": "Top " + str(limit) + " authors"}},
+                                                  "caption": self.dataset_meta.description,
+                                                  "subcaption": "Top " + str(limit) + " authors"}},
                   "data": list(data)}
 
         self.export_chart(result)

@@ -1,5 +1,3 @@
-
-
 <div ng-controller="DataFilterCtrl">
 
     <div class='container'>
@@ -54,20 +52,20 @@
                                     </div>
                                 </div>
                                 <!--<div class="form-group">-->
-                                    <!--<div class="input-group">-->
-                                        <!--<div class="input-group-addon">Duration</div>-->
-                                        <!--<select class="form-control" ng-model="datasetForm.dataset.limitType">-->
-                                            <!--<option>Duration</option>-->
-                                            <!--<option>Counter</option>-->
-                                        <!--</select>-->
-                                    <!--</div>-->
+                                <!--<div class="input-group">-->
+                                <!--<div class="input-group-addon">Duration</div>-->
+                                <!--<select class="form-control" ng-model="datasetForm.dataset.limitType">-->
+                                <!--<option>Duration</option>-->
+                                <!--<option>Counter</option>-->
+                                <!--</select>-->
+                                <!--</div>-->
                                 <!--</div>-->
                                 <!--<div class="form-group">-->
-                                    <!--<div class="input-group">-->
-                                        <!--<div class="input-group-addon">Duration Limit</div>-->
-                                        <!--<input type="number" class="form-control"-->
-                                               <!--ng-model="datasetForm.dataset.limit">-->
-                                    <!--</div>-->
+                                <!--<div class="input-group">-->
+                                <!--<div class="input-group-addon">Duration Limit</div>-->
+                                <!--<input type="number" class="form-control"-->
+                                <!--ng-model="datasetForm.dataset.limit">-->
+                                <!--</div>-->
                                 <!--</div>-->
                                 <div class="form-group">
                                     <div class="input-group">
@@ -95,10 +93,10 @@
                     <col width="10%">
                     <col width="10%">
                     <col width="10%">
-                    <col width="5%" >
-                    <col width="6%" >
+                    <col width="5%">
+                    <col width="6%">
                     <thead>
-                    <tr >
+                    <tr>
                         <th>Operation</th>
                         <th>
                             <a href="" ng-click="sortType = 'type' ; sortReverse = !sortReverse">Type</a>
@@ -155,13 +153,13 @@
                             <button class="btn btn-danger" ng-click="stopDataset(p)" ng-show="p['schema']=='RAW'"><i
                                     class="glyphicon glyphicon-stop"></i></button>
                             <!--<button class="btn btn-inverse" ng-click="deleteDataset(p)"-->
-                                    <!--ng-show="p['status']!='RUNNING'&&p['status']!='ORDERED'"><i-->
-                                    <!--class="glyphicon glyphicon-trash"></i></button>-->
+                            <!--ng-show="p['status']!='RUNNING'&&p['status']!='ORDERED'"><i-->
+                            <!--class="glyphicon glyphicon-trash"></i></button>-->
                             <button class="btn btn-primary" ng-click="duplicate(p)"><i
                                     class="fa fa-files-o"></i></button>
 
                         </td>
-                        <td ng-bind="p['type']" ></td>
+                        <td ng-bind="p['type']"></td>
                         <td ng-bind="p['description']"></td>
                         <td ng-bind="p['id']"></td>
                         <td ng-bind="p['db_col']"></td>
@@ -171,6 +169,29 @@
                         <td ng-bind="p['end_time']"></td>
                         <td ng-bind="p['collection_size']" align="center"></td>
                         <td ng-bind="p['schema']" align="center"></td>
+                        <!--<td><div style="height:100px; overflow:hidden" ng-bind="p['schema']" align="center"></div></td>-->
+                        <!--<td align="center">-->
+                        <!--<div style="height:100px; overflow:hidden"><button class="btn btn-success" ng-click="startDataset(p)" ng-show="p['schema']=='RAW'"><i-->
+                        <!--class="glyphicon glyphicon-play"></i></button>-->
+                        <!--<button class="btn btn-danger" ng-click="stopDataset(p)" ng-show="p['schema']=='RAW'"><i-->
+                        <!--class="glyphicon glyphicon-stop"></i></button>-->
+                        <!--&lt;!&ndash;<button class="btn btn-inverse" ng-click="deleteDataset(p)"&ndash;&gt;-->
+                        <!--&lt;!&ndash;ng-show="p['status']!='RUNNING'&&p['status']!='ORDERED'"><i&ndash;&gt;-->
+                        <!--&lt;!&ndash;class="glyphicon glyphicon-trash"></i></button>&ndash;&gt;-->
+                        <!--<button class="btn btn-primary" ng-click="duplicate(p)"><i-->
+                        <!--class="fa fa-files-o"></i></button>-->
+                        <!--</div>-->
+                        <!--</td>-->
+                        <!--<td><div style="height:150px; overflow:hidden" ng-bind="p['type']"  ></div></td>-->
+                        <!--<td><div style="height:100px; overflow:hidden" ng-bind="p['description']"></div></td>-->
+                        <!--<td><div style="height:100px; overflow:hidden" ng-bind="p['id']"></div></td>-->
+                        <!--<td><div style="height:100px; overflow:hidden" ng-bind="p['db_col']"></div></td>-->
+                        <!--<td><div style="height:100px; overflow:hidden" ng-bind="p['status']"></div></td>-->
+                        <!--<td><div style="height:100px; overflow:hidden" ng-bind="p['tags']">&ndash;&gt;></div></td>-->
+                        <!--<td><div style="height:100px; overflow:hidden" ng-bind="p['start_time']"></div></td>-->
+                        <!--<td><div style="height:100px; overflow:hidden" ng-bind="p['end_time']"></div></td>-->
+                        <!--<td><div style="height:100px; overflow:hidden" ng-bind="p['collection_size']" align="center"></div></td>-->
+                        <!--<td><div style="height:100px; overflow:hidden" ng-bind="p['schema']" align="center"></div></td>-->
                     </tr>
                     </tbody>
                 </table>
