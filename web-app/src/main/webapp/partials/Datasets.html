@@ -1,3 +1,5 @@
+
+
 <div ng-controller="DataFilterCtrl">
 
     <div class='container'>
@@ -96,7 +98,7 @@
                     <col width="5%" >
                     <col width="6%" >
                     <thead>
-                    <tr>
+                    <tr >
                         <th>Operation</th>
                         <th>
                             <a href="" ng-click="sortType = 'type' ; sortReverse = !sortReverse">Type</a>
@@ -148,9 +150,9 @@
                     <tbody>
                     <tr ng-repeat="p in datasets | orderBy:'name' | filter:searchText | orderBy:sortType:sortReverse">
                         <td align="center">
-                            <button class="btn btn-success" ng-click="startDataset(p)"><i
+                            <button class="btn btn-success" ng-click="startDataset(p)" ng-show="p['schema']=='RAW'"><i
                                     class="glyphicon glyphicon-play"></i></button>
-                            <button class="btn btn-danger" ng-click="stopDataset(p)"><i
+                            <button class="btn btn-danger" ng-click="stopDataset(p)" ng-show="p['schema']=='RAW'"><i
                                     class="glyphicon glyphicon-stop"></i></button>
                             <!--<button class="btn btn-inverse" ng-click="deleteDataset(p)"-->
                                     <!--ng-show="p['status']!='RUNNING'&&p['status']!='ORDERED'"><i-->
@@ -159,7 +161,7 @@
                                     class="fa fa-files-o"></i></button>
 
                         </td>
-                        <td ng-bind="p['type']"></td>
+                        <td ng-bind="p['type']" ></td>
                         <td ng-bind="p['description']"></td>
                         <td ng-bind="p['id']"></td>
                         <td ng-bind="p['db_col']"></td>
