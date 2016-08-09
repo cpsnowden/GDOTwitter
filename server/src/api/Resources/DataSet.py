@@ -35,9 +35,7 @@ class DataServiceR(Resource):
     def get(self):
 
         status = self.data_service.get_status()
-        print jsonify(status)
-        return jsonify(status)
-
+        return status
 
 class DataSet(Resource):
     logger = logging.getLogger(__name__)

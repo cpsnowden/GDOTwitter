@@ -99,7 +99,7 @@ public class App {
     }
 
     public App(String host, int port, String userName, String password, String authDB) throws IOException, TimeoutException {
-
+	logger.info("Using db: " + host + " port: " + port + " username: " + userName);
         jsonParser = new JSONParser();
         MongoCredential credential = MongoCredential.createCredential(userName, authDB, password.toCharArray());
         DB db = new MongoClient(new ServerAddress(host, port), Arrays.asList(credential)).getDB(MONGO_DB);

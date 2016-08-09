@@ -142,9 +142,8 @@ class GraphColor(object):
     def color_edges(graph, mapping):
 
         key, color_map = mapping
-
-        for u, v, k in graph.edges(data=key):
-            GraphColor.color_element_from_rgb(graph[u][v], color_map.get(k, "grey"))
+        for u, v, k in graph.edges(data=True):
+            GraphColor.color_element_from_rgb(graph[u][v], color_map.get(k[key], "grey"))
 
         return graph
 
