@@ -90,7 +90,7 @@ class RetweetCommunity(Graphing):
 
             # Add the source user
             source_user = status.get_user()
-            source_user_id = str(source_user.get_id())
+            source_user_id = str(source_user.get_name())
 
             if source_user_id not in users:
                 users[source_user_id] = CommunityUser(classification_scores=hashtag_scores)
@@ -104,8 +104,8 @@ class RetweetCommunity(Graphing):
 
             retweet = status.get_retweet_status()
             if include_retweet_edges and retweet is not None:
-                retweeted_user = retweet.get_user()
-                retweeted_user_id = str(retweeted_user.get_id())
+                retweeted_user = retweet.get_user(True)
+                retweeted_user_id = str(retweeted_user.get_name())
 
                 if retweeted_user_id not in users:
                     users[retweeted_user_id] = CommunityUser(classification_scores=hashtag_scores)
@@ -127,7 +127,7 @@ class RetweetCommunity(Graphing):
             elif include_mention_edges:
                 for mention in status.get_mentions():
 
-                    mentioned_user_id = str(mention.get_id())
+                    mentioned_user_id = str(mention.get_name())
 
                     if mentioned_user_id not in users:
                         users[mentioned_user_id] = CommunityUser(classification_scores=hashtag_scores)

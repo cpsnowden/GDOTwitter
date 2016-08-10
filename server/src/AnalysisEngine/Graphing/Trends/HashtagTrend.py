@@ -49,11 +49,14 @@ class HashtagTrend(TrendGraph):
                                  [(i, 1) for i in hashtag_args[1]["tags"]])
         classification_system = ClassificationSystem("BASIC", class_labels, hashtag_groupings)
 
+        if top_user_limit > 0:
+            user_ids = self.get_top_users(self.schema, top_user_limit, self.col)
 
-        user_ids = self.get_top_users(self.schema, top_user_limit, self.col)
+            query = self.get_time_bounded_query({Util.join_keys(Status.SCHEMA_MAP[self.schema]["user"],
+                                                                User.SCHEMA_MAP[self.schema]["id"]): {"$in": user_ids}})
+        else:
+            query = self.get_time_bounded_query({})
 
-        query = self.get_time_bounded_query({Util.join_keys(Status.SCHEMA_MAP[self.schema]["user"],
-                                                            User.SCHEMA_MAP[self.schema]["id"]): {"$in": user_ids}})
         cursor = self.get_sorted_cursor(query, limit)
 
         if cursor is None:

@@ -53,10 +53,15 @@ class HashtagTrendReweet(TrendGraph):
         classification_system = ClassificationSystem(classification_type, class_labels, hashtag_groupings)
 
         self._logger.info("Getting top users")
-        user_ids = HashtagTrend.get_top_users(self.schema, top_user_limit, self.col)
 
-        query = self.get_time_bounded_query({Util.join_keys(Status.SCHEMA_MAP[self.schema]["user"],
+        if top_user_limit > 0:
+            user_ids = HashtagTrend.get_top_users(self.schema, top_user_limit, self.col)
+
+            query = self.get_time_bounded_query({Util.join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                                             User.SCHEMA_MAP[self.schema]["id"]): {"$in": user_ids}})
+        else:
+            query = self.get_time_bounded_query({})
+
         cursor = self.get_sorted_cursor(query, tweet_limit)
         if cursor is None:
             self.analytics_meta.status = "NO DATA IN RANGE"
@@ -92,11 +97,11 @@ class HashtagTrendReweet(TrendGraph):
             status_id = str(status.get_id())
 
             source_user = status.get_user()
-            source_id = str(source_user.get_id())
+            source_id = str(source_user.get_name())
 
             current_score, tweet_score = classification_system.consume(status)
             user = status.get_user()
-            source_user_id = user.get_id()
+            source_user_id = user.get_name()
             source_node_id = str(source_user_id) + ":" + str(status_id)
 
             G.add_node(source_node_id,
@@ -117,8 +122,8 @@ class HashtagTrendReweet(TrendGraph):
 
             retweet = status.get_retweet_status()
             if retweet is not None:
-                user = retweet.get_user()
-                user_id = user.get_id()
+                user = retweet.get_user(True)
+                user_id = user.get_name()
                 target_node_id = str(user_id) + ":" + str(status_id)
                 # Ignore the vain people retweeting themselves
                 if user_id != source_id:

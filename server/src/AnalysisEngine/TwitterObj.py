@@ -4,17 +4,18 @@ from dateutil import parser
 class Status(object):
     T4J = dict(hashtags="hashtagEntities", mentions="userMentionEntities", user="user", text="text",
                created_at="createdAt", id="id", retweeted_status="retweetedStatus", language="lang", ISO_date=
-               "createdAt", coordinates="geoLocation", user_sub_field = "user")
+               "createdAt", coordinates="geoLocation", user_sub_field = "user", retweet_user = "user")
 
     RAW = dict(hashtags="entities.hashtags", mentions="entities.user_mentions", user="user", text="text",
                created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date=
-               "ISO_created_at", coordinates="coordinates.coordinates", user_sub_field = "user")
+               "ISO_created_at", coordinates="coordinates.coordinates", user_sub_field = "user", retweet_user = "user")
 
     GNIP = dict(hashtags="entities-hashtags", mentions="entities-user_mentions", text="clean-text",
                 created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="language",
                 ISO_date=
                 "ISO_created_at", user_sub_field=["user-id", "user-utcOffset", "user-friendsCount", "user-name",
-                                                  "user-twitterTimeZone","user-followersCount", "language"], user="")
+                                                  "user-twitterTimeZone","user-followersCount", "language"], user="",
+                retweet_user = "user")
 
     SCHEMA_MAP = {
         "T4J": T4J,
@@ -38,7 +39,9 @@ class Status(object):
         mention_list = self.get("mentions")
         return [UserMention(json, self.SCHEMA_ID) for json in mention_list]
 
-    def get_user(self):
+    def get_user(self, retweet = False):
+        if retweet:
+            User(self.get("retweet_user"), self.SCHEMA_ID, True)
         return User(self.get("user_sub_field"), self.SCHEMA_ID)
 
     def get_text(self):
@@ -46,7 +49,6 @@ class Status(object):
 
     def get_created_at(self):
         return self.get("created_at")
-        # TwitterDate(self.get("created_at"), self.SCHEMA_ID).get_date_time()
 
     def get_id(self):
         return self.get("id")
@@ -119,6 +121,7 @@ class User(object):
                lang="lang", utc_offset="utc_offset", time_zone="time_zone")
     GNIP = dict(id="user-id", name="user-name", follower_count="user-followersCount", friends_count="user-friendsCount",
                 utc_offset="user-utcOffset", time_zone="user-twitterTimeZone", lang="language")
+    RTWT_GNIP = dict(name="screen_name")
 
     SCHEMA_MAP = {
         "T4J": T4J,
@@ -126,9 +129,18 @@ class User(object):
         "GNIP": GNIP
     }
 
-    def __init__(self, json, schema_id):
+    RETWEET_SCHEMA_MAP = {
+        "T4J": T4J,
+        "RAW": RAW,
+        "GNIP": RTWT_GNIP
+    }
+
+    def __init__(self, json, schema_id, retweet = False):
         self.item = DictionaryWrapper(json)
-        self.SCHEMA = self.SCHEMA_MAP[schema_id]
+        if retweet:
+            self.SCHEMA = self.RETWEET_SCHEMA_MAP[schema_id]
+        else:
+            self.SCHEMA = self.SCHEMA_MAP[schema_id]
         self.SCHEMA_ID = schema_id
 
     def get(self, key):

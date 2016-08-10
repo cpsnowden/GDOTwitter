@@ -1,6 +1,7 @@
 import logging
 import abc
 from AnalysisEngine.Analytics.Analytics import Analytics
+import datetime
 
 
 class TimeAggregation(Analytics):
@@ -20,3 +21,12 @@ class TimeAggregation(Analytics):
     @classmethod
     def get_args(cls):
         return cls.__arguments + super(TimeAggregation, cls).get_args()
+
+    def get_time_values(self, start, end):
+        t_values = []
+        date = start
+        while date <= end:
+            t_values.append(date)
+            date += datetime.timedelta(**{self.args["timeInterval"].lower() + "s": 1})
+
+        return t_values

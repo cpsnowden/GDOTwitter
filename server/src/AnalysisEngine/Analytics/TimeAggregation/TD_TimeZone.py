@@ -60,6 +60,8 @@ class TD_TimeZone(TimeAggregation):
             elif series_name == 0:
                 l["_id"] = "UTC"
 
+        x_values = self.get_time_values(min(x_values), max(x_values))
+
         result = {"details": {"chartType": "msline",
                               "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
                                                   "xAxisName": "Date (UTC)",

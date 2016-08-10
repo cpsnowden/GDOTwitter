@@ -5,6 +5,7 @@ import networkx as nx
 from AnalysisEngine.Graphing.Graphing import Graphing
 from AnalysisEngine.TwitterObj import Status
 
+
 class BasicRetweet(Graphing):
     _logger = logging.getLogger(__name__)
     __arguments = [dict(name="filter_max_component", prettyName="Filter max component", type="boolean", default=True)]
@@ -14,7 +15,6 @@ class BasicRetweet(Graphing):
 
     def __init__(self, analytics_meta):
         super(BasicRetweet, self).__init__(analytics_meta)
-
 
     @classmethod
     def get_type(cls):
@@ -61,12 +61,12 @@ class BasicRetweet(Graphing):
 
             # Add the source user
             source_user = status.get_user()
-            source_user_id = str(source_user.get_id())
+            source_user_id = str(source_user.get_name())
 
             if source_user_id not in retweeted and source_user_id not in retweeters:
                 G.add_node(source_user_id,
-                           username = source_user.get_name(),
-                           node_type = "user",
+                           username=source_user.get_name(),
+                           node_type="user",
                            label=source_user.get_name(),
                            type="retweeter")
 
@@ -75,13 +75,13 @@ class BasicRetweet(Graphing):
             if source_user_id in retweeted:
                 G.node[source_user_id]["type"] = "both"
 
-            target_user = status.get_retweet_status().get_user()
-            target_user_id = str(target_user.get_id())
+            target_user = status.get_retweet_status().get_user(True)
+            target_user_id = str(target_user.get_name())
 
             if target_user_id not in retweeted and target_user_id not in retweeters:
                 G.add_node(target_user_id,
-                           username = target_user.get_name(),
-                           node_type = "user",
+                           username=target_user.get_name(),
+                           node_type="user",
                            label=target_user.get_name(),
                            type="retweeted")
 

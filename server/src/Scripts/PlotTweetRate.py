@@ -17,31 +17,46 @@ for i in range(len(tableau20)):
 
 #######################################################################################################################
 # path = "/Users/ChrisSnowden/Dropbox/1_Imperial College/Individual Project/FinalReport/Data/Brexit_Large_TweetRate.json"
-path =  "/Users/ChrisSnowden/IndividualProject/GDOTwitter/DATA/hourlyBrexit.dat"
-raw_data = []
+# path =  "/Users/ChrisSnowden/IndividualProject/GDOTwitter/DATA/hourlyBrexit.dat"
+# raw_data = []
+# with open(path) as f:
+#     for l in f:
+#         raw_data.append(json.loads(l))
+
+
+path =  "/Users/ChrisSnowden/IndividualProject/GDOTwitter/DATA/RAW_A_TwitterBre_7d.json"
 with open(path) as f:
-    for l in f:
-        raw_data.append(json.loads(l))
+    data = json.load(f)
+data = data["data"]
+for i,series in enumerate(data["values"]):
+    # print series
+    if series["_id"] != "brexit":
+        continue
 
-time = [parser.parse(i["_id"]["dt"]) for i in raw_data]
-counts = np.array([i["count"] for i in raw_data]).astype(float) / 10e3
+    time = [parser.parse(i["dt"]) for i in series["data"]]
+    counts = np.array([i["count"] for i in series["data"]]).astype(float) / 10e3
 
-y, zz, mean1, mean2 = ChangePoint.step4(counts)
 
-fig, axs = plt.subplots(nrows=1, sharex=True)
-# ax1 = axs[0]
-ax1 =axs
+fig, axs = plt.subplots(nrows=2, sharex=True)
+ax1 = axs[0]
+# ax1 =axs
 xfmt = md.DateFormatter('%Y-%m-%d\n %H:%M:%S')
 
 ax1.xaxis.set_major_formatter(xfmt)
 ax1.plot(time,counts)
 ax1.set_ylabel("Tweets per day /10e3")
-print len(time),len(y)
 
-# ax2 = axs[1]
-# ax2.plot(time[1:],y)
-# ax2.set_ylabel("logP")
-# ax2.set_xlabel("Date")
+t = time[:len(time)/2]
+c = counts[:len(time)/2]
+y, zz, mean1, mean2 = ChangePoint.step4(c)
+print len(t),len(y)
+
+
+
+ax2 = axs[1]
+ax2.plot(t[1:],y)
+ax2.set_ylabel("logP")
+ax2.set_xlabel("Date")
 plt.show()
 
 #19th February "https://www.theguardian.com/world/live/2016/feb/19/eu-summit-all-night-negotiations-deal-cameron-live
