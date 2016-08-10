@@ -3,16 +3,19 @@ from dateutil import parser
 
 class Status(object):
     T4J = dict(hashtags="hashtagEntities", mentions="userMentionEntities", user="user", text="text",
-               created_at="createdAt", id="id", retweeted_status="retweetedStatus", language="lang", ISO_date =
+               created_at="createdAt", id="id", retweeted_status="retweetedStatus", language="lang", ISO_date=
                "createdAt", coordinates="geoLocation")
 
     RAW = dict(hashtags="entities.hashtags", mentions="entities.user_mentions", user="user", text="text",
-               created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date =
+               created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date=
                "ISO_created_at", coordinates="coordinates.coordinates")
 
-    GNIP = dict(hashtags="entities-hashtags", mentions="entities-user_mentions", user=None, text="clean-text",
-               created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date=
-               "ISO_created_at")
+    GNIP = dict(hashtags="entities-hashtags", mentions="entities-user_mentions", text="clean-text",
+                created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="language",
+                ISO_date=
+                "ISO_created_at", user=["user-id", "user-utcOffset", "user-friendsCount", "user-name",
+                                        "user-twitterTimeZone",
+                                        "user-followersCount", "language"])
 
     SCHEMA_MAP = {
         "T4J": T4J,
@@ -44,7 +47,7 @@ class Status(object):
 
     def get_created_at(self):
         return self.get("created_at")
-        #TwitterDate(self.get("created_at"), self.SCHEMA_ID).get_date_time()
+        # TwitterDate(self.get("created_at"), self.SCHEMA_ID).get_date_time()
 
     def get_id(self):
         return self.get("id")
@@ -61,8 +64,8 @@ class Status(object):
         except KeyError:
             return None
 
-class GeoLocation(object):
 
+class GeoLocation(object):
     T4J = dict(longitude="longitude", latitude="latitude")
     RAW = dict(longitude=0, latitude=1)
 
@@ -88,6 +91,7 @@ class GeoLocation(object):
     def __str__(self):
         return str(self.get_longitude()) + "," + str(self.get_latitude())
 
+
 # def conv_dt(raw):
 #     return raw
 #
@@ -111,12 +115,16 @@ class GeoLocation(object):
 
 class User(object):
     T4J = dict(id="id", name="screenName", follower_count="followersCount", friends_count="friendsCount", lang="lang",
-               utc_offset="utcOffset", time_zone= "timeZone")
+               utc_offset="utcOffset", time_zone="timeZone")
     RAW = dict(id="id", name="screen_name", follower_count="followers_count", friends_count="friends_count",
-               lang="lang", utc_offset = "utc_offset", time_zone = "time_zone")
+               lang="lang", utc_offset="utc_offset", time_zone="time_zone")
+    GNIP = dict(id="user-id", name="user-name", follower_count="user-followersCount", friends_count="user-friendsCount",
+                utc_offset="user-utcOffset", time_zone="user-twitterTimeZone", lang="language")
+
     SCHEMA_MAP = {
         "T4J": T4J,
-        "RAW": RAW
+        "RAW": RAW,
+        "GNIP": GNIP
     }
 
     def __init__(self, json, schema_id):
@@ -148,13 +156,15 @@ class User(object):
     def get_utc_offset(self):
         return self.get("utc_offset")
 
+
 class UserMention(object):
     T4J = dict(id="id", name="screenName")
     RAW = dict(id="id", name="screen_name")
-
+    GNIP = dict(id="id", name="screen_name")
     SCHEMA_MAP = {
         "T4J": T4J,
-        "RAW": RAW
+        "RAW": RAW,
+        "GNIP": GNIP,
     }
 
     def __init__(self, json, schema_id):
@@ -183,7 +193,10 @@ class DictionaryWrapper(object):
         self.item = json
 
     def get(self, item):
-        return self.__getitem__(item)
+        if isinstance(item, list):
+            return {i: self.__getitem__(i) if i in self.item else None for i in item}
+        else:
+            return self.__getitem__(item)
 
     def put(self, key, value):
         return self.__setitem__(key, value)
@@ -213,3 +226,7 @@ class DictionaryWrapper(object):
             return DictionaryWrapper.rec_get(d[key], rest)
         else:
             return d[keys]
+
+
+if __name__ == "__main__":
+    print Status({"user-id": 123, "user-name": "cps"}, "GNIP").get_user().item.item
