@@ -16,10 +16,10 @@ class HashtagTrendReweet(TrendGraph):
                         options=ClassificationSystem.options, default = "BASIC"),
                    dict(name="hashtag_grouping", prettyName="Hashtag Groupings", type="dictionary_list", variable=False,
                         default=[
-                            dict(name="Leave",
+                            dict(name="leave",
                                  tags=["no2eu", "notoeu", "betteroffout", "voteout", "eureform", "britainout",
                                        "leaveeu", "voteleave", "beleave", "loveeuropeleaveeu"], color=None),
-                            dict(name="Remain",
+                            dict(name="remain",
                                  tags=["yes2eu", "yestoeu", "betteroffin", "votein", "ukineu", "bremain",
                                        "strongerin", "leadnotleave", "voteremain"], color=None)])]
 

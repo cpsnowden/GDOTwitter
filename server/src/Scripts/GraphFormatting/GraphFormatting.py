@@ -29,8 +29,11 @@ def fix_graphml_format_better(name, out):
     with open(out, "w") as des:
         tree.write(des, encoding='utf-8', method='xml')
 
-_node_color = ("type", {"source": "red", "target": "lime", "TimeIndicator": "purple"})
-_edges_color = ("type", {"retweet": "gold", "user": "steelblue"})
+# _node_color = ("type", {"source": "red", "target": "lime", "TimeIndicator": "purple"})
+# _edges_color = ("type", {"retweet": "gold", "user": "steelblue"})
+
+_edges_color = ("type", dict(retweet="blue", mention="gold", both="red"))
+_node_color = ("type", dict(retweeted="red", retweeter="lime", both="blueviolet"))
 
 
 path = sys.argv[1]
