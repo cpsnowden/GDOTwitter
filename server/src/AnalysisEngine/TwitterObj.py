@@ -4,18 +4,17 @@ from dateutil import parser
 class Status(object):
     T4J = dict(hashtags="hashtagEntities", mentions="userMentionEntities", user="user", text="text",
                created_at="createdAt", id="id", retweeted_status="retweetedStatus", language="lang", ISO_date=
-               "createdAt", coordinates="geoLocation")
+               "createdAt", coordinates="geoLocation", user_sub_field = "user")
 
     RAW = dict(hashtags="entities.hashtags", mentions="entities.user_mentions", user="user", text="text",
                created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date=
-               "ISO_created_at", coordinates="coordinates.coordinates")
+               "ISO_created_at", coordinates="coordinates.coordinates", user_sub_field = "user")
 
     GNIP = dict(hashtags="entities-hashtags", mentions="entities-user_mentions", text="clean-text",
                 created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="language",
                 ISO_date=
-                "ISO_created_at", user=["user-id", "user-utcOffset", "user-friendsCount", "user-name",
-                                        "user-twitterTimeZone",
-                                        "user-followersCount", "language"])
+                "ISO_created_at", user_sub_field=["user-id", "user-utcOffset", "user-friendsCount", "user-name",
+                                                  "user-twitterTimeZone","user-followersCount", "language"], user="")
 
     SCHEMA_MAP = {
         "T4J": T4J,
@@ -40,7 +39,7 @@ class Status(object):
         return [UserMention(json, self.SCHEMA_ID) for json in mention_list]
 
     def get_user(self):
-        return User(self.get("user"), self.SCHEMA_ID)
+        return User(self.get("user_sub_field"), self.SCHEMA_ID)
 
     def get_text(self):
         return self.get("text")
