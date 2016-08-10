@@ -25,10 +25,11 @@ class TopRetweeting(Analytics):
         limit = self.args["Limit"]
 
         retweet_key = Status.SCHEMA_MAP[self.schema]["retweeted_status"]
+        retweet_exists_key = Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]
         user_name_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                               User.SCHEMA_MAP[self.schema]["name"])
         query = [
-            {"$match": {retweet_key: {"$exists": True, "$ne": None}}},
+            {"$match": {retweet_exists_key: {"$exists": True, "$ne": None}}},
             {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
             {"$sort": {"count": -1}},
             {"$limit": limit}]

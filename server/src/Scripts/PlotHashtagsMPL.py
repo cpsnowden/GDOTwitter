@@ -2,6 +2,7 @@ from dateutil import parser
 from collections import OrderedDict
 import matplotlib.dates as md
 import matplotlib.pyplot as plt
+import mpld3
 import json
 dpi = 1
 
@@ -25,29 +26,34 @@ x_categories = [parser.parse(i) for i in data["categories"]]
 y_labels = OrderedDict.fromkeys(x_categories, 0)
 
 # fig = plt.figure(figsize=(1920 / dpi, 1080 / dpi), dpi=dpi, )
-# fig,ax = plt.subplots()
+fig,ax = plt.subplots()
 
 
 for i,series in enumerate(data["values"]):
     for entry in series["data"]:
         y_labels[parser.parse(entry["dt"])] = entry["count"]
-    # l = ax.plot(x_categories, list(y_labels.values()), label=series["_id"], color = tableau20[i])
-    if series["_id"] == "voteleave":
-        leave = y_labels
-        break
-    elif series["_id"]=="voteremain":
-        remain = y_labels
-    elif series["_id"] == "brexit":
-        brexit = y_labels
+    l = ax.plot(x_categories, list(y_labels.values()), label=series["_id"], color = tableau20[i])
+    # if series["_id"] == "voteleave":
+    #     leave = y_labels
+    #     break
+    # elif series["_id"]=="voteremain":
+    #     remain = y_labels
+    # elif series["_id"] == "brexit":
+    #     brexit = y_labels
     y_labels = OrderedDict.fromkeys(x_categories, 0)
+# mpld3.plugins.connect(fig, plugins.ResponsiveSize())
 
-
-
-
+# mpld3.plugins.Re
+#
+#
+#
 xfmt = md.DateFormatter('%Y-%m-%d\n %H:%M:%S')
-fig,axs = plt.subplots(nrows=2)
-axs[0].plot(x_categories, brexit.values())
-axs[1].plot(x_categories, remain.values())
-axs[1].plot(x_categories, leave.values())
-axs[1].xaxis.set_major_formatter(xfmt)
+
+# fig,axs = plt.subplots(nrows=2)
+# axs[0].plot(x_categories, brexit.values())
+# axs[1].plot(x_categories, remain.values())
+# axs[1].plot(x_categories, leave.values())
+ax.xaxis.set_major_formatter(xfmt)
+plt.legend()
+# mpld3.show()
 plt.show()

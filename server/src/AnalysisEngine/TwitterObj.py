@@ -4,18 +4,20 @@ from dateutil import parser
 class Status(object):
     T4J = dict(hashtags="hashtagEntities", mentions="userMentionEntities", user="user", text="text",
                created_at="createdAt", id="id", retweeted_status="retweetedStatus", language="lang", ISO_date=
-               "createdAt", coordinates="geoLocation", user_sub_field = "user", retweet_user = "user")
+               "createdAt", coordinates="geoLocation", user_sub_field="user", retweet_user="user",
+               retweet_exists_key="retweetedStatus.text")
 
     RAW = dict(hashtags="entities.hashtags", mentions="entities.user_mentions", user="user", text="text",
                created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date=
-               "ISO_created_at", coordinates="coordinates.coordinates", user_sub_field = "user", retweet_user = "user")
+               "ISO_created_at", coordinates="coordinates.coordinates", user_sub_field="user", retweet_user="user",
+               retweet_exists_key="retweeted_status.text")
 
     GNIP = dict(hashtags="entities-hashtags", mentions="entities-user_mentions", text="clean-text",
                 created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="language",
                 ISO_date=
                 "ISO_created_at", user_sub_field=["user-id", "user-utcOffset", "user-friendsCount", "user-name",
-                                                  "user-twitterTimeZone","user-followersCount", "language"], user="",
-                retweet_user = "user")
+                                                  "user-twitterTimeZone", "user-followersCount", "language"], user="",
+                retweet_user="user", retweet_exists_key="retweeted_status.text")
 
     SCHEMA_MAP = {
         "T4J": T4J,
@@ -39,7 +41,7 @@ class Status(object):
         mention_list = self.get("mentions")
         return [UserMention(json, self.SCHEMA_ID) for json in mention_list]
 
-    def get_user(self, retweet = False):
+    def get_user(self, retweet=False):
         if retweet:
             User(self.get("retweet_user"), self.SCHEMA_ID, True)
         return User(self.get("user_sub_field"), self.SCHEMA_ID)
@@ -55,6 +57,8 @@ class Status(object):
 
     def get_retweet_status(self):
         try:
+            if self.get("retweet_exists_key") is None:
+                return None
             return Status(self.get("retweeted_status"), self.SCHEMA_ID)
         except KeyError:
             return None
@@ -135,7 +139,7 @@ class User(object):
         "GNIP": RTWT_GNIP
     }
 
-    def __init__(self, json, schema_id, retweet = False):
+    def __init__(self, json, schema_id, retweet=False):
         self.item = DictionaryWrapper(json)
         if retweet:
             self.SCHEMA = self.RETWEET_SCHEMA_MAP[schema_id]
