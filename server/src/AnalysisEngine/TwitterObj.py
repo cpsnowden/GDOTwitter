@@ -5,19 +5,19 @@ class Status(object):
     T4J = dict(hashtags="hashtagEntities", mentions="userMentionEntities", user="user", text="text",
                created_at="createdAt", id="id", retweeted_status="retweetedStatus", language="lang", ISO_date=
                "createdAt", coordinates="geoLocation", user_sub_field="user", retweet_user="user",
-               retweet_exists_key="retweetedStatus.text")
+               retweeted_status_exists="retweetedStatus.text")
 
     RAW = dict(hashtags="entities.hashtags", mentions="entities.user_mentions", user="user", text="text",
                created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date=
                "ISO_created_at", coordinates="coordinates.coordinates", user_sub_field="user", retweet_user="user",
-               retweet_exists_key="retweeted_status.text")
+               retweeted_status_exists="retweeted_status.text")
 
     GNIP = dict(hashtags="entities-hashtags", mentions="entities-user_mentions", text="clean-text",
                 created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="language",
                 ISO_date=
                 "ISO_created_at", user_sub_field=["user-id", "user-utcOffset", "user-friendsCount", "user-name",
                                                   "user-twitterTimeZone", "user-followersCount", "language"], user="",
-                retweet_user="user", retweet_exists_key="retweeted_status.text")
+                retweet_user="user", retweeted_status_exists="retweeted_status.text")
 
     SCHEMA_MAP = {
         "T4J": T4J,
@@ -57,7 +57,7 @@ class Status(object):
 
     def get_retweet_status(self):
         try:
-            if self.get("retweet_exists_key") is None:
+            if self.get("retweeted_status_exists") is None:
                 return None
             return Status(self.get("retweeted_status"), self.SCHEMA_ID)
         except KeyError:
