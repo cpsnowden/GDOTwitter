@@ -33,8 +33,6 @@ class TopAuthors(Analytics):
             {"$sort": {"count": -1}},
             {"$limit": limit}]
 
-
-
         data = self.col.aggregate(query, allowDiskUse=True)
 
         result = {"details": {"chartType": "bar2d",

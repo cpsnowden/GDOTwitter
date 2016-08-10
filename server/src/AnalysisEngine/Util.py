@@ -36,7 +36,7 @@ def get_date_projection(key, level):
 
 
 def join_keys(*keys):
-    return ".".join(keys)
+    return ".".join([k for k in keys if k != ""])
 
 def dollar_join_keys(*keys):
     return "$" + join_keys(*keys)
