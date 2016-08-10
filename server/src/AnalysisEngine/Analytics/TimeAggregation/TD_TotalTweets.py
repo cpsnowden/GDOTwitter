@@ -41,8 +41,11 @@ class TD_TotalTweets(TimeAggregation):
             x_values.add(l["dt"])
 
         x_values = self.get_time_values(min(x_values), max(x_values))
-
-        result = {"details": {"chartType": "msline",
+        if len(x_values) > 1000:
+            chartType = "zoomline"
+        else:
+            chartType = "msline"
+        result = {"details": {"chartType": chartType,
                               "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
                                                   "xAxisName": "Date (UTC)",
                                                   "caption": self.dataset_meta.description,

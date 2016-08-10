@@ -77,7 +77,12 @@ class TD_Sentiment(TimeAggregation):
                 for (series_name, series_data) in data_dict.iteritems()]
         x_values = gb.index.tolist()
 
-        result = {"details": {"chartType": "msline",
+        if len(x_values) > 1000:
+            chartType = "zoomline"
+        else:
+            chartType = "msline"
+
+        result = {"details": {"chartType": chartType,
                               "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
                                                   "xAxisName": "Date (UTC)",
                                                   "caption": self.dataset_meta.description,

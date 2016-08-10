@@ -61,8 +61,11 @@ class TD_TimeZone(TimeAggregation):
                 l["_id"] = "UTC"
 
         x_values = self.get_time_values(min(x_values), max(x_values))
-
-        result = {"details": {"chartType": "msline",
+        if len(x_values) > 1000:
+            chartType = "zoomline"
+        else:
+            chartType = "msline"
+        result = {"details": {"chartType": chartType,
                               "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
                                                   "xAxisName": "Date (UTC)",
                                                   "caption": self.dataset_meta.description,
