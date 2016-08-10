@@ -32,7 +32,7 @@ class BasicRetweet(Graphing):
         limit = self.args["Limit"]
         filter_component = self.args["filter_max_component"]
 
-        query = self.get_time_bounded_query({Status.SCHEMA_MAP[self.schema]["retweeted_status"]: {"$exists": True,
+        query = self.get_time_bounded_query({Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]: {"$exists": True,
                                                                                                   "$ne": None}})
         cursor = self.get_sorted_cursor(query, limit)
         if cursor is None:
