@@ -28,7 +28,7 @@ class TopRetweeted(Analytics):
         retweet_exists_key = Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]
         user_name_key = Util.dollar_join_keys(retweet_key,
                                               Status.SCHEMA_MAP[self.schema]["retweet_user"],
-                                              User.SCHEMA_MAP[self.schema]["name"])
+                                              User.SCHEMA_MAP[self.schema]["retweet_screen_name"])
         query = [
             {"$match": {retweet_exists_key: {"$exists": True, "$ne": None}}},
             {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},

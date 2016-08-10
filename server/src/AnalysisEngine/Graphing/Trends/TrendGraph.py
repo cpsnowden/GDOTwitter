@@ -46,7 +46,7 @@ class TrendGraph(Graphing):
         else:
             return None
 
-    def add_time_indicator_nodes(self, G, start_date):
+    def add_time_indicator_nodes(self, G, start_date , layout = True):
 
         if self.args["timeLabelInterval"] > 0:
             max_gravity_x = 0
@@ -72,28 +72,50 @@ class TrendGraph(Graphing):
 
             for i in np.arange(min_gravity_x, max_gravity_x,
                                float(self.args["timeLabelInterval"]) / self.args["timeInterval"]):
-                G.add_node("TimeInd_T:" + str(start_date + timedelta(seconds=i)),
-                           type="TimeIndicator",
-                           node_type="time",
-                           time=str(start_date + timedelta(seconds=i)),
-                           x=float(i),
-                           y=float(max_gravity_y + 10),
-                           gravity_x=float(i),
-                           gravity_x_strength=float(100),
-                           gravity_y=float(max_gravity_y + 10),
-                           gravity_y_strength=float(100),
-                           size = float(10.0))
 
-                G.add_node("TimeInd_B:" + str(start_date + timedelta(seconds=i)),
-                           type="TimeIndicator",
-                           node_type="time",
-                           time=str(start_date + timedelta(seconds=i)),
-                           x=float(i),
-                           y=float(max_gravity_y + 10),
-                           gravity_x=float(i),
-                           gravity_x_strength=float(100),
-                           gravity_y=float(min_gravity_y - 10),
-                           gravity_y_strength=float(100),
-                           size = float(10.0))
+                if self.args["layoutIterations"] > 0:
+                    G.add_node("TimeInd_T:" + str(start_date + timedelta(seconds=i)),
+                               type="TimeIndicator",
+                               node_type="time",
+                               time=str(start_date + timedelta(seconds=i)),
+                               x=float(i),
+                               y=float(max_gravity_y + 10),
+                               gravity_x=float(i),
+                               gravity_x_strength=float(100),
+                               gravity_y=float(max_gravity_y + 10),
+                               gravity_y_strength=float(100),
+                               size=float(10.0))
+
+                    G.add_node("TimeInd_B:" + str(start_date + timedelta(seconds=i)),
+                               type="TimeIndicator",
+                               node_type="time",
+                               time=str(start_date + timedelta(seconds=i)),
+                               x=float(i),
+                               y=float(max_gravity_y - 10),
+                               gravity_x=float(i),
+                               gravity_x_strength=float(100),
+                               gravity_y=float(min_gravity_y - 10),
+                               gravity_y_strength=float(100),
+                               size=float(10.0))
+                else:
+                    G.add_node("TimeInd_T:" + str(start_date + timedelta(seconds=i)),
+                               type="TimeIndicator",
+                               node_type="time",
+                               time=str(start_date + timedelta(seconds=i)),
+                               gravity_x=float(i),
+                               gravity_x_strength=float(100),
+                               gravity_y=float(max_gravity_y + 10),
+                               gravity_y_strength=float(100),
+                               size = float(10.0))
+
+                    G.add_node("TimeInd_B:" + str(start_date + timedelta(seconds=i)),
+                               type="TimeIndicator",
+                               node_type="time",
+                               time=str(start_date + timedelta(seconds=i)),
+                               gravity_x=float(i),
+                               gravity_x_strength=float(100),
+                               gravity_y=float(min_gravity_y - 10),
+                               gravity_y_strength=float(100),
+                               size = float(10.0))
 
         return G

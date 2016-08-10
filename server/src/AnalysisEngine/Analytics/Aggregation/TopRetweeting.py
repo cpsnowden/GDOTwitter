@@ -24,7 +24,7 @@ class TopRetweeting(Analytics):
     def process(self):
         limit = self.args["Limit"]
 
-        retweet_key = Status.SCHEMA_MAP[self.schema]["retweeted_status"]
+        # retweet_key = Status.SCHEMA_MAP[self.schema]["retweeted_status"]
         retweet_exists_key = Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]
         user_name_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                               User.SCHEMA_MAP[self.schema]["name"])

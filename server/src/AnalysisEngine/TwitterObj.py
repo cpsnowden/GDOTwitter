@@ -120,11 +120,12 @@ class GeoLocation(object):
 
 class User(object):
     T4J = dict(id="id", name="screenName", follower_count="followersCount", friends_count="friendsCount", lang="lang",
-               utc_offset="utcOffset", time_zone="timeZone")
+               utc_offset="utcOffset", time_zone="timeZone", retweet_screen_name = "screenName")
     RAW = dict(id="id", name="screen_name", follower_count="followers_count", friends_count="friends_count",
-               lang="lang", utc_offset="utc_offset", time_zone="time_zone")
+               lang="lang", utc_offset="utc_offset", time_zone="time_zone", retweet_screen_name="screen_name")
     GNIP = dict(id="user-id", name="user-name", follower_count="user-followersCount", friends_count="user-friendsCount",
-                utc_offset="user-utcOffset", time_zone="user-twitterTimeZone", lang="language")
+                utc_offset="user-utcOffset", time_zone="user-twitterTimeZone", lang="language", retweet_screen_name =
+                "screen_name")
     RTWT_GNIP = dict(name="screen_name")
 
     SCHEMA_MAP = {

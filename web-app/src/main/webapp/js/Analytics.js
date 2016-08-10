@@ -73,6 +73,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
         $scope.orderAnalytics = function (dataset) {
             $scope.get_options();
             $scope.analyticsForm.order.id = dataset.id;
+            $scope.analyticsForm.order.description = "MConsole_"+ new Date().toLocaleString();
             $scope.analyticsForm.show = true;
             $scope.analyticsForm.dataset = dataset;
         };
