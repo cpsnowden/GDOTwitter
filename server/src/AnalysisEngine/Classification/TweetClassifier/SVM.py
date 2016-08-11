@@ -129,17 +129,17 @@ class SVMClassifier(TweetClassifier):
             if 0 < row_count < i:
                 break
             truth = self.class_mapping[row[0]]
-            score, fv = self.predict(row[1])
+            score = self.predict(row[1])
             predicted = score.classification
             predicted_labels.append(predicted)
             true_labels.append(truth)
-            print score.score, score.classification, predicted, truth
+            print score.confidence, score.classification, predicted, truth
             if truth != predicted:
                 print "================================================================"
                 print "Truth:", self.reverse_mapping[truth], "Predicted:", self.reverse_mapping[predicted], score.score, \
                     "-->", \
                     row[1]
-                print fv
+
                 print "================================================================"
 
         return metrics.classification_report(true_labels, predicted_labels, target_names=self.class_mapping.keys())
@@ -153,3 +153,36 @@ class SVMClassifier(TweetClassifier):
             output.append(
                 "{:0.4f}{: >15}    {:0.4f}{: >15}".format(cp, fnp, cn, fnn))
         return "\n".join(output)
+
+
+if __name__ == '__main__':
+
+    # c = TweetPreprocessor()
+    # print c.tokenize("Tweeting from the UK city that's closest to the EU continent. Hoping for a #Bremain result "
+    #              "tomorrow! #EUref https://t.co/vfRYSagnma")
+    # exit()
+    # path = "../TEST_DATA.csv"
+    # writer = csv.writer(open("../TEST_DATA_OUT.csv","w"), delimiter=',', quotechar='|', quoting=csv.QUOTE_ALL)
+    # data = csv.reader(open(path, 'rb'), delimiter=',', quotechar='|')
+    #
+    # for row in data:
+    #     if "RT" in row[1]:
+    #         continue
+    #     else:
+    #         writer.writerow(row)
+    # exit()
+    import pprint
+    from collections import OrderedDict
+    classifier = SVMClassifier(OrderedDict([("leave",0),("remain",1)]),"../Training/TRAINING_DATA_OUT.csv")
+    #, ("unknown",2)]), False)
+    # print classifier.class_mapping.keys()
+    # print classifier.tokenizer.tokenize("50,000 :),")
+    # classifier.cross_validate("../TRAINING_DATA_OUT.csv")
+    #
+    # pprint.pprint(classifier.get_features())
+    print classifier.get_informative_features()
+    #
+    print classifier.test_from_csv("../Training/labelling_text_BREXIT.dat", -1)
+    # print classifier.test_from_csv("../TEST_DATA_OUT.csv", -1)
+    #
+    #
