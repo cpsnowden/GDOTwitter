@@ -73,7 +73,7 @@ class TD_Hashtags(TimeAggregation):
                                                   "labelStep": int(len(x_values) / 20.0)}},
                   "data": {"categories": sorted(x_values), "values": result_lst}}
 
-        self.export_chart(result)
         self.export_json(result)
+        self.export_chart(result)
 
         return True
