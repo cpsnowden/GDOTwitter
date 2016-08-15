@@ -9,7 +9,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
     .controller('AnalyticsCtrl', ["$scope","$window","$interval","Restangular", function ($scope, $window, $interval, Restangular) {
 
         $scope.datasets = Restangular.all('dataset').getList({status: "READY_FOR_ANALYTICS"}).$object;
-
+        $scope.enableDelete = false;
         $scope.sortType = 'endDate';
         $scope.sortReverse = false;
 

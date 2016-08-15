@@ -18,6 +18,7 @@ from AnalysisEngine.Analytics.Aggregation.Languages import Languages
 from AnalysisEngine.Analytics.Aggregation.Original import Original
 from AnalysisEngine.Analytics.Aggregation.TimeZones import TimeZone
 from AnalysisEngine.Analytics.Aggregation.TopAuthors import TopAuthors
+from AnalysisEngine.Analytics.Aggregation.TopTweetingAuthors import TopTweetingAuthors
 from AnalysisEngine.Analytics.Aggregation.TopHashtags import TopHashtags
 from AnalysisEngine.Analytics.Aggregation.TopMentioned import TopMentioned
 from AnalysisEngine.Analytics.Aggregation.TopRetweeted import TopRetweeted
@@ -34,6 +35,7 @@ class AnalysisRouter():
                Original,
                TimeZone,
                TopAuthors,
+               TopTweetingAuthors,
                TopMentioned,
                TopRetweeted,
                TopHashtags,

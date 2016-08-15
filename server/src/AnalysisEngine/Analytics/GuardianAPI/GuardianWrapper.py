@@ -15,15 +15,15 @@ class GuardianWrapper(object):
     def query_topics(self, topic_list, start_date=None, end_date=None):
 
         result = self.query(" AND ".join(topic_list), start_date, end_date)
-        print topic_list
-        print result
+        # print topic_list
+        # print result
         if len(result) > 0:
             return result
         else:
 
             self._logger.info("Could not find any results using AND switching to OR")
             results = self.query(" OR ".join(topic_list), start_date, end_date)
-            print results
+            # print results
             return results
 
     def query(self, topics, start_date=None, end_date=None):

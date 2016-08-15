@@ -20,17 +20,19 @@ class Event(object):
         self.end = end
         self.top_words = []
         self.guardian_titles = []
+        self.midpoint = self.start + (self.end - self.start) / 2
 
     def __str__(self):
-        return "(" + str(self.start) + "," + str(self.end) + ", words: " + str(self.top_words) + ", guardian: " + \
+        return "(" + str(self.midpoint) + "," + str(self.end) + ", words: " + str(self.top_words) + ", guardian: " + \
                str(self.guardian_titles) + ")"
 
     def __repr__(self):
         return self.__str__()
 
     def get_chart_label(self):
-        return self.start.strftime("%a%e%b %H") + " {br} Top words: " + ", ".join(self.top_words) + \
+        return self.start.strftime("%a%e%b") + " {br} Top words: " + ", ".join(self.top_words) + \
                " {br}  Guardian Headlines: " + ", " + ", ".join(self.guardian_titles)
+
 
 class EventDetection(object):
     _logger = logging.getLogger(__name__)
@@ -88,7 +90,7 @@ class EventDetection(object):
             event.top_words = self.get_top_words(event.start, event.end, hashtag, schema)
             event.guardian_titles = self.guardian_api.query_topics(event.top_words,
                                                                    event.start, event.end)[:5]
-
+            print event
 
         return events
 
@@ -98,29 +100,30 @@ if __name__ == "__main__":
 
     # brexit = json.load(open("brexit.json"))
     # leave = json.load(open("leave.json"))
-    remain = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/strongerin.json")))
-    brexit = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/brexit.json")))
+    data = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/strongerin.json")))
+    htag = "strongerin"
+    # brexit = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/brexit.json")))
 
     from pymongo import MongoClient
     from datetime import datetime
     from AnalysisEngine.Charting.Charting import create_chart
+
     client = MongoClient("146.169.32.151", 27017)
     db = client.get_database("DATA")
     auth = db.authenticate("twitterApplication", "gdotwitter", source="admin")
     col = db.get_collection("Twitter_Brexit_GNIP")
 
-
     ed = EventDetection(col, "4d547cbd-99e2-4b00-a40e-987c67c252b8")
     print "Getting events"
-    events = ed.map_events(OrderedDict([(parser.parse(i[0]),i[1]) for i in brexit]), "brexit", "GNIP")
+    events = ed.map_events(OrderedDict([(parser.parse(i[0]), i[1]) for i in data]), htag, "GNIP")
 
     result = {"details": {"chartType": "event",
                           "chartProperties": {"yAxisName": "Tweets per hour",
                                               "xAxisName": "Date (UTC)",
                                               "caption": "Brexit",
-                                              "subcaption": "'#brexit'" + " event dectection",
-                                              "labelStep": int(len(remain) / 20.0)}},
-              "data": {"series": [[parser.parse(i[0]),i[1]] for i in brexit], "events": events}}
+                                              "subcaption": "'#" + htag + "'" + " event dectection",
+                                              "labelStep": int(len(data) / 20.0)}},
+              "data": {"series": [[parser.parse(i[0]), i[1]] for i in data], "events": events}}
 
     html = create_chart(result)
 

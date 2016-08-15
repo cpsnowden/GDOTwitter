@@ -5,21 +5,21 @@ from AnalysisEngine.Analytics.Analytics import Analytics
 from AnalysisEngine.TwitterObj import Status, User
 
 
-class TopAuthors(Analytics):
+class TopTweetingAuthors(Analytics):
     _logger = logging.getLogger(__name__)
-    __arguments = [dict(name="Limit", prettyName="Number of top non-retweeting users", type="integer",
+    __arguments = [dict(name="Limit", prettyName="Number of top tweeting users", type="integer",
                         default=10)]
 
     def __init__(self, analytics_meta):
-        super(TopAuthors, self).__init__(analytics_meta)
+        super(TopTweetingAuthors, self).__init__(analytics_meta)
 
     @classmethod
     def get_type(cls):
-        return "Top Original Authors"
+        return "Top Authors"
 
     @classmethod
     def get_args(cls):
-        return cls.__arguments + super(TopAuthors, cls).get_args()
+        return cls.__arguments + super(TopTweetingAuthors, cls).get_args()
 
     def process(self):
         limit = self.args["Limit"]
@@ -28,7 +28,6 @@ class TopAuthors(Analytics):
                                               User.SCHEMA_MAP[self.schema]["name"])
 
         query = [
-            {"$match": {Status.SCHEMA_MAP[self.schema]["retweeted_status"]: {"$exists": False}}},
             {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
             {"$sort": {"count": -1}},
             {"$limit": limit}]
@@ -39,7 +38,7 @@ class TopAuthors(Analytics):
                               "chartProperties": {"yAxisName": "Number of Tweets",
                                                   "xAxisName": "Author",
                                                   "caption": self.dataset_meta.description,
-                                                  "subcaption": "Top " + str(limit) + " original authors"}},
+                                                  "subcaption": "Top " + str(limit) + "tweeting authors"}},
                   "data": list(data)}
 
         self.export_chart(result)

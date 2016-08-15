@@ -156,6 +156,8 @@
                     <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Data Sets Ready for Analytics</h3>
                     <div class="pull-right">
                         <button class="btn btn-success"
+                                ng-click="enableDelete = !enableDelete"><i class="fa fa-bullseye"></i></button>
+                        <button class="btn btn-success"
                                 ng-click="refreshTable()"><i class="fa fa-refresh"></i></button>
                     </div>
                 </div>
@@ -261,6 +263,7 @@
                                             <i class="fa fa-bar-chart" aria-hidden="true"></i>
                                         </button>
                                         <button class="btn btn-inverse"
+                                                ng-show = "enableDelete"
                                                 ng-click="delete(a,p)">
                                             <i class="glyphicon glyphicon-trash"></i>
                                         </button>

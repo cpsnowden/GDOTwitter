@@ -63,6 +63,8 @@ def create_event_chart(data):
     data["details"]["chartProperties"]["showValues"] = "0"
     data["details"]["chartProperties"]["showTickMarks"] = "1"
     data["details"]["chartProperties"]["chartTopMargin"] = 175
+    data["details"]["chartProperties"]["chartBottomMargin"] = 175
+    data["details"]["chartProperties"]["captionAlignment"] = "left"
 
     values = [{"label": i[0], "value": i[1]} for i in data["data"]["series"]]
     x_categories_parsed = {i[0].replace(tzinfo=None): j for j, i in enumerate(data["data"]["series"])}
@@ -72,13 +74,13 @@ def create_event_chart(data):
     v_trend_line = {"line": []}
 
     for i,event in enumerate(data["data"]["events"]):
-        annotations["groups"].append(make_annotation(event, x_categories_parsed, divmod(i,2)[1] == 0))
+        annotations["groups"].append(make_annotation(event, x_categories_parsed, divmod(i,4)[1]))
         v_trend_line["line"].append(make_trend_line(event, x_categories_parsed))
 
     return get_html({"chart": data["details"]["chartProperties"],
                      "data": values,
                      "annotations": annotations,
-                     "vtrendlines": v_trend_line}, "line")
+                     "vtrendlines": v_trend_line}, "line", str(1920*4), str(1080))
 
 
 def make_trend_line(event, datetime_to_index):
@@ -98,7 +100,7 @@ def make_trend_line(event, datetime_to_index):
     return zone
 
 
-def make_annotation(event, datetime_to_index, upper):
+def make_annotation(event, datetime_to_index, cycle):
     start_index = datetime_to_index[event.start]
     end_index = datetime_to_index[event.end]
     label = event.get_chart_label()
@@ -139,16 +141,27 @@ def make_annotation(event, datetime_to_index, upper):
         "wrapHeight": 95
     }
 
-    if upper:
+    if cycle == 0:
         start_line_annotation["y"] += " - 200"
         end_line_annotation["y"] += " - 200"
         label_annotation["y"] += " - 200"
         label_annotation["vAlign"] = "bottom"
-    else:
+    elif cycle == 1:
         start_line_annotation["y"] += " - 5"
         end_line_annotation["y"] += " - 5"
         label_annotation["y"] += " - 5"
         label_annotation["vAlign"] = "top"
+    elif cycle == 2:
+        start_line_annotation["toy"] = "$canvasEndY + 120"
+        end_line_annotation["toy"] = "$canvasEndY + 120"
+        label_annotation["y"] = "$canvasEndY + 120"
+        label_annotation["vAlign"] = "bottom"
+    elif cycle == 3:
+        start_line_annotation["toy"] = "$canvasEndY + 320"
+        end_line_annotation["toy"] = "$canvasEndY + 320"
+        label_annotation["y"] = "$canvasEndY + 320"
+        label_annotation["vAlign"] = "top"
+
 
     return {"items": [start_line_annotation, end_line_annotation, label_annotation]}
 
