@@ -49,14 +49,15 @@ class HashtagEventDetection(Analytics):
             y_labels[parser.parse(entry["dt"])] = entry["count"]
 
         eventDetector = EventDetection(self.col, "4d547cbd-99e2-4b00-a40e-987c67c252b8")
-        events = eventDetector.map_events(series, hashtag, self.schema)
+        events = eventDetector.map_events(y_labels, hashtag, self.schema)
 
         result = {"details": {"chartType": "event",
                               "chartProperties": {"yAxisName": "Tweets per hour",
                                                   "xAxisName": "Date (UTC)",
                                                   "caption": self.dataset_meta.description,
-                                                  "subcaption": ""}},
-                  "data": {"series": series, "events": events}}
+                                                  "subcaption": hashtag + " event dectection",
+                                                  "labelStep": int(len(x_categories) / 20.0)}},
+                  "data": {"series": y_labels.items(), "events": events}}
 
         self.export_chart(result)
         self.export_json(result)

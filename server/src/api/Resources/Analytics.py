@@ -22,6 +22,7 @@ analytics_meta_fields = {
     "specialised_args": DictionaryWrap(attribute="specialised_args"),
     "classification": fields.String,
     "description": fields.String,
+    "raw_id": fields.String,
     "uri_base": fields.Url("analytics"),
     "uri_data": fields.Url("analyticsData")
 }

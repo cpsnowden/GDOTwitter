@@ -2,6 +2,7 @@ import logging
 import os
 import re
 from collections import OrderedDict
+from datetime import timedelta
 
 import numpy as np
 import pandas as pd
@@ -28,7 +29,8 @@ class Event(object):
         return self.__str__()
 
     def get_chart_label(self):
-        return "Top words: " + ",".join(self.top_words) + " {br}  Guardian Headlines: " + ", ".join(self.guardian_titles)
+        return "Top words: " + ", ".join(self.top_words) + \
+               " {br}  Guardian Headlines: " + ", " + ", ".join(self.guardian_titles)
 
 class EventDetection(object):
     _logger = logging.getLogger(__name__)
@@ -39,7 +41,7 @@ class EventDetection(object):
         self.stopwords = stopwords.words('english')
 
     def get_top_words(self, start_date, end_date, hashtag, schema):
-        print "Getting top words for", start_date, end_date, hashtag
+        self._logger.info("Getting top words for period from: %s to: %s hashtag: %s", start_date, end_date, hashtag)
 
         hashtag_key = Util.join_keys(Status.SCHEMA_MAP[schema]["hashtags"], "text")
 
@@ -61,26 +63,31 @@ class EventDetection(object):
 
         df = pd.DataFrame.from_dict(tweet_rates, orient="index")
         df.columns = ["count"]
+
         ma = pd.rolling_mean(df, 24)
         stdev = df["count"].std()
         threshold = df["count"].mean() + pd.rolling_std(df["count"], 24)
         df["limit"] = ma + alpha * stdev
         df["event"] = (df["count"] > df["limit"]) & (df["count"] > (threshold))
         df["block"] = (df["event"].shift(1) != df["event"]).astype(int).cumsum()
-        event_flags = df.reset_index().groupby(['event', 'block'])['index'].apply(lambda x: np.array(x))
 
-        return [Event(datetime.datetime.utcfromtimestamp(K[0].tolist() / 1e9) - datetime.timedelta(hours=padding),
-                      datetime.datetime.utcfromtimestamp(K[-1].tolist() / 1e9) + datetime.timedelta(hours=padding)) for
+        event_flags = df.reset_index().groupby(['event', 'block'])['index'].apply(lambda x: np.array(x))
+        if True not in event_flags.index:
+            return []
+
+        return [Event(datetime.utcfromtimestamp(K[0].tolist() / 1e9) - timedelta(hours=padding),
+                      datetime.utcfromtimestamp(K[-1].tolist() / 1e9) + timedelta(hours=padding)) for
                 K in
                 event_flags.ix[True]]
 
     def map_events(self, tweet_rates, hashtag, schema):
         events = self.find_events(tweet_rates)
         self._logger.info("Found " + str(len(events)) + " events ")
+
         for event in events:
             event.top_words = self.get_top_words(event.start, event.end, hashtag, schema)
             event.guardian_titles = self.guardian_api.query_topics(event.top_words,
-                                                                   event.start, event.end)[:2]
+                                                                   event.start, event.end)[:5]
 
 
         return events
@@ -93,20 +100,29 @@ if __name__ == "__main__":
     # leave = json.load(open("leave.json"))
     remain = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/strongerin.json")))
     brexit = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/brexit.json")))
-    from Scripts.TweetRate.EventCharting import get_event_chart
-
 
     from pymongo import MongoClient
-    import datetime
-
+    from datetime import datetime
+    from AnalysisEngine.Charting.Charting import create_chart
     client = MongoClient("146.169.32.151", 27017)
     db = client.get_database("DATA")
     auth = db.authenticate("twitterApplication", "gdotwitter", source="admin")
     col = db.get_collection("Twitter_Brexit_GNIP")
 
+
     ed = EventDetection(col, "4d547cbd-99e2-4b00-a40e-987c67c252b8")
+    print "Getting events"
     events = ed.map_events(OrderedDict([(parser.parse(i[0]),i[1]) for i in brexit]), "brexit", "GNIP")
 
-    html = get_event_chart(remain, events)
+    result = {"details": {"chartType": "event",
+                          "chartProperties": {"yAxisName": "Tweets per hour",
+                                              "xAxisName": "Date (UTC)",
+                                              "caption": "Brexit",
+                                              "subcaption": "brexit" + " event dectection",
+                                              "labelStep": int(len(remain) / 20.0)}},
+              "data": {"series": remain, "events": events}}
+
+    html = create_chart(result)
+
     with open("out.html", "w") as f:
         f.write(html)
