@@ -22,7 +22,7 @@ def create_time_graph(chart_data):
         values = OrderedDict.fromkeys(chart_data["data"]["categories"], 0)
 
     chart_data["details"]["chartProperties"]["drawAnchors"] = 0
-    chart_data["details"]["chartProperties"]["labelStep"] = 6
+    # chart_data["details"]["chartProperties"]["labelStep"] = 6
     chart_data["details"]["chartProperties"]["slantLabels"] = 1
     chart_data["details"]["chartProperties"]["showValues"] = "0"
 
@@ -59,20 +59,18 @@ def create_ranking_chart(chart_data):
 
 def create_event_chart(data):
     data["details"]["chartProperties"]["drawAnchors"] = 0
-    data["details"]["chartProperties"]["labelStep"] = 24 * 14
     data["details"]["chartProperties"]["slantLabels"] = "1"
     data["details"]["chartProperties"]["showValues"] = "0"
     data["details"]["chartProperties"]["showTickMarks"] = "1"
 
-    values = [{"label": i[0], "value": i[1]} for i in data["data"]["series"].items()]
-    x_categories_parsed = {i[0].replace(tzinfo=None): j for j, i in enumerate(data["data"]["series"].items())}
+    values = [{"label": i[0], "value": i[1]} for i in data["data"]["series"]]
+    x_categories_parsed = {i[0].replace(tzinfo=None): j for j, i in enumerate(data["data"]["series"])}
 
     annotations = {"autoscale": "1",
                    "groups": []}
-
     v_trend_line = {"line": []}
 
-    for event in data["events"]:
+    for event in data["data"]["events"]:
         annotations["groups"].append(make_annotation(event, x_categories_parsed))
         v_trend_line["line"].append(make_trend_line(event, x_categories_parsed))
 
