@@ -3,7 +3,7 @@ import os
 import re
 from collections import OrderedDict
 from datetime import timedelta
-
+from datetime import datetime
 import numpy as np
 import pandas as pd
 from dateutil import parser
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     # brexit = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/brexit.json")))
 
     from pymongo import MongoClient
-    from datetime import datetime
+    # from datetime import datetime
     from AnalysisEngine.Charting.Charting import create_chart
 
     client = MongoClient("146.169.32.151", 27017)
