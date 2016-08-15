@@ -1,6 +1,6 @@
 import datetime
 
-date_encoder = lambda obj: (obj.isoformat() + "Z" if isinstance(obj, datetime.datetime) else None)
+date_encoder = lambda obj: (obj.isoformat() if isinstance(obj, datetime.datetime) else None)
 
 level_map = {
     "Minute": 1,

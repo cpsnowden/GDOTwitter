@@ -11,5 +11,6 @@ setup(
         license='',
         author='ChrisSnowden',
         author_email='',
-        description='', requires=['sklearn', 'nltk', 'textblob', 'mongoengine', 'mongoengine', 'flask', 'flask']
+        description='', requires=['sklearn', 'nltk', 'textblob', 'mongoengine', 'mongoengine', 'flask', 'flask',
+                                  'requests']
 )

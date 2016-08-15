@@ -37,7 +37,7 @@ class Analysis(object):
         self.col = self.dbm.data_db.get_collection(self.dataset_meta.db_col)
         self.args = self.parse_args(analytics_meta.specialised_args, self.dataset_meta)
         self.schema = self.dataset_meta.schema
-        self._logger.info("Attempting to run %s with arguments %s", self.get_type, self.args)
+        self._logger.info("Attempting to run %s with arguments %s", self.get_type(), self.get_args())
 
     @abc.abstractmethod
     def process(self):

@@ -79,6 +79,10 @@ class HashtagGraph(Graphing):
         np.fill_diagonal(score, 0.0)
         upper95 = score.mean() + 3 * score.std()
         score *= 3.0 / upper95
+
+        for i, h in enumerate(top_hashtags):
+            G[i]["n_occurences"] = float(row_sum[i])
+
         for row in xrange(0, n):
             for col in xrange(row + 1, n):
                 if score[row][col] != 0:

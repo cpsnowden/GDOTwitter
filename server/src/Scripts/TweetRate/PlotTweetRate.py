@@ -2,9 +2,10 @@ import json
 
 import matplotlib.dates as md
 import matplotlib.pyplot as plt
-from dateutil import parser
 import numpy as np
-import ChangePoint
+from dateutil import parser
+
+import Scripts.TweetRate.ChangePoint
 
 tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
              (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),
@@ -48,7 +49,7 @@ ax1.set_ylabel("Tweets per day /10e3")
 
 t = time[:len(time)/2]
 c = counts[:len(time)/2]
-y, zz, mean1, mean2 = ChangePoint.step4(c)
+y, zz, mean1, mean2 = Scripts.TweetRate.ChangePoint.step4(c)
 print len(t),len(y)
 
 

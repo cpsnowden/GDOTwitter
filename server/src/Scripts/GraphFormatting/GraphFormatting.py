@@ -4,7 +4,7 @@ from xml.etree import ElementTree
 
 import networkx as nx
 
-from AnalyticsService.Graphing.GraphUtils import GraphColor
+from AnalysisEngine.Graphing.Utils.GraphUtils import GraphColor
 
 
 def fix_graphml_format_better(name, out):
