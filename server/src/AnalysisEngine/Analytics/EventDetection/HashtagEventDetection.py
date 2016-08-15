@@ -55,7 +55,7 @@ class HashtagEventDetection(Analytics):
                               "chartProperties": {"yAxisName": "Tweets per hour",
                                                   "xAxisName": "Date (UTC)",
                                                   "caption": self.dataset_meta.description,
-                                                  "subcaption": hashtag + " event dectection",
+                                                  "subcaption": "'#" + hashtag + "' event dectection",
                                                   "labelStep": int(len(x_categories) / 20.0)}},
                   "data": {"series": y_labels.items(), "events": events}}
 

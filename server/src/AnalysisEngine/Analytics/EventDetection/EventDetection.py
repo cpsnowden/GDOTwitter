@@ -29,7 +29,7 @@ class Event(object):
         return self.__str__()
 
     def get_chart_label(self):
-        return "Top words: " + ", ".join(self.top_words) + \
+        return self.start.strftime("%a%e%b %H") + " {br} Top words: " + ", ".join(self.top_words) + \
                " {br}  Guardian Headlines: " + ", " + ", ".join(self.guardian_titles)
 
 class EventDetection(object):
@@ -118,7 +118,7 @@ if __name__ == "__main__":
                           "chartProperties": {"yAxisName": "Tweets per hour",
                                               "xAxisName": "Date (UTC)",
                                               "caption": "Brexit",
-                                              "subcaption": "brexit" + " event dectection",
+                                              "subcaption": "'#brexit'" + " event dectection",
                                               "labelStep": int(len(remain) / 20.0)}},
               "data": {"series": [[parser.parse(i[0]),i[1]] for i in brexit], "events": events}}
 

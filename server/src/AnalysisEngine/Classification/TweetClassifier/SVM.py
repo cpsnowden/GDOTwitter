@@ -67,6 +67,8 @@ class SVMClassifier(TweetClassifier):
         self.train_from_csv(training_path, training_n)
 
     def predict(self, status):
+        if not isinstance(status,str):
+            status = status.get_text()
 
         feature_vector = self.cv.transform([status])
         classification = self.clf.predict(feature_vector)

@@ -12,8 +12,8 @@ class TrendGraph(Graphing):
     __metaclass__ = abc.ABCMeta
     _logger = logging.getLogger(__name__)
 
-    __arguments = [dict(name="timeLabelInterval", prettyName="Time between time indicator labels (hrs)", type="integer",
-                        default=1.0),
+    __arguments = [dict(name="timeLabelInterval", prettyName="Time between time indicator labels (s)", type="integer",
+                        default=3600.0),
                    dict(name="timeInterval", prettyName="Time interval to classify source of gravity (s)",
                         type="integer", default=1.0)]
 

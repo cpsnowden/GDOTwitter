@@ -20,7 +20,7 @@ class ClassificationSystem(object):
         self.tweet_classifier = None
 
         if option == "SVM":
-            self.user_model = MovingAverageModel
+            self.user_model = BasicUser
             self.tweet_classifier = SVMClassifier(class_labels,
                                                   os.path.join(DIR_NAME, "Training","TRAINING_DATA_OUT.csv"))
         elif option == "BASIC":

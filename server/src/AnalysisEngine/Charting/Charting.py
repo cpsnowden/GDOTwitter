@@ -27,7 +27,7 @@ def create_time_graph(chart_data):
     chart_data["details"]["chartProperties"]["showValues"] = "0"
 
     return get_html({"chart": chart_data["details"]["chartProperties"], "dataset": series, "categories": {
-        "category": x_categories}}, "msline")
+        "category": x_categories}}, chart_data["details"]["chartType"])
 
 
 def create_pie_chart(chart_data):
@@ -62,6 +62,7 @@ def create_event_chart(data):
     data["details"]["chartProperties"]["slantLabels"] = "1"
     data["details"]["chartProperties"]["showValues"] = "0"
     data["details"]["chartProperties"]["showTickMarks"] = "1"
+    data["details"]["chartProperties"]["chartTopMargin"] = 175
 
     values = [{"label": i[0], "value": i[1]} for i in data["data"]["series"]]
     x_categories_parsed = {i[0].replace(tzinfo=None): j for j, i in enumerate(data["data"]["series"])}
@@ -70,8 +71,8 @@ def create_event_chart(data):
                    "groups": []}
     v_trend_line = {"line": []}
 
-    for event in data["data"]["events"]:
-        annotations["groups"].append(make_annotation(event, x_categories_parsed))
+    for i,event in enumerate(data["data"]["events"]):
+        annotations["groups"].append(make_annotation(event, x_categories_parsed, divmod(i,2)[1] == 0))
         v_trend_line["line"].append(make_trend_line(event, x_categories_parsed))
 
     return get_html({"chart": data["details"]["chartProperties"],
@@ -93,10 +94,11 @@ def make_trend_line(event, datetime_to_index):
         "displayValue": " ",
     }
 
+
     return zone
 
 
-def make_annotation(event, datetime_to_index):
+def make_annotation(event, datetime_to_index, upper):
     start_index = datetime_to_index[event.start]
     end_index = datetime_to_index[event.end]
     label = event.get_chart_label()
@@ -133,8 +135,20 @@ def make_annotation(event, datetime_to_index):
         "fontsize": "7",
         "x": "$dataset.0.set." + str(int(np.mean([start_index, end_index]))) + ".x",
         "y": "$canvasStartY",
-        "bgColor": '#0075c2'
+        "bgColor": '#0075c2',
+        "wrapHeight": 95
     }
+
+    if upper:
+        start_line_annotation["y"] += " - 200"
+        end_line_annotation["y"] += " - 200"
+        label_annotation["y"] += " - 200"
+        label_annotation["vAlign"] = "bottom"
+    else:
+        start_line_annotation["y"] += " - 5"
+        end_line_annotation["y"] += " - 5"
+        label_annotation["y"] += " - 5"
+        label_annotation["vAlign"] = "top"
 
     return {"items": [start_line_annotation, end_line_annotation, label_annotation]}
 
@@ -181,6 +195,7 @@ def get_html(data_source, type, width="100%", height="100%"):
 
 def create_chart(data):
     options = {
+        "zoomline": create_time_graph,
         "msline": create_time_graph,
         "bar2d": create_ranking_chart,
         "doughnut2d": create_pie_chart,

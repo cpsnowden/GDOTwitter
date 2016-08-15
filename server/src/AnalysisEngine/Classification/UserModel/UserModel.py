@@ -67,7 +67,7 @@ class MovingAverageModel(UserModel):
 
     def said(self, status):
 
-        tweet_score = self.classifier.predict(status.get_text())
+        tweet_score = self.classifier.predict(status)
         tweet_score = tweet_score.classification *  tweet_score.confidence
         self.history.append(tweet_score)
         return sum(self.history[-self.h_length:]), tweet_score
