@@ -120,7 +120,7 @@ if __name__ == "__main__":
                                               "caption": "Brexit",
                                               "subcaption": "brexit" + " event dectection",
                                               "labelStep": int(len(remain) / 20.0)}},
-              "data": {"series": remain, "events": events}}
+              "data": {"series": [[parser.parse(i[0]),i[1]] for i in brexit], "events": events}}
 
     html = create_chart(result)
 

@@ -80,8 +80,12 @@ class HashtagGraph(Graphing):
         upper95 = score.mean() + 3 * score.std()
         score *= 3.0 / upper95
 
+        min_occurences = min(row_sum)[0]
+        max_occurences = max(row_sum)[0]
+
         for i, h in enumerate(top_hashtags):
-            G[i]["n_occurences"] = float(row_sum[i])
+            G.node[i]["n_occurences"] = float(row_sum[i][0])
+            G.node[i]["size"] = 2 + 40 * (float(row_sum[i][0]) - min_occurences) / (max_occurences - min_occurences)
 
         for row in xrange(0, n):
             for col in xrange(row + 1, n):
