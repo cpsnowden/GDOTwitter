@@ -31,9 +31,9 @@ class GuardianWrapper(object):
         params = {"q": topics, "api-key": self.api_key, "tag":"politics/eu-referendum"}
 
         if self.time_of_last_request is not None:
-            time_since = (self.time_of_last_request - datetime.datetime.now()).total_seconds()
+            time_since = (datetime.datetime.now() - self.time_of_last_request).total_seconds()
             if time_since < 1.0:
-                self._logger.info("Waiting as more too many requests to Guardian API")
+                self._logger.info("Waiting as more too many requests to Guardian API %d s", time_since)
                 time.sleep(abs(1.0 - time_since))
 
         if start_date is not None:
