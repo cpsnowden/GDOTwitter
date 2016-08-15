@@ -13,8 +13,8 @@ path = "gnip_top_users.json"
 with open(path) as f:
     data = json.load(f)
 
-users = [i["_id"]["user-id"] for i in data if i["count"] >= 150]
-
+users = [i["_id"]["user-id"] for i in data[:1000]]
+# users = [i["_id"]["user-id"] for i in data if i["count"] >= 150]
 print len(users)
 print users[:10]
 
@@ -32,8 +32,8 @@ col = db.get_collection("Twitter_Brexit_GNIP")
 
 sample_query = [
     {"$match": {"user-id": {"$in": users}}},
-    {"$sample": {"size": 50000}},
-    {"$out": "GNIP_50000_sample_users_above150twts"}
+    {"$sample": {"size": 100000}},
+    {"$out": "GNIP_50000_sample_top1000users"}
 ]
 
 print "Executing query"

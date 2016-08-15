@@ -10,7 +10,7 @@ from AnalysisEngine.Analytics.EventDetection.EventDetection import EventDetectio
 class HashtagEventDetection(Analytics):
     _logger = logging.getLogger(__name__)
     __arguments = [dict(name="hashtag_rate_f_name", prettyName="Name of gridfs file with hashtag rates", type="string",
-                        default="blah"),
+                        default="RAW_A_TwitterBre_50"),
                    dict(name="hashtag", prettyName="Hashtag", type="enum", options=["strongerin",
                                                                                                  "brexit",
                                                                                                  "voteleave"],
