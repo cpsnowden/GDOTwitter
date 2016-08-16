@@ -1,16 +1,17 @@
-import logging
 import json
-import numpy as np
 import logging
 import os
 from collections import OrderedDict
 from string import Template
-import json
-import AnalysisEngine.Util
+
+import numpy as np
 from dateutil import parser
+
+import AnalysisEngine.Util
+
 DIR_NAME = os.path.dirname(__file__)
 logger = logging.getLogger(__name__)
-from AnalysisEngine.Analytics.EventDetection.EventDetection import Event
+from AnalysisEngine.EventDetection import Event
 from datetime import datetime
 
 def get_html(data_source, type, width="100%", height="100%"):

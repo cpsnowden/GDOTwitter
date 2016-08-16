@@ -10,7 +10,7 @@ import AnalysisEngine.Util
 
 DIR_NAME = os.path.dirname(__file__)
 logger = logging.getLogger(__name__)
-from AnalysisEngine.Analytics.EventDetection.EventDetection import Event
+from AnalysisEngine.EventDetection import Event
 from datetime import datetime
 
 def get_html(data_source, type, width="100%", height="100%"):

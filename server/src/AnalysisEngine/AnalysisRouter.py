@@ -1,28 +1,27 @@
 import logging
 from itertools import groupby
 
-from AnalysisEngine.Graphing.Hashtag.HashtagGraph import HashtagGraph
-from AnalysisEngine.Graphing.Community.BasicRetweet import BasicRetweet
-from AnalysisEngine.Graphing.Community.RetweetCommunity import RetweetCommunity
-from AnalysisEngine.Graphing.Trends.HashtagTrend import HashtagTrend
-from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet import HashtagTrendReweet
-from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet2 import HashtagTrendReweet2
-from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet3 import HashtagTrendReweet3
-
-from AnalysisEngine.Analytics.TimeAggregation.TD_Sentiment import TD_Sentiment
-from AnalysisEngine.Analytics.TimeAggregation.TD_Hashtag import TD_Hashtags
-from AnalysisEngine.Analytics.TimeAggregation.TD_TimeZone import TD_TimeZone
-from AnalysisEngine.Analytics.TimeAggregation.TD_TotalTweets import TD_TotalTweets
-from AnalysisEngine.Analytics.EventDetection.HashtagEventDetection import HashtagEventDetection
 from AnalysisEngine.Analytics.Aggregation.Languages import Languages
 from AnalysisEngine.Analytics.Aggregation.Original import Original
 from AnalysisEngine.Analytics.Aggregation.TimeZones import TimeZone
 from AnalysisEngine.Analytics.Aggregation.TopAuthors import TopAuthors
-from AnalysisEngine.Analytics.Aggregation.TopTweetingAuthors import TopTweetingAuthors
 from AnalysisEngine.Analytics.Aggregation.TopHashtags import TopHashtags
 from AnalysisEngine.Analytics.Aggregation.TopMentioned import TopMentioned
 from AnalysisEngine.Analytics.Aggregation.TopRetweeted import TopRetweeted
 from AnalysisEngine.Analytics.Aggregation.TopRetweeting import TopRetweeting
+from AnalysisEngine.Analytics.Aggregation.TopTweetingAuthors import TopTweetingAuthors
+from AnalysisEngine.Analytics.TimeAggregation.TD_Hashtag import TD_Hashtags
+from AnalysisEngine.Analytics.TimeAggregation.TD_Sentiment import TD_Sentiment
+from AnalysisEngine.Analytics.TimeAggregation.TD_TimeZone import TD_TimeZone
+from AnalysisEngine.Analytics.TimeAggregation.TD_TotalTweets import TD_TotalTweets
+from AnalysisEngine.EventDetection.HashtagEventDetection import HashtagEventDetection
+from AnalysisEngine.Graphing.Community.BasicRetweet import BasicRetweet
+from AnalysisEngine.Graphing.Community.RetweetCommunity import RetweetCommunity
+from AnalysisEngine.Graphing.Hashtag.HashtagGraph import HashtagGraph
+from AnalysisEngine.Graphing.Trends.HashtagTrend import HashtagTrend
+from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet import HashtagTrendReweet
+from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet2 import HashtagTrendReweet2
+from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet3 import HashtagTrendReweet3
 
 
 class AnalysisRouter():
