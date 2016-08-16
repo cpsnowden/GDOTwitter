@@ -5,7 +5,7 @@ from collections import OrderedDict
 from dateutil import parser
 
 from AnalysisEngine.EventDetection.EventDetectionC import EventAnalysis
-from EventDetection import EventDetection
+from AnalysisEngine.EventDetection.EventDetection import EventDetection
 
 
 class HashtagEventDetection(EventAnalysis):
