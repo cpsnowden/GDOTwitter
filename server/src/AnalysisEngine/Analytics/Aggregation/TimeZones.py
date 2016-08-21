@@ -41,12 +41,12 @@ class TimeZone(Analytics):
             elif c["_id"] == 0:
                 c["_id"] = "UTC"
 
-        result = {"details": {"chartType": "doughnut3d",
-                              "chartProperties": {"caption": self.dataset_meta.description,
-                                                  "subcaption": "Time Zones"}},
-                  "data": utc_offsets}
+        self.export_html(result=utc_offsets,
+                         properties={"chartProperties": {"caption": self.dataset_meta.description,
+                                                         "subcaption": "Time Zones"},
+                                     "analysisType": "proportion",
+                                     "chartType": "doughnut3d"},
+                         export_type="chart")
 
-        self.export_chart(result)
-        self.export_json(result)
-
+        self.export_json(utc_offsets)
         return True

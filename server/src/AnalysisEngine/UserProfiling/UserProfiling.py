@@ -69,7 +69,7 @@ class UserProfiling(Analysis):
         user_profile.no_original = n_original
         self._logger.info("Finished profiling")
 
-        self.export_html(user_profile, "userProfile")
+        self.export_html(user_profile, export_type="userProfile")
         self.export_json(user_profile.__dict__)
 
         return True

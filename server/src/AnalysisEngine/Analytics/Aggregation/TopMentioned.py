@@ -28,22 +28,20 @@ class TopMentioned(Analytics):
         user_name_key = Util.join_keys(mention_key,
                                        UserMention.SCHEMA_MAP[self.schema]["name"])
 
-        query = [
-            {"$unwind": mention_key},
-            {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
-            {"$sort": {"count": -1}},
-            {"$limit": limit}]
+        query = [{"$unwind": mention_key},
+                 {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
+                 {"$sort": {"count": -1}},
+                 {"$limit": limit}]
 
-        data = self.col.aggregate(query, allowDiskUse=True)
+        data = list(self.col.aggregate(query, allowDiskUse=True))
 
-        result = {"details": {"chartType": "bar2d",
-                              "chartProperties": {"yAxisName": "Number of Times Mentioned",
-                                                  "xAxisName": "User",
-                                                  "caption": self.dataset_meta.description,
-                                                  "subcaption": "Top " + str(limit) + " mentioned users"}},
-                  "data": list(data)}
-
-        self.export_chart(result)
-        self.export_json(result)
-
+        self.export_html(result=data,
+                         properties={"chartProperties": {"yAxisName": "Number of Times Mentioned",
+                                                         "xAxisName": "User",
+                                                         "caption": self.dataset_meta.description,
+                                                         "subcaption": "Top " + str(limit) + " mentioned users"},
+                                     "analysisType": "ranking",
+                                     "chartType": "bar2d"},
+                         export_type="chart")
+        self.export_json(data)
         return True

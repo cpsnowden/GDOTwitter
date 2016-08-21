@@ -24,26 +24,24 @@ class TopRetweeting(Analytics):
     def process(self):
         limit = self.args["Limit"]
 
-        # retweet_key = Status.SCHEMA_MAP[self.schema]["retweeted_status"]
         retweet_exists_key = Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]
         user_name_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                               User.SCHEMA_MAP[self.schema]["name"])
-        query = [
-            {"$match": {retweet_exists_key: {"$exists": True, "$ne": None}}},
-            {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
-            {"$sort": {"count": -1}},
-            {"$limit": limit}]
 
-        data = self.col.aggregate(query, allowDiskUse=True)
+        query = [{"$match": {retweet_exists_key: {"$exists": True, "$ne": None}}},
+                 {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
+                 {"$sort": {"count": -1}},
+                 {"$limit": limit}]
 
-        result = {"details": {"chartType": "bar2d",
-                              "chartProperties": {"yAxisName": "Number of Retweets",
-                                                  "xAxisName": "User",
-                                                  "caption": self.dataset_meta.description,
-                                                  "subcaption": "Top " + str(limit) + " retweeting users"}},
-                  "data": list(data)}
+        data = list(self.col.aggregate(query, allowDiskUse=True))
 
-        self.export_chart(result)
-        self.export_json(result)
-
+        self.export_html(result=data,
+                         properties={"chartProperties": {"yAxisName": "Number of Retweets",
+                                                         "xAxisName": "User",
+                                                         "caption": self.dataset_meta.description,
+                                                         "subcaption": "Top " + str(limit) + " retweeting users"},
+                                     "analysisType": "ranking",
+                                     "chartType": "bar2d"},
+                         export_type="chart")
+        self.export_json(data)
         return True

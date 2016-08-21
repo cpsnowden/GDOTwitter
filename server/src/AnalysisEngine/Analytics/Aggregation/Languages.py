@@ -21,21 +21,18 @@ class Languages(Analytics):
         return cls.__arguments + super(Languages, cls).get_args()
 
     def process(self):
-
         lang_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["language"])
 
-        query = [
-            {"$group": {"_id": lang_key, "count": {"$sum": 1}}},
-            {"$sort": {"count": -1}}]
+        query = [{"$group": {"_id": lang_key, "count": {"$sum": 1}}},
+                 {"$sort": {"count": -1}}]
 
-        data = self.col.aggregate(query, allowDiskUse=True)
+        data = list(self.col.aggregate(query, allowDiskUse=True))
 
-        result = {"details": {"chartType": "doughnut3d",
-                              "chartProperties": {"caption": self.dataset_meta.description,
-                                                  "subcaption": "Languages"}},
-                  "data": list(data)}
-
-        self.export_chart(result)
-        self.export_json(result)
-
+        self.export_html(result=data,
+                         properties={"chartProperties": {"caption": self.dataset_meta.description,
+                                                         "subcaption": "Languages"},
+                                     "analysisType": "proportion",
+                                     "chartType": "doughnut3d"},
+                         export_type="chart")
+        self.export_json(data)
         return True

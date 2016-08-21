@@ -26,16 +26,15 @@ class TopHashtags(Analytics):
 
         data = self.get_top_hashtags(self.schema, limit, self.col)
 
-        result = {"details": {"chartType": "bar2d",
-                              "chartProperties": {"yAxisName": "Number of Occurences",
-                                                  "xAxisName": "Hashtag",
-                                                  "caption": self.dataset_meta.description,
-                                                  "subcaption": "Top " + str(limit) + " hashtags"}},
-                  "data": data}
-
-        self.export_chart(result)
-        self.export_json(result)
-
+        self.export_html(result=data,
+                         properties={"chartProperties": {"yAxisName": "Number of Occurences",
+                                                         "xAxisName": "Hashtag",
+                                                         "caption": self.dataset_meta.description,
+                                                         "subcaption": "Top " + str(limit) + " hashtags"},
+                                     "analysisType": "ranking",
+                                     "chartType": "bar2d"},
+                         export_type="chart")
+        self.export_json(data)
         return True
 
     @staticmethod

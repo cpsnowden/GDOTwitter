@@ -8,7 +8,9 @@ import yaml
 from dateutil import parser
 
 from AnalysisEngine import Util
-from AnalysisEngine.HTMLGeneration.HTMLGeneration import get_html
+from AnalysisEngine.HTMLGeneration.FusionCharting import get_fusion_chart_data, get_fusion_html
+from AnalysisEngine.HTMLGeneration.UserProfileCharting import get_user_profile_chart
+
 from AnalysisEngine.TwitterObj import Status
 from Database.Persistence import DatabaseManager
 from api.Objects.MetaData import DatasetMeta
@@ -118,23 +120,42 @@ class Analysis(object):
 
         self.analytics_meta.raw_id = "RAW_" + self.analytics_meta.db_ref
 
-        with self.dbm.gridfs.new_file(filename=self.analytics_meta.raw_id, content_type="text/json") as f:
+        with self.dbm.gridfs.new_file(filename=self.analytics_meta.raw_id, content_type="application/json") as f:
             f.write(json.dumps(data, default=Util.date_encoder))
 
         self.analytics_meta.status = "SAVED"
         self.analytics_meta.end_time = datetime.now()
         self.analytics_meta.save()
 
-    def export_html(self, results_obj, result_type="chart"):
+    def export_html(self, result, properties = None, export_type="chart"):
 
         self.analytics_meta.status = "EXPORTING HTML"
         self.analytics_meta.save()
 
+        if export_type == "chart":
+            if properties is None:
+                properties = {}
+            self.analytics_meta.chart_id = "CHART_" + self.analytics_meta.db_ref
+            fusion_data = get_fusion_chart_data(result,
+                                                properties["chartProperties"],
+                                                properties["analysisType"],
+                                                properties["chartType"])
+
+            with self.dbm.gridfs.new_file(filename=self.analytics_meta.chart_id,
+                                          content_type="application/json",
+                                          encoding='utf-8') as f:
+                f.write(json.dumps(fusion_data, default=Util.date_encoder))
+            html = get_fusion_html(fusion_data["dataSource"], fusion_data["analysisType"])
+        elif export_type == "userProfile":
+            html = get_user_profile_chart(result)
+        else:
+            self._logger.warning("Unknown HTML export type")
+            return
+
         self.analytics_meta.html_id = "HTML_" + self.analytics_meta.db_ref
 
-        html = get_html(results_obj, result_type)
-
-        with self.dbm.gridfs.new_file(filename=self.analytics_meta.html_id, content_type="text/html",
+        with self.dbm.gridfs.new_file(filename=self.analytics_meta.html_id,
+                                      content_type="text/html",
                                       encoding='utf-8') as f:
             f.write(html)
 

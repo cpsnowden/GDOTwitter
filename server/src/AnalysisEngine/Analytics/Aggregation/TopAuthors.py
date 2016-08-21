@@ -27,22 +27,20 @@ class TopAuthors(Analytics):
         user_name_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                               User.SCHEMA_MAP[self.schema]["name"])
 
-        query = [
-            {"$match": {Status.SCHEMA_MAP[self.schema]["retweeted_status"]: {"$exists": False}}},
-            {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
-            {"$sort": {"count": -1}},
-            {"$limit": limit}]
+        query = [{"$match": {Status.SCHEMA_MAP[self.schema]["retweeted_status"]: {"$exists": False}}},
+                 {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
+                 {"$sort": {"count": -1}},
+                 {"$limit": limit}]
 
-        data = self.col.aggregate(query, allowDiskUse=True)
+        data = list(self.col.aggregate(query, allowDiskUse=True))
 
-        result = {"details": {"chartType": "bar2d",
-                              "chartProperties": {"yAxisName": "Number of Tweets",
-                                                  "xAxisName": "Author",
-                                                  "caption": self.dataset_meta.description,
-                                                  "subcaption": "Top " + str(limit) + " original authors"}},
-                  "data": list(data)}
-
-        self.export_chart(result)
-        self.export_json(result)
-
+        self.export_html(result=data,
+                         properties={"chartProperties": {"yAxisName": "Number of Tweets",
+                                                         "xAxisName": "Author",
+                                                         "caption": self.dataset_meta.description,
+                                                         "subcaption": "Top " + str(limit) + " original authors"},
+                                     "analysisType": "ranking",
+                                     "chartType": "bar2d"},
+                         export_type="chart")
+        self.export_json(data)
         return True

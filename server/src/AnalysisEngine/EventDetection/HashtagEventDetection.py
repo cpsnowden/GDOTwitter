@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 from dateutil import parser
 
-from AnalysisEngine.EventDetection.EventDetectionC import EventAnalysis
+from AnalysisEngine.EventDetection.EventAnalysis import EventAnalysis
 from AnalysisEngine.EventDetection.EventDetection import EventDetection
 
 
@@ -12,9 +12,8 @@ class HashtagEventDetection(EventAnalysis):
     _logger = logging.getLogger(__name__)
     __arguments = [dict(name="hashtag_rate_f_name", prettyName="Name of gridfs file with hashtag rates", type="string",
                         default="RAW_A_TwitterBre_50"),
-                   dict(name="hashtag", prettyName="Hashtag", type="enum", options=["strongerin",
-                                                                                                 "brexit",
-                                                                                                 "voteleave"],
+                   dict(name="hashtag", prettyName="Hashtag", type="enum",
+                        options=["strongerin","brexit","voteleave"],
                         default="strongerin")]
 
     def __init__(self, analytics_meta):
@@ -52,15 +51,16 @@ class HashtagEventDetection(EventAnalysis):
         eventDetector = EventDetection(self.col, "4d547cbd-99e2-4b00-a40e-987c67c252b8")
         events = eventDetector.map_events(y_labels, hashtag, self.schema)
 
-        result = {"details": {"chartType": "event",
-                              "chartProperties": {"yAxisName": "Tweets per hour",
-                                                  "xAxisName": "Date (UTC)",
-                                                  "caption": self.dataset_meta.description,
-                                                  "subcaption": "'#" + hashtag + "' event dectection",
-                                                  "labelStep": int(len(x_categories) / 20.0)}},
-                  "data": {"series": y_labels.items(), "events": events}}
+        data = {"series": y_labels.items(), "events": events}
 
-        self.export_chart(result)
-        self.export_json(result)
-
+        self.export_html(result=data,
+                         properties={"chartProperties": {"yAxisName": "Tweets per hour",
+                                                         "xAxisName": "Date (UTC)",
+                                                         "caption": self.dataset_meta.description,
+                                                         "subcaption": "'#" + hashtag + "' event dectection",
+                                                         "labelStep": int(len(x_categories) / 20.0)},
+                                     "analysisType": "event",
+                                     "chartType": "line"},
+                         export_type="chart")
+        self.export_json(data)
         return True

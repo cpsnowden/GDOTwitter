@@ -82,15 +82,15 @@ class TD_Sentiment(TimeAggregation):
         else:
             chartType = "msline"
 
-        result = {"details": {"chartType": chartType,
-                              "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
-                                                  "xAxisName": "Date (UTC)",
-                                                  "caption": self.dataset_meta.description,
-                                                  "subcaption": "Sentiment Time Distribution",
-                                                  "labelStep": int(len(x_values) / 20.0)}},
-                  "data": {"categories": sorted(x_values), "values": data}}
-
-        self.export_chart(result)
-        self.export_json(result)
-
+        dta = {"categories": sorted(x_values), "values": data}
+        self.export_html(result=dta,
+                         properties={"chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
+                                                         "xAxisName": "Date (UTC)",
+                                                         "caption": self.dataset_meta.description,
+                                                         "subcaption": "Sentiment Time Distribution",
+                                                         "labelStep": int(len(x_values) / 20.0)},
+                                     "analysisType": "time",
+                                     "chartType": chartType},
+                         export_type="chart")
+        self.export_json(dta)
         return True

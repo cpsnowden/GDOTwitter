@@ -65,15 +65,18 @@ class TD_Hashtags(TimeAggregation):
             chartType = "zoomline"
         else:
             chartType = "msline"
-        result = {"details": {"chartType": chartType,
-                              "chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
-                                                  "xAxisName": "Date (UTC)",
-                                                  "caption": self.dataset_meta.description,
-                                                  "subcaption": "Top " + str(limit) + " hashtag time interval",
-                                                  "labelStep": int(len(x_values) / 20.0)}},
-                  "data": {"categories": sorted(x_values), "values": result_lst}}
 
-        self.export_json(result)
-        self.export_chart(result)
+        data = {"categories": sorted(x_values), "values": result_lst}
 
+        self.export_html(result=data,
+                         properties={"chartProperties": {"yAxisName": "Tweets per " + time_interval.lower(),
+                                                         "xAxisName": "Date (UTC)",
+                                                         "caption": self.dataset_meta.description,
+                                                         "subcaption": "Top " + str(
+                                                             limit) + " hashtag time interval",
+                                                         "labelStep": int(len(x_values) / 20.0)},
+                                     "analysisType": "time",
+                                     "chartType": chartType},
+                         export_type="chart")
+        self.export_json(data)
         return True

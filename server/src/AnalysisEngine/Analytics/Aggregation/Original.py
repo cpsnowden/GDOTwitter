@@ -26,12 +26,11 @@ class Original(Analytics):
 
         distribution = [{"_id": "retweets", "count": retweeted}, {"_id": "non_retweets", "count": total - retweeted}]
 
-        result = {"details": {"chartType": "doughnut3d",
-                              "chartProperties": {"caption": self.dataset_meta.description,
-                                                  "subcaption": "Original Tweets"}},
-                  "data": distribution}
-
-        self.export_chart(result)
-        self.export_json(result)
-
+        self.export_html(result=distribution,
+                         properties={"chartProperties": {"caption": self.dataset_meta.description,
+                                                         "subcaption": "Original Tweets"},
+                                     "analysisType": "proportion",
+                                     "chartType": "doughnut3d"},
+                         export_type="chart")
+        self.export_json(distribution)
         return True

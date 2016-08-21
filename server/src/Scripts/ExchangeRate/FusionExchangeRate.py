@@ -1,5 +1,6 @@
-from AnalysisEngine.HTMLGeneration.Charting import get_html
 import json
+
+from Scripts.Charting import get_html
 
 raw = json.load(open("gbp-usd.json"))
 

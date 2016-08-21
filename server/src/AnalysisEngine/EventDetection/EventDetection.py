@@ -2,15 +2,16 @@ import logging
 import os
 import re
 from collections import OrderedDict
-from datetime import timedelta
 from datetime import datetime
+from datetime import timedelta
+
 import numpy as np
 import pandas as pd
 from dateutil import parser
 from nltk.corpus import stopwords
 
 from AnalysisEngine import Util
-from AnalysisEngine.Analytics.GuardianAPI.GuardianWrapper import GuardianWrapper
+from AnalysisEngine.GuardianAPI.GuardianWrapper import GuardianWrapper
 from AnalysisEngine.TwitterObj import Status
 
 
@@ -96,36 +97,31 @@ class EventDetection(object):
 
 
 if __name__ == "__main__":
-    import json
 
-    # brexit = json.load(open("brexit.json"))
-    # leave = json.load(open("leave.json"))
+    import json
+    from pymongo import MongoClient
+    from AnalysisEngine.HTMLGeneration.FusionCharting import get_fusion_chart_data, get_fusion_html
+
     data = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/strongerin.json")))
     htag = "strongerin"
-    # brexit = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/brexit.json")))
-
-    from pymongo import MongoClient
-    # from datetime import datetime
-    from AnalysisEngine.HTMLGeneration.Charting import create_chart
 
     client = MongoClient("146.169.32.151", 27017)
     db = client.get_database("DATA")
     auth = db.authenticate("twitterApplication", "gdotwitter", source="admin")
     col = db.get_collection("Twitter_Brexit_GNIP")
-
     ed = EventDetection(col, "4d547cbd-99e2-4b00-a40e-987c67c252b8")
+
     print "Getting events"
     events = ed.map_events(OrderedDict([(parser.parse(i[0]), i[1]) for i in data]), htag, "GNIP")
 
-    result = {"details": {"chartType": "event",
-                          "chartProperties": {"yAxisName": "Tweets per hour",
-                                              "xAxisName": "Date (UTC)",
-                                              "caption": "Brexit",
-                                              "subcaption": "'#" + htag + "'" + " event dectection",
-                                              "labelStep": int(len(data) / 20.0)}},
-              "data": {"series": [[parser.parse(i[0]), i[1]] for i in data], "events": events}}
-
-    html = create_chart(result)
-
+    fcd = get_fusion_chart_data({"series": [[parser.parse(i[0]), i[1]] for i in data], "events": events},
+                                {"yAxisName": "Tweets per hour",
+                                 "xAxisName": "Date (UTC)",
+                                 "caption": "Brexit",
+                                 "subcaption": "'#" + htag + "'" + " event dectection",
+                                 "labelStep": int(len(data) / 20.0)},
+                                "event",
+                                "line")
+    html = get_fusion_html(fcd["dataSource"], fcd["chartType"])
     with open("out.html", "w") as f:
         f.write(html)

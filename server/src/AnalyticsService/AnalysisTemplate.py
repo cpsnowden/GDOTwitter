@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 
-from AnalysisEngine.HTMLGeneration.Charting import create_chart
+from Scripts.Charting import create_chart
 
 
 class AnalysisTemplate(object):
