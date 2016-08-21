@@ -149,11 +149,15 @@ class AnalyticsData(Resource):
         except DoesNotExist:
             abort(404, message="Analytics {} does not exist".format(id))
             return
+        analytics_class = AnalysisRouter.get(found.classification, found.type)
+        if analytics_class is not None:
+            prefered_url, prefered_app = analytics_class.get_prefered_vis()
+        else:
+            prefered_url = prefered_app = None
 
-        prefered_url, prefered_app = AnalysisRouter.get(found.classification, found.type).get_prefered_vis()
         return AnalyticsDataOpt(request.path, found.chart_id, found.html_id,
-                                found.raw_id, found.graph_id, prefered_url,
-                                prefered_app)
+                            found.raw_id, found.graph_id, prefered_url,
+                            prefered_app)
 
 
 class AnalyticsDownload(Resource):
