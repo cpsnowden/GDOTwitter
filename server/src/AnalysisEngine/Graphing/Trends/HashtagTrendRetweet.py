@@ -96,9 +96,6 @@ class HashtagTrendReweet(TrendGraph):
             time_step = self.get_time_step(date, start_date, time_interval)
             status_id = str(status.get_id())
 
-            source_user = status.get_user()
-            source_id = str(source_user.get_name())
-
             current_score, tweet_score = classification_system.consume(status)
             user = status.get_user()
             source_user_id = user.get_name()
@@ -126,7 +123,7 @@ class HashtagTrendReweet(TrendGraph):
                 user_id = user.get_name()
                 target_node_id = str(user_id) + ":" + str(status_id)
                 # Ignore the vain people retweeting themselves
-                if user_id != source_id:
+                if user_id != source_user_id:
                     G.add_node(target_node_id,
                                    label="usr:" + user.get_name(),
                                    type="target",

@@ -48,7 +48,7 @@ class Status(object):
 
     def get_user(self, retweet=False):
         if retweet:
-            User(self.get("retweet_user"), self.SCHEMA_ID, True)
+            return User(self.get("retweet_user"), self.SCHEMA_ID, True)
         return User(self.get("user_sub_field"), self.SCHEMA_ID)
 
     def get_text(self):

@@ -22,7 +22,7 @@ class EventAnalysis(Analysis):
 
     @classmethod
     def get_classification(cls):
-        return "Event Analysis"
+        return "EventAnalysis"
 
     @classmethod
     def get_prefered_vis(cls):
