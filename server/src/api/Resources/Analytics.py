@@ -29,17 +29,22 @@ analytics_meta_fields = {
 
 analytics_data_fields = {
     "url_chart": fields.String(),
+    "url_html": fields.String(),
     "url_raw": fields.String(),
     "url_graph": fields.String(),
 }
 
 
 class AnalyticsDataOpt:
-    def __init__(self, path, chart_id, raw_id, graph_id):
+    def __init__(self, path, chart_id, html_id, raw_id, graph_id):
         if chart_id is not None:
             self.url_chart = path + "/dl?type=chart"
         else:
             self.url_chart = None
+        if html_id is not None:
+            self.url_html = path + "/dl?type=html"
+        else:
+            self.url_html = None
         if raw_id is not None:
             self.url_raw = path + "/dl?type=raw"
         else:
@@ -110,6 +115,8 @@ class Analytics(Resource):
             abort(404, message="Analytics {} does not exist".format(id))
             return
 
+        if found.html_id is not None:
+            r = self.dbm.deleteGridFSFile(found.html_id)
         if found.chart_id is not None:
             r = self.dbm.deleteGridFSFile(found.chart_id)
         if found.graph_id is not None:
@@ -134,7 +141,7 @@ class AnalyticsData(Resource):
             abort(404, message="Analytics {} does not exist".format(id))
             return
 
-        return AnalyticsDataOpt(request.path, found.chart_id, found.raw_id, found.graph_id)
+        return AnalyticsDataOpt(request.path, found.chart_id, found.html_id, found.raw_id, found.graph_id)
 
 
 class AnalyticsDownload(Resource):
@@ -143,7 +150,7 @@ class AnalyticsDownload(Resource):
     def __init__(self, **kwargs):
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('type', type=str, help="Type of data", location='args',
-                                 choices = ["graph","raw","chart"], required = True)
+                                 choices = ["graph","raw","chart","html"], required = True)
         self.dbm = kwargs["dbm"]
 
     def get(self, dataset_id, id):
@@ -164,12 +171,20 @@ class AnalyticsDownload(Resource):
             response.headers["Content-Disposition"] = "attachment; filename = " + found.raw_id + ".json;"
             response.headers["mimetype"] = "application/json"
             return response
+        elif dataType == "html":
+            self.logger.info("Get HTML DATA")
+            print found.html_id
+            f = self.dbm.gridfs.get_last_version(found.html_id)
+            response = make_response(f.read())
+            response.headers["Content-Disposition"] = "attachment; filename = " + found.html_id + ".html;"
+            response.headers["mimetype"] = "text/html"
+            return response
         elif dataType == "chart":
             self.logger.info("Get Chart DATA")
             f = self.dbm.gridfs.get_last_version(found.chart_id)
             response = make_response(f.read())
-            response.headers["Content-Disposition"] = "attachment; filename = " + found.chart_id + ".html;"
-            response.headers["mimetype"] = "text/html"
+            response.headers["Content-Disposition"] = "attachment; filename = " + found.chart_id + ".json;"
+            response.headers["mimetype"] = "application/json"
             return response
         elif dataType == "graph":
             self.logger.info("Get Graph DATA")

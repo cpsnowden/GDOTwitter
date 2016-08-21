@@ -14,7 +14,11 @@ from AnalysisEngine.Analytics.TimeAggregation.TD_Hashtag import TD_Hashtags
 from AnalysisEngine.Analytics.TimeAggregation.TD_Sentiment import TD_Sentiment
 from AnalysisEngine.Analytics.TimeAggregation.TD_TimeZone import TD_TimeZone
 from AnalysisEngine.Analytics.TimeAggregation.TD_TotalTweets import TD_TotalTweets
+
 from AnalysisEngine.EventDetection.HashtagEventDetection import HashtagEventDetection
+
+from AnalysisEngine.UserProfiling.UserProfiling import UserProfiling
+
 from AnalysisEngine.Graphing.Community.BasicRetweet import BasicRetweet
 from AnalysisEngine.Graphing.Community.RetweetCommunity import RetweetCommunity
 from AnalysisEngine.Graphing.Hashtag.HashtagGraph import HashtagGraph
@@ -43,7 +47,8 @@ class AnalysisRouter():
                TD_Hashtags,
                TD_TimeZone,
                TD_TotalTweets,
-               HashtagEventDetection
+               HashtagEventDetection,
+               UserProfiling
                ] + [
                   HashtagGraph,
                   BasicRetweet,

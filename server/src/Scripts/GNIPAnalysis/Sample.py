@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-
+MongoClient().get_database().coll
 # client = MongoClient("146.169.32.151", 27017)
 #
 # db = client.get_database("DATA")

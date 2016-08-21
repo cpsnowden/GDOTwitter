@@ -3,9 +3,10 @@ import logging
 import os
 from collections import OrderedDict
 from string import Template
-
+import copy
 import AnalysisEngine.Util
 import numpy as np
+
 DIR_NAME = os.path.dirname(__file__)
 logger = logging.getLogger(__name__)
 
@@ -49,6 +50,7 @@ def create_3d_pie_chart(chart_data):
     chart_data["details"]["chartProperties"]["showLegend"] = "1"
     chart_data["details"]["chartProperties"]["labelFontColor"] = "#FFFFFF"
     chart_data["details"]["chartProperties"]["labelFontSize"] = "20"
+    chart_data["details"]["chartProperties"]["enableRotation"] = "0"
     return get_html({"chart": chart_data["details"]["chartProperties"], "data": plot_data}, "doughnut3d")
 
 
@@ -73,14 +75,14 @@ def create_event_chart(data):
                    "groups": []}
     v_trend_line = {"line": []}
 
-    for i,event in enumerate(data["data"]["events"]):
-        annotations["groups"].append(make_annotation(event, x_categories_parsed, divmod(i,4)[1]))
+    for i, event in enumerate(data["data"]["events"]):
+        annotations["groups"].append(make_annotation(event, x_categories_parsed, divmod(i, 4)[1]))
         v_trend_line["line"].append(make_trend_line(event, x_categories_parsed))
 
     return get_html({"chart": data["details"]["chartProperties"],
                      "data": values,
                      "annotations": annotations,
-                     "vtrendlines": v_trend_line}, "line", str(1920*4), str(1080))
+                     "vtrendlines": v_trend_line}, "line")
 
 
 def make_trend_line(event, datetime_to_index):
@@ -96,7 +98,6 @@ def make_trend_line(event, datetime_to_index):
         "displayValue": " ",
     }
 
-
     return zone
 
 
@@ -105,36 +106,40 @@ def make_annotation(event, datetime_to_index, cycle):
     end_index = datetime_to_index[event.end]
     label = event.get_chart_label()
 
-    start_line_annotation = {
+    top_top = -200
+    top_bottom = -5
+    bottom_top = 120
+    bottom_bottom = 320
+
+    default = {
         "id": "end_high-line",
         "type": "line",
-        "y": "$canvasStartY",
-        "x": "$dataset.0.set." + str(start_index) + ".x",
-        "toy": "$canvasEndY",
-        "tox": "$dataset.0.set." + str(start_index) + ".x",
         "color": "#6baa01",
         "dashed": "1",
-        "thickness": "1",
+        "thickness": "1"
     }
-    end_line_annotation = {
-        "id": "start_high-line",
-        "type": "line",
-        "y": "$canvasStartY",
-        "x": "$dataset.0.set." + str(end_index) + ".x",
-        "toy": "$canvasEndY",
-        "tox": "$dataset.0.set." + str(end_index) + ".x",
-        "color": "#6baa01",
-        "dashed": "1",
-        "thickness": "1",
-    }
+
+    start_line_annotation = copy.deepcopy(default)
+
+    start_line_annotation["y"] = "$canvasStartY"
+    start_line_annotation["x"] = "$dataset.0.set." + str(start_index) + ".x"
+    start_line_annotation["toy"] = "$canvasEndY"
+    start_line_annotation["tox"] = "$dataset.0.set." + str(start_index) + ".x"
+
+    end_line_annotation = copy.deepcopy(default)
+    end_line_annotation["y"] = "$canvasStartY"
+    end_line_annotation["x"] = "$dataset.0.set." + str(end_index) + ".x"
+    end_line_annotation["toy"] = "$canvasEndY"
+    end_line_annotation["tox"] = "$dataset.0.set." + str(end_index) + ".x"
+
     label_annotation = {
         "id": "dyn-label",
         "type": "text",
         "text": label,
         "wrap": 1,
-        "wrapWidth": 100,
+        "wrapWidth": 150,
         "fillcolor": "#ffffff",
-        "fontsize": "7",
+        "fontsize": "15",
         "x": "$dataset.0.set." + str(int(np.mean([start_index, end_index]))) + ".x",
         "y": "$canvasStartY",
         "bgColor": '#0075c2',
@@ -142,29 +147,27 @@ def make_annotation(event, datetime_to_index, cycle):
     }
 
     if cycle == 0:
-        start_line_annotation["y"] += " - 200"
-        end_line_annotation["y"] += " - 200"
-        label_annotation["y"] += " - 200"
+        start_line_annotation["y"] += " - " + str(top_top)
+        end_line_annotation["y"] += " -  " + str(top_top)
+        label_annotation["y"] += " -  " + str(top_top)
         label_annotation["vAlign"] = "bottom"
     elif cycle == 1:
-        start_line_annotation["y"] += " - 5"
-        end_line_annotation["y"] += " - 5"
-        label_annotation["y"] += " - 5"
+        start_line_annotation["y"] += " - " + str(top_bottom)
+        end_line_annotation["y"] += " - " + str(top_bottom)
+        label_annotation["y"] += " - " + str(top_bottom)
         label_annotation["vAlign"] = "top"
     elif cycle == 2:
-        start_line_annotation["toy"] = "$canvasEndY + 120"
-        end_line_annotation["toy"] = "$canvasEndY + 120"
-        label_annotation["y"] = "$canvasEndY + 120"
+        start_line_annotation["toy"] = "$canvasEndY + " + str(bottom_top)
+        end_line_annotation["toy"] = "$canvasEndY + " + str(bottom_top)
+        label_annotation["y"] = "$canvasEndY + " + str(bottom_top)
         label_annotation["vAlign"] = "bottom"
     elif cycle == 3:
-        start_line_annotation["toy"] = "$canvasEndY + 320"
-        end_line_annotation["toy"] = "$canvasEndY + 320"
-        label_annotation["y"] = "$canvasEndY + 320"
+        start_line_annotation["toy"] = "$canvasEndY + " + str(bottom_bottom)
+        end_line_annotation["toy"] = "$canvasEndY + " + str(bottom_bottom)
+        label_annotation["y"] = "$canvasEndY + " + str(bottom_bottom)
         label_annotation["vAlign"] = "top"
 
-
     return {"items": [start_line_annotation, end_line_annotation, label_annotation]}
-
 
 def get_html(data_source, type, width="100%", height="100%"):
     default_chart_properties = {
@@ -205,6 +208,7 @@ def get_html(data_source, type, width="100%", height="100%"):
                               "height": height,
                               "width": width,
                               "type": type})
+
 
 def create_chart(data):
     options = {

@@ -8,7 +8,7 @@ import yaml
 from dateutil import parser
 
 from AnalysisEngine import Util
-from AnalysisEngine.Charting.Charting import create_chart
+from AnalysisEngine.HTMLGeneration.HTMLGeneration import get_html
 from AnalysisEngine.TwitterObj import Status
 from Database.Persistence import DatabaseManager
 from api.Objects.MetaData import DatasetMeta
@@ -85,17 +85,22 @@ class Analysis(object):
 
         return query
 
-    def get_sorted_cursor(self, query, limit, projection=None):
+    def get_sorted_cursor(self, query, limit=0, projection=None, reverse=False):
 
         self._logger.info("Querying DATA database, collection %s with query %s and projection %s", self.col.name,
                           query, projection)
 
+        if reverse:
+            order = pymongo.DESCENDING
+        else:
+            order = pymongo.ASCENDING
+
         if projection is None:
             cursor = self.col.find(query).limit(limit) \
-                .sort(Status.SCHEMA_MAP[self.schema]["ISO_date"], pymongo.ASCENDING)
+                .sort(Status.SCHEMA_MAP[self.schema]["ISO_date"], order)
         else:
             cursor = self.col.find(query, projection).limit(limit) \
-                .sort(Status.SCHEMA_MAP[self.schema]["ISO_date"], pymongo.ASCENDING)
+                .sort(Status.SCHEMA_MAP[self.schema]["ISO_date"], order)
 
         cusor_size = cursor.count(with_limit_and_skip=True)
 
@@ -120,17 +125,18 @@ class Analysis(object):
         self.analytics_meta.end_time = datetime.now()
         self.analytics_meta.save()
 
-    def export_chart(self, data):
+    def export_html(self, results_obj, result_type="chart"):
 
-        self.analytics_meta.status = "EXPORTING CHART"
+        self.analytics_meta.status = "EXPORTING HTML"
         self.analytics_meta.save()
 
-        self.analytics_meta.chart_id = "CHART_" + self.analytics_meta.db_ref
+        self.analytics_meta.html_id = "HTML_" + self.analytics_meta.db_ref
 
-        html = create_chart(data)
+        html = get_html(results_obj, result_type)
 
-        with self.dbm.gridfs.new_file(filename=self.analytics_meta.chart_id, content_type="text/html") as f:
+        with self.dbm.gridfs.new_file(filename=self.analytics_meta.html_id, content_type="text/html",
+                                      encoding='utf-8') as f:
             f.write(html)
 
-        self.analytics_meta.status = "CHART SAVED"
+        self.analytics_meta.status = "HTML SAVED"
         self.analytics_meta.save()

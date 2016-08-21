@@ -1,0 +1,155 @@
+<html>
+<head>
+    <title>User Profile: $screenName</title>
+    <script type="text/javascript" src="http://static.fusioncharts.com/code/latest/fusioncharts.js"></script>
+    <script type="text/javascript"
+            src="http://static.fusioncharts.com/code/latest/themes/fusioncharts.theme.fint.js?cacheBust=56"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            /*color: white;*/
+            /*background-color: black;*/
+
+        }
+
+        html, body, .container-fluid {
+            height: 100%;
+        }
+
+        .smallRow {
+            height: 25%;
+        }
+
+        .largeRow {
+            height: 70%;
+        }
+
+        .v-divider {
+            margin-left: 5px;
+            margin-right: 5px;
+            width: 1px;
+            height: 100%;
+            border-left: 1px solid gray;
+        }
+
+        .h-divider {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            height: 1px;
+            width: 100%;
+            border-top: 1px solid gray;
+        }
+
+        #map {
+            height: 100%;
+        }
+
+        #footer {
+            height: 2%;
+            background-color: #f5f5f5;
+            color: gray;
+        }
+    </style>
+    <script type="text/javascript">
+        FusionCharts.ready(function () {
+            var retweetDistribution = new FusionCharts({
+                        type: "pie2d",
+                        renderAt: 'retweetDistribution',
+                        width: "100%",
+                        height: "100%",
+                        dataFormat: 'json',
+                        dataSource: $retweetData
+                    }
+            ).render();
+            var followerFollowing = new FusionCharts({
+                        type: "pie2d",
+                        renderAt: 'followerFollowing',
+                        width: "100%",
+                        height: "100%",
+                        dataFormat: 'json',
+                        dataSource: $followingData
+                    }
+            ).render();
+        });
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 1,
+                center: {lat: -0, lng: 0},
+                disableDefaultUI: true
+            });
+            var markers = $markers;
+            for (var i = 0; i < markers.length; ++i) {
+                var marker = new google.maps.Marker(markers[i]);
+                marker.setMap(map);
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC04w32DkYjb-TmueAftn7lCbEw26Fr7zA&callback=initMap"
+            async defer></script>
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="row smallRow">
+            <div class="col-lg-2">
+                <img src="$profileImage"
+                     class="img-responsive center-block" alt="Responsive image">
+            </div>
+            <div class="col-lg-1 v-divider"></div>
+            <div class="col-lg-9">
+                <div class="col-lg-3">
+                    <div id="retweetDistribution">FusionCharts XT will load here!</div>
+                </div>
+                <div class="col-lg-3">
+                    <div id="followerFollowing">FusionCharts XT will load here!</div>
+                </div>
+                <div class="col-lg-6">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+        <div class="h-divider"></div>
+        <div class="row largeRow">
+            <div class="col-lg-2">
+                <h4>Name: $name</h4>
+                <h4>ScreenName: $screenName</h4>
+                <h4>Location: $location</h4>
+                <h4>Description: $description</h4>
+                <h4>Account Created At: $createdAt</h4>
+                <h4>TimeZone: $timeZone</h4>
+            </div>
+            <div class="col-lg-1 v-divider"></div>
+            <div class="col-lg-9">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Text</th>
+                        <th>Retweeted Author</th>
+                    </tr>
+                    </thead>
+                    $tbody
+                </table>
+            </div>
+        </div>
+        <div id="footer">
+            <div class="col-lg-10">
+                User Profile: $screenName, compiled from streamed data set $dataSetName
+            </div>
+            <div class="col-lg-2"><p class=".pull-right">as of $timestamp</p></div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

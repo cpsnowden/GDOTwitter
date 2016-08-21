@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
     from pymongo import MongoClient
     # from datetime import datetime
-    from AnalysisEngine.Charting.Charting import create_chart
+    from AnalysisEngine.HTMLGeneration.Charting import create_chart
 
     client = MongoClient("146.169.32.151", 27017)
     db = client.get_database("DATA")

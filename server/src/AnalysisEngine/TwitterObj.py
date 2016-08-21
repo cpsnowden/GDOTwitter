@@ -5,19 +5,21 @@ class Status(object):
     T4J = dict(hashtags="hashtagEntities", mentions="userMentionEntities", user="user", text="text",
                created_at="createdAt", id="id", retweeted_status="retweetedStatus", language="lang", ISO_date=
                "createdAt", coordinates="geoLocation", user_sub_field="user", retweet_user="user",
-               retweeted_status_exists="retweetedStatus.text")
+               retweeted_status_exists="retweetedStatus.text",n_retweeted="retweetCount")
 
     RAW = dict(hashtags="entities.hashtags", mentions="entities.user_mentions", user="user", text="text",
                created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date=
                "ISO_created_at", coordinates="coordinates.coordinates", user_sub_field="user", retweet_user="user",
-               retweeted_status_exists="retweeted_status.text")
+               retweeted_status_exists="retweeted_status.text",n_retweeted="retweet_count")
 
     GNIP = dict(hashtags="entities-hashtags", mentions="entities-user_mentions", text="clean-text",
                 created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="language",
                 ISO_date=
                 "ISO_created_at", user_sub_field=["user-id", "user-utcOffset", "user-friendsCount", "user-preferredUsername",
-                                                  "user-twitterTimeZone", "user-followersCount", "language"], user="",
-                retweet_user="user", retweeted_status_exists="retweeted_status.text")
+                                                  "user-twitterTimeZone", "user-followersCount", "language",
+                                                  "user-image", "user-name"], user="",
+                retweet_user="user", retweeted_status_exists="retweeted_status.text",n_retweeted="retweetCount",
+                coordinates="entities-user-place-coordinates")
 
     SCHEMA_MAP = {
         "T4J": T4J,
@@ -36,6 +38,9 @@ class Status(object):
     def get_hashtags(self):
         hashtag_list = self.get("hashtags")
         return [h_tag["text"] for h_tag in hashtag_list]
+
+    def get_n_retweeted(self):
+        return self.get("n_retweeted")
 
     def get_mentions(self):
         mention_list = self.get("mentions")
@@ -65,7 +70,8 @@ class Status(object):
 
     def get_coordinates(self):
         try:
-            return GeoLocation(self.get("coordinates"), self.SCHEMA_ID)
+            if self.get("coordinates") is not None:
+                return GeoLocation(self.get("coordinates"), self.SCHEMA_ID)
         except KeyError:
             return None
 
@@ -73,10 +79,12 @@ class Status(object):
 class GeoLocation(object):
     T4J = dict(longitude="longitude", latitude="latitude")
     RAW = dict(longitude=0, latitude=1)
+    GNIP = dict(longitude="lon", latitude="lat")
 
     SCHEMA_MAP = {
         "T4J": T4J,
-        "RAW": RAW
+        "RAW": RAW,
+        "GNIP": GNIP
     }
 
     def __init__(self, json, schema_id):
@@ -97,36 +105,18 @@ class GeoLocation(object):
         return str(self.get_longitude()) + "," + str(self.get_latitude())
 
 
-# def conv_dt(raw):
-#     return raw
-#
-#
-# def conv_json_dt(raw):
-#     return parser.parse(raw)
-#
-# class TwitterDate(object):
-#     SCHEMA_MAP = {
-#         "T4J": conv_dt,
-#         "RAW": conv_json_dt
-#     }
-#
-#     def __init__(self, raw, schema_id):
-#         self.SCHEMA_ID = schema_id
-#         self.raw = raw
-#
-#     def get_date_time(self):
-#         return self.SCHEMA_MAP[self.SCHEMA_ID](self.raw)
-
-
 class User(object):
     T4J = dict(id="id", name="screenName", follower_count="followersCount", friends_count="friendsCount", lang="lang",
-               utc_offset="utcOffset", time_zone="timeZone", retweet_screen_name = "screenName")
+               utc_offset="utcOffset", time_zone="timeZone", retweet_screen_name = "screenName",
+               image_url="originalProfileImageURL",
+               real_name="name", location="location")
     RAW = dict(id="id", name="screen_name", follower_count="followers_count", friends_count="friends_count",
-               lang="lang", utc_offset="utc_offset", time_zone="time_zone", retweet_screen_name="screen_name")
+               lang="lang", utc_offset="utc_offset", time_zone="time_zone", retweet_screen_name="screen_name",
+               image_url="profile_image_url",real_name="name", location="location")
     GNIP = dict(id="user-id", name="user-preferredUsername", follower_count="user-followersCount", friends_count="user-friendsCount",
                 utc_offset="user-utcOffset", time_zone="user-twitterTimeZone", lang="language", retweet_screen_name =
-                "screen_name")
-    RTWT_GNIP = dict(name="screen_name")
+                "screen_name",image_url="user-image",real_name="user-name", location="user-location")
+    RTWT_GNIP = dict(name="screen_name", real_name="name")
 
     SCHEMA_MAP = {
         "T4J": T4J,
@@ -151,8 +141,14 @@ class User(object):
     def get(self, key):
         return self.item.get(self.SCHEMA[key])
 
+    def get_image_url(self):
+        return self.get("image_url")
+
     def get_name(self):
         return self.get("name")
+
+    def get_real_name(self):
+        return self.get("real_name")
 
     def get_id(self):
         return self.get("id")
@@ -171,6 +167,9 @@ class User(object):
 
     def get_utc_offset(self):
         return self.get("utc_offset")
+
+    def get_location(self):
+        return self.get("location")
 
 
 class UserMention(object):
@@ -212,7 +211,10 @@ class DictionaryWrapper(object):
         if isinstance(item, list):
             return {i: self.__getitem__(i) if i in self.item else None for i in item}
         else:
-            return self.__getitem__(item)
+            try:
+                return self.__getitem__(item)
+            except KeyError:
+                return None
 
     def put(self, key, value):
         return self.__setitem__(key, value)

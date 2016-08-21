@@ -42,6 +42,7 @@ class AnalyticsMeta(Document):
     start_time = DateTimeField(required=True, default=datetime.datetime.now())
     end_time = DateTimeField()
     specialised_args = DictField()
+    html_id = StringField()
     chart_id = StringField()
     graph_id = StringField()
     raw_id = StringField()
