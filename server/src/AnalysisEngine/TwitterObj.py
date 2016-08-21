@@ -109,13 +109,13 @@ class User(object):
     T4J = dict(id="id", name="screenName", follower_count="followersCount", friends_count="friendsCount", lang="lang",
                utc_offset="utcOffset", time_zone="timeZone", retweet_screen_name = "screenName",
                image_url="originalProfileImageURL",
-               real_name="name", location="location")
+               real_name="name", location="location", description = "description")
     RAW = dict(id="id", name="screen_name", follower_count="followers_count", friends_count="friends_count",
                lang="lang", utc_offset="utc_offset", time_zone="time_zone", retweet_screen_name="screen_name",
-               image_url="profile_image_url",real_name="name", location="location")
+               image_url="profile_image_url",real_name="name", location="location", description = "description")
     GNIP = dict(id="user-id", name="user-preferredUsername", follower_count="user-followersCount", friends_count="user-friendsCount",
                 utc_offset="user-utcOffset", time_zone="user-twitterTimeZone", lang="language", retweet_screen_name =
-                "screen_name",image_url="user-image",real_name="user-name", location="user-location")
+                "screen_name",image_url="user-image",real_name="user-name", location="user-location", description = "user-summary")
     RTWT_GNIP = dict(name="screen_name", real_name="name")
 
     SCHEMA_MAP = {
@@ -171,6 +171,8 @@ class User(object):
     def get_location(self):
         return self.get("location")
 
+    def get_description(self):
+        return self.get("description")
 
 class UserMention(object):
     T4J = dict(id="id", name="screenName")

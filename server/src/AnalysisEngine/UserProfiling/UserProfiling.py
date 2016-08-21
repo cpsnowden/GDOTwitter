@@ -62,6 +62,7 @@ class UserProfiling(Analysis):
                 user_profile.profileImage = user.get_image_url().replace("_normal","")
                 user_profile.timeZone = user.get_time_zone()
                 user_profile.location = user.get_location()
+                user_profile.description = user.get_description()
                 first = False
             if s.get_retweet_status() is None:
                 n_original += 1
