@@ -21,6 +21,10 @@ class Analytics(Analysis):
         return cls.__arguments + super(Analytics, cls).get_args()
 
     @classmethod
+    def get_prefered_vis(cls):
+        return "url_chart", "FusionChart"
+
+    @classmethod
     def get_classification(cls):
         return "Analytics"
 

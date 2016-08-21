@@ -263,26 +263,35 @@
                                             </button>
                                             <button class="btn btn-success"
                                                     ng-click="chart(a)"
-                                                    ng-show="a['status']=='FINISHED' && a.classification=='Analytics'">
+                                                    ng-show="a['status']=='FINISHED' && a.classification!='Graph'">
                                                 <i class="fa fa-bar-chart" aria-hidden="true"></i>
                                             </button>
                                             <div class="btn-group" uib-dropdown keyboard-nav
                                                  ng-show="a['status']=='FINISHED'">
                                                 <button id="simple-btn-keyboard-nav" type="button"
-                                                        class="btn btn-primary" uib-dropdown-toggle ng-click="getDownloadOptions(a)">
+                                                        class="btn btn-primary" uib-dropdown-toggle
+                                                        ng-click="getDownloadOptions(a)">
                                                     <i class="glyphicon glyphicon-download"></i><span
                                                         class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu" uib-dropdown-menu role="menu"
                                                     aria-labelledby="simple-btn-keyboard-nav">
                                                     <li role="menuitem" ng-repeat="o in a.downloadOptions"><a
-                                                            ng-click="downloadItem(o.value)">{{o.name}}</a></li>
-                                                    <li class="divider"></li>
-                                                    <li role="menuitem"><a ng-click="download(a)">All</a></li>
+                                                            ng-click="downloadItem(o.value)">{{o.name}}
+                                                        <i ng-if="a.defaultDownload==o.name"
+                                                           class="fa fa-star"></i>
+                                                    </a>
+
+                                                    </li>
+                                                    <li class="divider" ng-if="a.downloadOptions.length>1"></li>
+                                                    <li role="menuitem" ng-if="a.downloadOptions.length>1"><a ng-click="download(a)">All</a></li>
 
                                                 </ul>
+
                                             </div>
-                                        </div>
+
+                                            <div class="btn-group" uib-dropdown>
+                                            </div>
                                     </td>
                                     <td style="width:45%" ng-bind="a['id']"></td>
                                     <td style="width:45%" ng-bind="a['type']"></td>

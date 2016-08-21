@@ -38,6 +38,10 @@ class Graphing(Analysis):
         return "Graph"
 
     @classmethod
+    def get_prefered_vis(cls):
+        return "url_graph","Graph"
+
+    @classmethod
     def get_type(cls):
         pass
 

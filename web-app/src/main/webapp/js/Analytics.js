@@ -151,14 +151,16 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
 
         $scope.getDownloadOptions = function (item) {
             Restangular.oneUrl("tempit", item.uri_data).get().then(function (result) {
-                var downloadOptions = Restangular.stripRestangular(result.data);
+                var analyticsDataOptions = Restangular.stripRestangular(result.data);
+                var downloadOptions = analyticsDataOptions.urls;
                 options = [];
                 for(var k in downloadOptions){
                     if(downloadOptions.hasOwnProperty(k) && downloadOptions[k] != null){
                         options.push({"name":k,"value":downloadOptions[k]})
                     }
                 }
-                item.downloadOptions = options; 
+                item.downloadOptions = options;
+                item.defaultDownload = analyticsDataOptions.prefered_url
             });
 
 

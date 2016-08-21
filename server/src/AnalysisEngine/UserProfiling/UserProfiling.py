@@ -27,6 +27,10 @@ class UserProfiling(Analysis):
         return "Profile"
 
     @classmethod
+    def get_prefered_vis(cls):
+        return "url_html", "StaticHTML"
+
+    @classmethod
     def get_args(cls):
         return cls.__arguments + super(UserProfiling, cls).get_args()
 

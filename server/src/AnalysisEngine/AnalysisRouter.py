@@ -91,3 +91,7 @@ class AnalysisRouter():
             return False
 
         return result
+
+    @classmethod
+    def get(cls, classification, type):
+        return cls.get_options().get(classification).get(type)

@@ -25,5 +25,9 @@ class EventAnalysis(Analysis):
         return "Event Analysis"
 
     @classmethod
+    def get_prefered_vis(cls):
+        return "url_chart", "FusionChart"
+
+    @classmethod
     def get_type(cls):
         pass

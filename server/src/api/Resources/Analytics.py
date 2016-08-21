@@ -27,32 +27,41 @@ analytics_meta_fields = {
     "uri_data": fields.Url("analyticsData")
 }
 
-analytics_data_fields = {
+analytics_data_urls_fields = {
     "url_chart": fields.String(),
     "url_html": fields.String(),
     "url_raw": fields.String(),
     "url_graph": fields.String(),
 }
 
+analytics_data_fields = {
+    "prefered_url" : fields.String(),
+    "prefered_app": fields.String(),
+    "urls": fields.Nested(analytics_data_urls_fields)
+}
+
 
 class AnalyticsDataOpt:
-    def __init__(self, path, chart_id, html_id, raw_id, graph_id):
+    def __init__(self, path, chart_id, html_id, raw_id, graph_id, prefered_url, prefered_app):
+        self.prefered_url = prefered_url
+        self.prefered_app = prefered_app
+        self.urls = {}
         if chart_id is not None:
-            self.url_chart = path + "/dl?type=chart"
+            self.urls["url_chart"] = path + "/dl?type=chart"
         else:
-            self.url_chart = None
+            self.urls["url_chart"] = None
         if html_id is not None:
-            self.url_html = path + "/dl?type=html"
+            self.urls["url_html"] = path + "/dl?type=html"
         else:
-            self.url_html = None
+            self.urls["url_html"] = None
         if raw_id is not None:
-            self.url_raw = path + "/dl?type=raw"
+            self.urls["url_raw"] = path + "/dl?type=raw"
         else:
-            self.url_raw = None
+            self.urls["url_raw"] = None
         if graph_id is not None:
-            self.url_graph = path + "/dl?type=graph"
+            self.urls["url_graph"] = path + "/dl?type=graph"
         else:
-            self.url_graph = None
+            self.urls["url_graph"] = None
 
 
 class AnalyticsList(Resource):
@@ -141,7 +150,10 @@ class AnalyticsData(Resource):
             abort(404, message="Analytics {} does not exist".format(id))
             return
 
-        return AnalyticsDataOpt(request.path, found.chart_id, found.html_id, found.raw_id, found.graph_id)
+        prefered_url, prefered_app = AnalysisRouter.get(found.classification, found.type).get_prefered_vis()
+        return AnalyticsDataOpt(request.path, found.chart_id, found.html_id,
+                                found.raw_id, found.graph_id, prefered_url,
+                                prefered_app)
 
 
 class AnalyticsDownload(Resource):
