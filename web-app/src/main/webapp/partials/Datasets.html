@@ -6,6 +6,7 @@
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Datasets</h3>
                     <div class="pull-right">
+
                         <input class="form-control" type="text" ng-model="searchText.$" placeholder="Filter the list..">
                     </div>
                 </div>
@@ -29,6 +30,11 @@
                         <i class="glyphicon glyphicon-refresh"></i>
                         Refresh
                     </button>
+                    <button ng-click="adminEnabled = !adminEnabled"
+                            ng-class="{'btn btn-danger':adminEnabled, 'btn btn-success':!adminEnabled}"
+                    ><i class="fa fa-bullseye"></i>{{adminEnableText}}
+                    </button>
+
                 </div>
 
                 <div ng-show="datasetForm.show">
@@ -148,16 +154,20 @@
                     <tbody>
                     <tr ng-repeat="p in datasets | orderBy:'name' | filter:searchText | orderBy:sortType:sortReverse">
                         <td align="center">
-                            <button class="btn btn-success" ng-click="startDataset(p)" ng-show="p['schema']=='RAW'"><i
-                                    class="glyphicon glyphicon-play"></i></button>
-                            <button class="btn btn-danger" ng-click="stopDataset(p)" ng-show="p['schema']=='RAW'"><i
-                                    class="glyphicon glyphicon-stop"></i></button>
-                            <!--<button class="btn btn-inverse" ng-click="deleteDataset(p)"-->
-                            <!--ng-show="p['status']!='RUNNING'&&p['status']!='ORDERED'"><i-->
-                            <!--class="glyphicon glyphicon-trash"></i></button>-->
-                            <button class="btn btn-primary" ng-click="duplicate(p)"><i
-                                    class="fa fa-files-o"></i></button>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-primary" ng-click="duplicate(p)">
+                                    <i class="fa fa-files-o"></i></button>
+                                <button class="btn btn-success" ng-click="startDataset(p)"
+                                        ng-show="p['schema']=='RAW'" ng-disabled="!adminEnabled">
+                                    <i class="glyphicon glyphicon-play"></i></button>
+                                <button class="btn btn-warning" ng-click="stopDataset(p)" ng-show="p['schema']=='RAW'"
+                                        ng-disabled="!adminEnabled">
+                                    <i class="glyphicon glyphicon-stop" ></i></button>
+                                <button class="btn btn-danger" ng-click="deleteDataset(p)" ng-disabled="!adminEnabled"
+                                        ng-show="p['status']!='RUNNING'&&p['status']!='ORDERED'">
+                                    <i class="glyphicon glyphicon-trash"></i></button>
 
+                            </div>
                         </td>
                         <td ng-bind="p['type']"></td>
                         <td ng-bind="p['description']"></td>

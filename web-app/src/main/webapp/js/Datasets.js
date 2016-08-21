@@ -10,6 +10,13 @@ var myApp = angular.module('dataFilter', ['restangular', 'ngResource', 'ui.boots
 
     .controller('DataFilterCtrl', function ($scope, $window, $q, $interval, Restangular) {
 
+        $scope.adminEnabled = false;
+        $scope.sortType = 'endDate';
+        $scope.sortReverse = false;
+
+        $scope.$watch('adminEnabled', function () {
+            $scope.adminEnableText = !$scope.adminEnabled ? 'Enable Admin' : 'Disable Admin';
+        });
 
         $scope.datasets = Restangular.all('dataset').getList().$object;
 
