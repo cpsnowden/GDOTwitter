@@ -1,4 +1,4 @@
-var twitterGDOAccessApp = angular.module('twitterGDOAccess',['ngRoute','dataFilter','analytics','consumers','welcome','chartApp','chartIFrameApp']);
+var twitterGDOAccessApp = angular.module('twitterGDOAccess',['ngRoute','dataFilter','analytics','consumers','welcome','chartIFrameApp']);
 
     twitterGDOAccessApp.config(function($routeProvider, RestangularProvider) {
         $routeProvider

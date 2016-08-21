@@ -145,7 +145,7 @@ class Analysis(object):
                                           content_type="application/json",
                                           encoding='utf-8') as f:
                 f.write(json.dumps(fusion_data, default=Util.date_encoder))
-            html = get_fusion_html(fusion_data["dataSource"], fusion_data["analysisType"])
+            html = get_fusion_html(fusion_data["dataSource"], fusion_data["chartType"])
         elif export_type == "userProfile":
             html = get_user_profile_chart(result)
         else:

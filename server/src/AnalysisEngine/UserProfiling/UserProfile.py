@@ -6,7 +6,7 @@ class UserProfile(object):
         self.tweet_limt = tweet_limit
         self.profileImage = None
         self.name = ""
-        self.screenName = screenName
+        self.screenName = "@" + screenName
         self.description = ""
         self.createdAt = datetime.datetime.now()
         self.tweets = []

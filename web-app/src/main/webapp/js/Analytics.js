@@ -6,12 +6,17 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
         RestangularProvider.setDefaultHeaders({Authorization: "Basic Y3BzMTVfYWRtaW46c2VjcmV0"});
     })
 
-    .controller('AnalyticsCtrl', ["$scope","$window","$interval","Restangular", function ($scope, $window, $interval, Restangular) {
+    .controller('AnalyticsCtrl', ["$scope", "$window", "$interval", "Restangular", function ($scope, $window, $interval, Restangular) {
 
         $scope.datasets = Restangular.all('dataset').getList({status: "READY_FOR_ANALYTICS"}).$object;
-        $scope.enableDelete = false;
+        $scope.deleteEnabled = false;
         $scope.sortType = 'endDate';
         $scope.sortReverse = false;
+
+        $scope.$watch('deleteEnabled', function () {
+            $scope.deleteEnabledText = !$scope.deleteEnabled ? 'Enable Delete' : 'Disable Delete';
+        });
+
 
         $scope.analyticsForm = {
             show: false,
@@ -73,7 +78,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
         $scope.orderAnalytics = function (dataset) {
             $scope.get_options();
             $scope.analyticsForm.order.id = dataset.id;
-            $scope.analyticsForm.order.description = "MConsole_"+ new Date().toLocaleString();
+            $scope.analyticsForm.order.description = "MConsole_" + new Date().toLocaleString();
             $scope.analyticsForm.show = true;
             $scope.analyticsForm.dataset = dataset;
         };
@@ -144,6 +149,21 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
             }
         };
 
+        $scope.getDownloadOptions = function (item) {
+            Restangular.oneUrl("tempit", item.uri_data).get().then(function (result) {
+                var downloadOptions = Restangular.stripRestangular(result.data);
+                options = [];
+                for(var k in downloadOptions){
+                    if(downloadOptions.hasOwnProperty(k) && downloadOptions[k] != null){
+                        options.push({"name":k,"value":downloadOptions[k]})
+                    }
+                }
+                item.downloadOptions = options; 
+            });
+
+
+        };
+
         $scope.download = function (analytics) {
 
             Restangular.one("dataset", analytics.dataset_id).one("analytics", analytics.id).customGET("data").then(function (res) {
@@ -174,6 +194,21 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
             })
         };
 
+        $scope.downloadItem = function (url) {
+            
+            Restangular.oneUrl("temp", url).get().then(function (result) {
+
+                            var fname = result.headers("Content-Disposition").split(';')[1].trim().split("=")[1].trim();
+                            data = result.data;
+                            if (result.headers("mimetype") == "application/json") {
+                                data = Restangular.stripRestangular(data);
+                                data = JSON.stringify(data)
+                            }
+                            console.log("Saving " + fname);
+                            saveAs(new Blob([data], {type: result.headers("mimetype")}), fname);
+                        })
+        };
+
         $scope.delete = function (analytics, dataset) {
             // var msgbox = $dialog.messageBox('Delete Item', 'Are you sure?', [{
             //     label: 'Yes, I\'m sure',
@@ -181,9 +216,9 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
             // }, {label: 'Nope', result: 'no'}]);
             // msgbox.open().then(function (result) {
             //     if (result === 'yes') {
-                    Restangular.one("dataset", analytics.dataset_id).one('analytics', analytics.id).remove().then(function () {
-                        dataset.analytics = $scope.getAnalytics(dataset)
-                    });
+            Restangular.one("dataset", analytics.dataset_id).one('analytics', analytics.id).remove().then(function () {
+                dataset.analytics = $scope.getAnalytics(dataset)
+            });
             //     }
             // })
         };
@@ -193,4 +228,4 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
             console.log(p)
         };
 
-}]);
+    }]);

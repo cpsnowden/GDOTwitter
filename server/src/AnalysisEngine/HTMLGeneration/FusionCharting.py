@@ -58,7 +58,7 @@ def create_time_graph(data, properties, chartType):
     properties["slantLabels"] = 1
     properties["showValues"] = "0"
 
-    return {"dataSource": {"chart": properties,
+    return {"dataSource": {"chart": add_default_properties(properties),
                            "dataset": series,
                            "categories": {"category": x_categories}},
             "chartType": chartType}
@@ -74,7 +74,7 @@ def create_pie_chart(data, properties, chartType):
     properties["centerLabelFontSize"] = "30"
     properties["enableRotation"] = "0"
 
-    return {"dataSource": {"chart": properties,
+    return {"dataSource": {"chart": add_default_properties(properties),
                            "data": [{"label": i["_id"],
                                      "value": i["count"]} for i in data]},
             "chartType": chartType}
@@ -82,7 +82,7 @@ def create_pie_chart(data, properties, chartType):
 
 def create_ranking_chart(data, properties, chartType):
 
-    return {"dataSource": {"chart": properties,
+    return {"dataSource": {"chart": add_default_properties(properties),
                            "data": [{"label": i["_id"],
                                      "value": i["count"]} for i in data]},
             "chartType": chartType}
@@ -109,7 +109,7 @@ def create_event_chart(data, properties, chartType):
         annotations["groups"].append(make_annotation(event, x_categories_parsed, divmod(i, 4)[1]))
         v_trend_line["line"].append(make_trend_line(event, x_categories_parsed))
 
-    return get_fusion_html({"chart": properties,
+    return get_fusion_html({"chart": add_default_properties(properties),
                             "data": values,
                             "annotations": annotations,
                             "vtrendlines": v_trend_line}, chartType)

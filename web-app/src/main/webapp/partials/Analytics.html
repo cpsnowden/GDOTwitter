@@ -155,9 +155,10 @@
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Data Sets Ready for Analytics</h3>
                     <div class="pull-right">
-                        <button ng-click="enableDelete = !enableDelete"
-                                ng-class="{'btn btn-danger':enableDelete, 'btn btn-success':!enableDelete}"
-                        ><i class="fa fa-bullseye"></i></button>
+                        <button ng-click="deleteEnabled = !deleteEnabled"
+                                ng-class="{'btn btn-danger':deleteEnabled, 'btn btn-success':!deleteEnabled}"
+                        ><i class="fa fa-bullseye"></i>{{deleteEnabledText}}
+                        </button>
                         <button class="btn btn-success"
                                 ng-click="refreshTable()"><i class="fa fa-refresh"></i></button>
                     </div>
@@ -240,7 +241,7 @@
                             <table class="table  table-bordered">
                                 <thead>
                                 <tr>
-                                    <th style="width:6%"></th>
+                                    <th style="width:5%"></th>
                                     <th style="width:15%">Id</th>
                                     <th style="width:15%">Type</th>
                                     <th style="width:15%">Raw id</th>
@@ -253,21 +254,35 @@
                                 <tbody>
                                 <tr ng-repeat="a in p.analytics | orderBy:endDate:true">
                                     <td>
-                                        <button class="btn btn-success"
-                                                ng-click="download(a)"
-                                                ng-show="a['status']=='FINISHED'">
-                                            <i class="glyphicon glyphicon-download"></i>
-                                        </button>
-                                        <button class="btn btn-success"
-                                                ng-click="chart(a)"
-                                                ng-show="a['status']=='FINISHED' && a.classification=='Analytics'">
-                                            <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                                        </button>
-                                        <button class="btn btn-inverse"
-                                                ng-show = "enableDelete"
-                                                ng-click="delete(a,p)">
-                                            <i class="glyphicon glyphicon-trash"></i>
-                                        </button>
+                                        <div class="btn-group-vertical">
+
+                                            <button class="btn btn-danger"
+                                                    ng-disabled="!deleteEnabled"
+                                                    ng-click="delete(a,p)">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </button>
+                                            <button class="btn btn-success"
+                                                    ng-click="chart(a)"
+                                                    ng-show="a['status']=='FINISHED' && a.classification=='Analytics'">
+                                                <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                                            </button>
+                                            <div class="btn-group" uib-dropdown keyboard-nav
+                                                 ng-show="a['status']=='FINISHED'">
+                                                <button id="simple-btn-keyboard-nav" type="button"
+                                                        class="btn btn-primary" uib-dropdown-toggle ng-click="getDownloadOptions(a)">
+                                                    <i class="glyphicon glyphicon-download"></i><span
+                                                        class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" uib-dropdown-menu role="menu"
+                                                    aria-labelledby="simple-btn-keyboard-nav">
+                                                    <li role="menuitem" ng-repeat="o in a.downloadOptions"><a
+                                                            ng-click="downloadItem(o.value)">{{o.name}}</a></li>
+                                                    <li class="divider"></li>
+                                                    <li role="menuitem"><a ng-click="download(a)">All</a></li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td style="width:45%" ng-bind="a['id']"></td>
                                     <td style="width:45%" ng-bind="a['type']"></td>
@@ -275,7 +290,7 @@
                                     <td style="width:45%" ng-bind="a['status']"></td>
                                     <td style="width:45%" ng-bind="a['description']"></td>
                                     <td style="width:45%" ng-bind="a['end_time']"></td>
-                                    <td style="width:45%"><span >{{a['specialised_args']}}</span></td>
+                                    <td style="width:45%"><span>{{a['specialised_args']}}</span></td>
                                 </tr>
                                 </tbody>
                             </table>
