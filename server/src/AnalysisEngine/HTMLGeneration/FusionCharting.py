@@ -109,10 +109,11 @@ def create_event_chart(data, properties, chartType):
         annotations["groups"].append(make_annotation(event, x_categories_parsed, divmod(i, 4)[1]))
         v_trend_line["line"].append(make_trend_line(event, x_categories_parsed))
 
-    return get_fusion_html({"chart": add_default_properties(properties),
-                            "data": values,
-                            "annotations": annotations,
-                            "vtrendlines": v_trend_line}, chartType)
+    return {"dataSource":{"chart": add_default_properties(properties),
+                          "data": values,
+                          "annotations": annotations,
+                          "vtrendlines": v_trend_line},
+            "chartType": chartType}
 
 def make_trend_line(event, datetime_to_index):
     start_index = datetime_to_index[event.start]
