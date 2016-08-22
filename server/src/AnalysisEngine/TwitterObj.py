@@ -15,9 +15,9 @@ class Status(object):
     GNIP = dict(hashtags="entities-hashtags", mentions="entities-user_mentions", text="clean-text",
                 created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="language",
                 ISO_date=
-                "ISO_created_at", user_sub_field=["user-id", "user-utcOffset", "user-friendsCount", "user-preferredUsername",
-                                                  "user-twitterTimeZone", "user-followersCount", "language",
-                                                  "user-image", "user-name"], user="",
+                "ISO_created_at", user_sub_field=["user-id", "user-utcOffset", "user-friendsCount", "user-screen_name",
+                                                  "user-twitterTimeZone", "user-followersCount","language",
+                                                  "user-location","user-summary","user-image", "user-name"], user="",
                 retweet_user="user", retweeted_status_exists="retweeted_status.text",n_retweeted="retweetCount",
                 coordinates="entities-user-place-coordinates")
 
@@ -113,7 +113,7 @@ class User(object):
     RAW = dict(id="id", name="screen_name", follower_count="followers_count", friends_count="friends_count",
                lang="lang", utc_offset="utc_offset", time_zone="time_zone", retweet_screen_name="screen_name",
                image_url="profile_image_url",real_name="name", location="location", description = "description")
-    GNIP = dict(id="user-id", name="user-preferredUsername", follower_count="user-followersCount", friends_count="user-friendsCount",
+    GNIP = dict(id="user-id", name="user-screen_name", follower_count="user-followersCount", friends_count="user-friendsCount",
                 utc_offset="user-utcOffset", time_zone="user-twitterTimeZone", lang="language", retweet_screen_name =
                 "screen_name",image_url="user-image",real_name="user-name", location="user-location", description = "user-summary")
     RTWT_GNIP = dict(name="screen_name", real_name="name")
