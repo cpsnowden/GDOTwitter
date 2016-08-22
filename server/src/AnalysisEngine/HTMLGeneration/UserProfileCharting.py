@@ -6,8 +6,10 @@ DIR_NAME = os.path.dirname(__file__)
 
 base_chart = {
     "paletteColors": "#0075c2,#1aaf5d,#f2c500,#f45b00,#8e0000",
-    "bgColor": "#ffffff",
+    "bgColor": "#000000,#000000",
     "showBorder": "0",
+    "canvasBgAlpha": "0",
+    "bgAlpha": "100",
     "use3DLighting": "0",
     "showShadow": "0",
     "enableSmartLabels": "0",
@@ -31,7 +33,7 @@ base_chart = {
 
 
 def get_user_profile_chart(user_profile):
-    return get_html(os.path.join(DIR_NAME, "Templates", "UserProfileTemplatev3.html"), user_profile)
+    return get_html(os.path.join(DIR_NAME, "Templates", "UserProfileTemplateBlack.html"), user_profile)
 
 
 def get_html(file, u):
@@ -57,7 +59,7 @@ def get_tbody(u):
     body = "<tbody>"
     for t in u.tweets:
         if t["retweet_author"] != "":
-            body += '<tr class="info">'
+            body += '<tr class="retweet_row">'
         else:
             body += '<tr>'
         body += "<td>" + t["dt"].strftime("%c") + "</td><td>" + t["text"] + "</td><td>" + t[
@@ -105,7 +107,7 @@ if __name__ == "__main__":
     u.name = "Joe Blogs"
     u.screenName = "Someone"
     u.tweets = [{"dt":datetime.datetime.now(),"text":"sdagsdg","retweet_author":"blob"},
-                {"dt":datetime.datetime.now(),"text":"sdagsdg","retweet_author":""}]
+                {"dt":datetime.datetime.now(),"text":"sdagsdg","retweet_author":""}]  * 500
     u.marker = [{"position":{"lat": -25.363, "lng": 131.044},"title":"blah"}]
     html = get_user_profile_chart(u)
     with open("out.html","w") as f:
