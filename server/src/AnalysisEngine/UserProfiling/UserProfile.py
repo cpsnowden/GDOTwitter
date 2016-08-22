@@ -34,6 +34,6 @@ class UserProfile(object):
         if coordinates is not None:
             print coordinates.item.item
             if coordinates.get_latitude() is not None and coordinates.get_longitude() is not None:
-                self.marker.append({"position":{"lat": coordinates.get_latitude(),
-                                                "lng": coordinates.get_longitude()},
+                self.marker.append({"position":{"lat": float(coordinates.get_latitude()),
+                                                "lng": float(coordinates.get_longitude())},
                                     "title":s.get_created_at().strftime("%c")})

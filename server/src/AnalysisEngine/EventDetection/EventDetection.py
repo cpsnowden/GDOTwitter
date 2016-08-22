@@ -88,6 +88,7 @@ class EventDetection(object):
         self._logger.info("Found " + str(len(events)) + " events ")
 
         for event in events:
+            print event
             event.top_words = self.get_top_words(event.start, event.end, hashtag, schema)
             event.guardian_titles = self.guardian_api.query_topics(event.top_words,
                                                                    event.start, event.end)[:5]
@@ -123,5 +124,5 @@ if __name__ == "__main__":
                                 "event",
                                 "line")
     html = get_fusion_html(fcd["dataSource"], fcd["chartType"])
-    with open("out.html", "w") as f:
+    with open("out3.html", "w") as f:
         f.write(html)

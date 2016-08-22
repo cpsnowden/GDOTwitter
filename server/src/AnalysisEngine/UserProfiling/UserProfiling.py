@@ -43,6 +43,10 @@ class UserProfiling(Analysis):
 
         query = self.get_time_bounded_query({user_name_key: user_screen_name})
         cursor = self.get_sorted_cursor(query, limit, reverse=True)
+        if cursor is None:
+            self.analytics_meta.status = "NO DATA IN RANGE"
+            self.analytics_meta.save()
+            return False
 
         user_profile = UserProfile(user_screen_name, self.dataset_meta.description)
 

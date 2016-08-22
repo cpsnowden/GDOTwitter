@@ -20,7 +20,6 @@ def add_default_properties(properties):
         "canvasBgAlpha": "0",
         "bgAlpha": "100",
         "theme": "fint",
-        "exportEnabled": "1",
         "captionFont": "Verdana",
         "captionFontSize": "30",
         "captionFontColor": "#FFFFFF",
@@ -94,8 +93,8 @@ def create_event_chart(data, properties, chartType):
     properties["slantLabels"] = "1"
     properties["showValues"] = "0"
     properties["showTickMarks"] = "1"
-    properties["chartTopMargin"] = 175
-    properties["chartBottomMargin"] = 175
+    properties["chartTopMargin"] = 300
+    properties["chartBottomMargin"] = 180
     properties["captionAlignment"] = "left"
 
     values = [{"label": i[0], "value": i[1]} for i in data["series"]]
@@ -136,10 +135,10 @@ def make_annotation(event, datetime_to_index, cycle):
     end_index = datetime_to_index[event.end]
     label = event.get_chart_label()
 
-    top_top = -200
+    top_top = -305
     top_bottom = -5
-    bottom_top = 120
-    bottom_bottom = 320
+    bottom_top = 30
+    bottom_bottom = 330
 
     default = {
         "id": "end_high-line",
@@ -165,24 +164,24 @@ def make_annotation(event, datetime_to_index, cycle):
         "type": "text",
         "text": label,
         "wrap": 1,
-        "wrapWidth": 150,
+        "wrapWidth": 200,
         "fillcolor": "#ffffff",
-        "fontsize": "15",
+        "fontsize": "12",
         "x": "$dataset.0.set." + str(int(np.mean([start_index, end_index]))) + ".x",
         "y": "$canvasStartY",
         "bgColor": '#0075c2',
-        "wrapHeight": 95
+        "wrapHeight": 140
     }
 
     if cycle == 0:
-        start_line_annotation["y"] += " - " + str(top_top)
-        end_line_annotation["y"] += " -  " + str(top_top)
-        label_annotation["y"] += " -  " + str(top_top)
+        start_line_annotation["y"] +=  str(top_top)
+        end_line_annotation["y"] +=  str(top_top)
+        label_annotation["y"] +=  str(top_top)
         label_annotation["vAlign"] = "bottom"
     elif cycle == 1:
-        start_line_annotation["y"] += " - " + str(top_bottom)
-        end_line_annotation["y"] += " - " + str(top_bottom)
-        label_annotation["y"] += " - " + str(top_bottom)
+        start_line_annotation["y"] +=  str(top_bottom)
+        end_line_annotation["y"] +=  str(top_bottom)
+        label_annotation["y"] +=  str(top_bottom)
         label_annotation["vAlign"] = "top"
     elif cycle == 2:
         start_line_annotation["toy"] = "$canvasEndY + " + str(bottom_top)
