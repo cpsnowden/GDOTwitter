@@ -143,12 +143,13 @@ class Analytics(Resource):
     def put(self, dataset_id, id):
 
         args = self.parser.parse_args()
-
+        print "Here"
+        print args
         try:
             found = AnalyticsMeta.objects.get(id=id, dataset_id=dataset_id)
             found.description = args["description"]
             found.save()
-            return found
+            return found._data
         except DoesNotExist:
             abort(404, message="Analytics {} does not exist".format(id))
             return

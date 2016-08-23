@@ -12,7 +12,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
         $scope.deleteEnabled = false;
         $scope.sortType = 'endDate';
         $scope.sortReverse = false;
-
+        $scope.selected = {}
         $scope.$watch('deleteEnabled', function () {
             $scope.deleteEnabledText = !$scope.deleteEnabled ? 'Enable Delete' : 'Disable Delete';
         });
@@ -48,6 +48,10 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
 
         };
 
+        $scope.reset = function () {
+        $scope.selected = {};
+    };
+
         ////$interval($scope.refreshSubTable, 10000);
         //var stop = $interval(function() {
         //    console.log("Refreshed!");
@@ -81,6 +85,34 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
             $scope.analyticsForm.order.description = "MConsole_" + new Date().toLocaleString();
             $scope.analyticsForm.show = true;
             $scope.analyticsForm.dataset = dataset;
+        };
+
+        $scope.getTemplate = function (analytics) {
+
+            if (analytics.id === $scope.selected.id) return 'edit';
+            else return 'display';
+        };
+        $scope.editAnalytics = function (analytics) {
+            $scope.selected = angular.copy(analytics);
+        };
+        $scope.saveUpdate = function (dataset, aid) {
+
+            console.log("Saving");
+            console.log($scope.selected.description);
+            $scope.updateDescription(dataset.id, aid, $scope.selected.description);
+            $scope.reset();
+            dataset.analytics = $scope.getAnalytics(dataset)
+
+
+        };
+
+
+        $scope.updateDescription = function (dsid, id, description) {
+            Restangular.one("dataset", dsid).one("analytics", id).customPUT({'description': description}).then(function () {
+                console.log("Description updated");
+            }, function () {
+                console.log("Error updating description");
+            });
         };
 
         $scope.newAnalytics = function (order) {
@@ -154,9 +186,9 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
                 var analyticsDataOptions = Restangular.stripRestangular(result.data);
                 var downloadOptions = analyticsDataOptions.urls;
                 options = [];
-                for(var k in downloadOptions){
-                    if(downloadOptions.hasOwnProperty(k) && downloadOptions[k] != null){
-                        options.push({"name":k,"value":downloadOptions[k]})
+                for (var k in downloadOptions) {
+                    if (downloadOptions.hasOwnProperty(k) && downloadOptions[k] != null) {
+                        options.push({"name": k, "value": downloadOptions[k]})
                     }
                 }
                 item.downloadOptions = options;
@@ -197,18 +229,18 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
         };
 
         $scope.downloadItem = function (url) {
-            
+
             Restangular.oneUrl("temp", url).get().then(function (result) {
 
-                            var fname = result.headers("Content-Disposition").split(';')[1].trim().split("=")[1].trim();
-                            data = result.data;
-                            if (result.headers("mimetype") == "application/json") {
-                                data = Restangular.stripRestangular(data);
-                                data = JSON.stringify(data)
-                            }
-                            console.log("Saving " + fname);
-                            saveAs(new Blob([data], {type: result.headers("mimetype")}), fname);
-                        })
+                var fname = result.headers("Content-Disposition").split(';')[1].trim().split("=")[1].trim();
+                data = result.data;
+                if (result.headers("mimetype") == "application/json") {
+                    data = Restangular.stripRestangular(data);
+                    data = JSON.stringify(data)
+                }
+                console.log("Saving " + fname);
+                saveAs(new Blob([data], {type: result.headers("mimetype")}), fname);
+            })
         };
 
         $scope.delete = function (analytics, dataset) {

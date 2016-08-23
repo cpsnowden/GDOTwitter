@@ -252,58 +252,12 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="a in p.analytics | orderBy:endDate:true">
-                                    <td>
-                                        <div class="btn-group-vertical">
-
-                                            <button class="btn btn-danger"
-                                                    ng-disabled="!deleteEnabled"
-                                                    ng-click="delete(a,p)">
-                                                <i class="glyphicon glyphicon-trash"></i>
-                                            </button>
-                                            <button class="btn btn-success"
-                                                    ng-click="chart(a)"
-                                                    ng-show="a['status']=='FINISHED' && a.classification!='Graph'">
-                                                <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                                            </button>
-                                            <div class="btn-group" uib-dropdown keyboard-nav
-                                                 ng-show="a['status']=='FINISHED'">
-                                                <button id="simple-btn-keyboard-nav" type="button"
-                                                        class="btn btn-primary" uib-dropdown-toggle
-                                                        ng-click="getDownloadOptions(a)">
-                                                    <i class="glyphicon glyphicon-download"></i><span
-                                                        class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu" uib-dropdown-menu role="menu"
-                                                    aria-labelledby="simple-btn-keyboard-nav">
-                                                    <li role="menuitem" ng-repeat="o in a.downloadOptions"><a
-                                                            ng-click="downloadItem(o.value)">{{o.name}}
-                                                        <i ng-if="a.defaultDownload==o.name"
-                                                           class="fa fa-star"></i>
-                                                    </a>
-
-                                                    </li>
-                                                    <li class="divider" ng-if="a.downloadOptions.length>1"></li>
-                                                    <li role="menuitem" ng-if="a.downloadOptions.length>1"><a ng-click="download(a)">All</a></li>
-
-                                                </ul>
-                                            </div>
-                                    </div>
-                                    </td>
-                                    <td style="width:45%" ng-bind="a['id']"></td>
-                                    <td style="width:45%" ng-bind="a['type']"></td>
-                                    <td style="width:45%" ng-bind="a['raw_id']"></td>
-                                    <td style="width:45%" ng-bind="a['status']"></td>
-                                    <td style="width:45%" ng-bind="a['description']"></td>
-                                    <td style="width:45%" ng-bind="a['end_time']"></td>
-                                    <td style="width:45%"><span>{{a['specialised_args']}}</span></td>
+                                <tr ng-repeat="a in p.analytics | orderBy:endDate:true" ng-include="getTemplate(a)">
                                 </tr>
                                 </tbody>
                             </table>
                         </td>
                     </tr>
-
-
                     </tbody>
 
                 </table>
@@ -313,6 +267,67 @@
         </div>
 
     </div>
+
+    <script type="text/ng-template" id="display">
+        <td>
+            <div class="btn-group-vertical">
+                <button class="btn btn-danger"
+                        ng-disabled="!deleteEnabled"
+                        ng-click="delete(a,p)">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </button>
+                <button class="btn btn-success"
+                        ng-click="chart(a)"
+                        ng-show="a['status']=='FINISHED' && a.classification!='Graph'">
+                    <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                </button>
+                <div class="btn-group" uib-dropdown keyboard-nav
+                     ng-show="a['status']=='FINISHED'">
+                    <button id="simple-btn-keyboard-nav" type="button"
+                            class="btn btn-primary" uib-dropdown-toggle
+                            ng-click="getDownloadOptions(a)">
+                        <i class="glyphicon glyphicon-download"></i><span
+                            class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" uib-dropdown-menu role="menu"
+                        aria-labelledby="simple-btn-keyboard-nav">
+                        <li role="menuitem" ng-repeat="o in a.downloadOptions"><a
+                                ng-click="downloadItem(o.value)">{{o.name}}
+                            <i ng-if="a.defaultDownload==o.name"
+                               class="fa fa-star"></i>
+                        </a>
+                        </li>
+                        <li class="divider" ng-if="a.downloadOptions.length>1"></li>
+                        <li role="menuitem" ng-if="a.downloadOptions.length>1"><a ng-click="download(a)">All</a></li>
+                    </ul>
+                    <button class="btn btn-default" ng-click="editAnalytics(a)"><i class="fa fa-pencil"></i></button>
+                </div>
+            </div>
+        </td>
+        <td style="width:45%" ng-bind="a['id']"></td>
+        <td style="width:45%" ng-bind="a['type']"></td>
+        <td style="width:45%" ng-bind="a['raw_id']"></td>
+        <td style="width:45%" ng-bind="a['status']"></td>
+        <td style="width:45%" ng-bind="a['description']"></td>
+        <td style="width:45%" ng-bind="a['end_time']"></td>
+        <td style="width:45%"><span>{{a['specialised_args']}}</span></td>
+    </script>
+    <script type="text/ng-template" id="edit">
+        <td>
+            <div class="btn-group-vertical">
+                <button class="btn btn-success" ng-click="saveUpdate(p,a.id)"><i class="fa fa-floppy-o"></i></button>
+                <button class="btn btn-danger" ng-click="reset()"><i class="fa fa-undo"></i></button>
+            </div>
+
+        </td>
+        <td ng-bind="selected['id']"></td>
+        <td ng-bind="selected['type']"></td>
+        <td ng-bind="selected['raw_id']"></td>
+        <td ng-bind="selected['status']"></td>
+        <td><textarea ng-model="selected.description" style="width:100%; height:100%" rows="6"></textarea> </td>
+        <td ng-bind="selected['end_time']"></td>
+        <td><span>{{selected['specialised_args']}}</span></td>
+    </script>
 
 
 </div>
