@@ -107,6 +107,8 @@ class Analytics(Resource):
     def __init__(self, **kwargs):
 
         self.dbm = kwargs["dbm"]
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('description', type=str, help="Description")
 
     @marshal_with(analytics_meta_fields)
     def get(self, dataset_id, id):
@@ -137,6 +139,19 @@ class Analytics(Resource):
 
         return "", 204
 
+    @marshal_with(analytics_meta_fields)
+    def put(self, dataset_id, id):
+
+        args = self.parser.parse_args()
+
+        try:
+            found = AnalyticsMeta.objects.get(id=id, dataset_id=dataset_id)
+            found.description = args["description"]
+            found.save()
+            return found
+        except DoesNotExist:
+            abort(404, message="Analytics {} does not exist".format(id))
+            return
 
 class AnalyticsData(Resource):
     logger = logging.getLogger(__name__)
