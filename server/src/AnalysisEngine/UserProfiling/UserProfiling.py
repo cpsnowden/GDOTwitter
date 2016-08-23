@@ -62,6 +62,7 @@ class UserProfiling(Analysis):
                 user_profile.no_followers =  user.get_follower_count()
                 user_profile.no_friends = user.get_friends_count()
                 user_profile.timestamp = s.get_created_at()
+                user_profile.createdAt = user.get_profile_creation_date()
                 user_profile.name = user.get_real_name()
                 user_profile.profileImage = user.get_image_url().replace("_normal","")
                 user_profile.timeZone = user.get_time_zone()

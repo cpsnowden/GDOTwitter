@@ -1,0 +1,63 @@
+<html>
+<head>
+    <title>GDO Twitter Analysis Chart</title>
+    <script type="text/javascript" src="http://static.fusioncharts.com/code/latest/fusioncharts.js"></script>
+    <script type="text/javascript"
+            src="http://static.fusioncharts.com/code/latest/themes/fusioncharts.theme.fint.js?cacheBust=56"></script>
+    <script type="text/javascript">
+        var data = {"data":[{"value":3452921,"label":"en"},{"value":481494,"label":"es"},{"value":343469,"label":"fr"},{"value":251220,"label":"und"},{"value":192827,"label":"it"},{"value":129743,"label":"de"},{"value":56739,"label":"nl"},{"value":43412,"label":"el"},{"value":38607,"label":"tr"},{"value":30597,"label":"th"},{"value":23131,"label":"pt"},{"value":20174,"label":"pl"},{"value":18722,"label":"ar"},{"value":14305,"label":"ru"},{"value":14263,"label":"sv"},{"value":13836,"label":"in"},{"value":10397,"label":"ja"},{"value":8470,"label":"fi"},{"value":6308,"label":"tl"},{"value":5721,"label":"da"},{"value":5634,"label":"hi"},{"value":4030,"label":"cs"},{"value":3371,"label":"no"},{"value":2708,"label":"ht"},{"value":2344,"label":"ro"},{"value":2006,"label":"uk"},{"value":1907,"label":"et"},{"value":1468,"label":"cy"},{"value":1349,"label":"fa"},{"value":1209,"label":"ko"},{"value":1148,"label":"lv"},{"value":1052,"label":"eu"},{"value":811,"label":"ur"},{"value":806,"label":"sl"},{"value":766,"label":"sr"},{"value":641,"label":"lt"},{"value":582,"label":"bg"},{"value":578,"label":"hu"},{"value":529,"label":"is"},{"value":472,"label":"zh"},{"value":437,"label":"ne"},{"value":366,"label":"ta"},{"value":263,"label":"mr"},{"value":224,"label":"iw"},{"value":116,"label":"gu"},{"value":113,"label":"vi"},{"value":102,"label":"ml"},{"value":86,"label":"te"},{"value":61,"label":"bn"},{"value":25,"label":"kn"},{"value":22,"label":"ka"},{"value":17,"label":"am"},{"value":17,"label":"hy"},{"value":17,"label":"si"},{"value":2,"label":"my"},{"value":2,"label":"ckb"},{"value":1,"label":"pa"},{"value":1,"label":"ps"}],"chart":{"showLegend":"1","captionFontColor":"#FFFFFF","legendItemFontSize":"20","bgColor":"#000000,#000000","captionFontBold":"1","captionHorizontalPadding":"2","subcaption":"Languages","bgAlpha":"100","enableRotation":"0","subcaptionFontColor":"#FFFFFF","baseFont":"Verdana","subcaptionFontSize":"25","exportEnabled":"1","theme":"fint","subcaptionFontBold":"0","subcaptionFont":"Verdana","baseFontColor":"#FFFFFF","centerLabelFontSize":"30","captionFont":"Verdana","canvasBgAlpha":"0","labelFontSize":"20","baseFontSize":"20","captionOnTop":"0","captionAlignment":"right","labelFontColor":"#FFFFFF","plotHighlightEffect":"fadeout","plotFillAlpha":"50","centerLabelColor":"#FFFFFF","legendItemFontColor":"#666666","startingAngle":"310","caption":"Brexit_Both_Sides","captionFontSize":"30","decimals":"0"}}
+
+        var fusioncharts;
+        FusionCharts.ready(function () {
+            fusioncharts = new FusionCharts({
+                        id : "cpsChart",
+                        type: "doughnut3d",
+                        renderAt: 'chart-container',
+                        width: "500",
+                        height: "500",
+                        dataFormat: 'json',
+                        dataSource: data
+                    }
+            );
+            fusioncharts.render()
+
+        });
+
+
+
+        FusionCharts.addEventListener("rendered", function () {
+            console.log("Rendered");
+            dom_element = FusionCharts.getObjectReference("cpsChart")
+            document.getElementById("chart-container2").appendChild(dom_element.parentNode)
+//            console.log(JSON.stringify(dom_element))
+            console.log(dom_element)
+
+        });
+
+        FusionCharts.addEventListener("drawComplete", function () {
+            console.log("Drawn");
+        });
+
+    </script>
+    <style>
+        #col1{
+            position: fixed;
+            top: 0px;
+            left: 0px;
+        }
+        #col2{
+            position: fixed;
+            top: 0px;
+            left: 500px;
+        }
+    </style>
+</head>
+<body bgcolor="white">
+    <div id="col1">
+        <div id="chart-container">FusionCharts XT will load here!</div>
+    </div>
+    <div id="col2">
+        <div id="chart-container2">FusionCharts XT will load here!</div>
+    </div>
+</body>
+</html>
