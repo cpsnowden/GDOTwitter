@@ -15,19 +15,36 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
         $scope.selected_nodes = [];
         $scope.sections = [];
         $scope.savedSections = [];
-        $scope.currentSlide = {"description":null, "sections":[], "description":"MConsole_" + new Date().toLocaleString()}
+        $scope.currentSlide = {
+            "sections": [],
+            "description": "MConsole_" + new Date().toLocaleString()
+        };
         $scope.getDataSets = function () {
             return Restangular.all('dataset').getList().$object
         };
-       $scope.getAnalytics = function(dataSetId) {
+        $scope.getAnalytics = function (dataSetId) {
             return Restangular.one("dataset", dataSetId).getList('analytics').$object
         };
 
         $scope.dataSets = $scope.getDataSets();
+
+        $scope.findDataSet = function (id) {
+            for (var i = 0; i < $scope.dataSets.length; ++i) {
+                if ($scope.dataSets[i].id == id) {
+                    return $scope.dataSets[i]
+                }
+            }
+            return null;
+        };
+
         $scope.selectedDataSet = null;
         $scope.slides = [{"description": "Test", "nSections": 10}];
-        
+
         $scope.init = function () {
+            $scope.resetNodes();
+        };
+
+        $scope.resetNodes = function () {
             for (var j = 0; j < $scope.gdoHeight; ++j) {
                 var row = [];
                 for (var i = 0; i < $scope.gdoWidth; ++i) {
@@ -37,29 +54,82 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
             }
         };
         
-        $scope.saveSection = function(){
-            $scope.currentSlide.sections.push($scope.selectedSection)
-            $scope.selectedSection = null
-        };
-        
-        $scope.createSection = function () {
-
-            var rowStart = Math.min.apply(Math,$scope.selected_nodes.map(function(o){return o.row;}));
-            var rowEnd = Math.max.apply(Math,$scope.selected_nodes.map(function(o){return o.row;}));
-            var colStart = Math.min.apply(Math,$scope.selected_nodes.map(function(o){return o.col;}));
-            var colEnd = Math.max.apply(Math,$scope.selected_nodes.map(function(o){return o.col;}));
-            var newSection = {"id": $scope.sections.length, "nodes":[], "rowStart": rowStart, "rowEnd": rowEnd, "colStart": colStart, "colEnd": colEnd};
-            for (var i = 0; i < $scope.selected_nodes.length; ++i) {
-                $scope.selected_nodes[i].sectionId = newSection.id;
-                $scope.selected_nodes[i].isSelected = false;
-                // $scope.selected_nodes[i].section = newSection;
-
+        $scope.canCreateSection = function () {
+            if ($scope.selected_nodes.length <= 0) {
+                return false;
             }
-            newSection.nodes = $scope.selected_nodes;
-            $scope.sections.push(newSection);
-            $scope.selectedSection = newSection;
+            var rowStart = Math.min.apply(Math, $scope.selected_nodes.map(function (o) {
+                return o.row;
+            }));
+            var rowEnd = Math.max.apply(Math, $scope.selected_nodes.map(function (o) {
+                return o.row;
+            }));
+            var colStart = Math.min.apply(Math, $scope.selected_nodes.map(function (o) {
+                return o.col;
+            }));
+            var colEnd = Math.max.apply(Math, $scope.selected_nodes.map(function (o) {
+                return o.col;
+            }));
+
+            for (var r = rowStart; r <= rowEnd; ++r) {
+                for (var c = colStart; c <= colEnd; ++c) {
+                    if ($scope.gdo_nodes[r][c].sectionId >= 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+
+        $scope.canCreateSlide = function () {
+            if ($scope.currentSlide.sections.length <= 0 ||
+                $scope.currentSlide.description == "") {
+                return false;
+            }
+            for (var i = 0; i < $scope.currentSlide.sections.length; ++i) {
+                if ($scope.currentSlide.sections[i].dataSetId == undefined ||
+                    $scope.currentSlide.sections[i].analyticsId == undefined) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        var getId = function (row, col) {
+            return row * $scope.width + col;
+        };
+
+
+        $scope.createSection = function () {
+            var rowStart = Math.min.apply(Math, $scope.selected_nodes.map(function (o) {
+                return o.row;
+            }));
+            var rowEnd = Math.max.apply(Math, $scope.selected_nodes.map(function (o) {
+                return o.row;
+            }));
+            var colStart = Math.min.apply(Math, $scope.selected_nodes.map(function (o) {
+                return o.col;
+            }));
+            var colEnd = Math.max.apply(Math, $scope.selected_nodes.map(function (o) {
+                return o.col;
+            }));
+            var newSection = {
+                "id": $scope.sections.length,
+                "nodes": [],
+                "rowStart": rowStart,
+                "rowEnd": rowEnd,
+                "colStart": colStart,
+                "colEnd": colEnd
+            };
+            for (var r = rowStart; r <= rowEnd; ++r) {
+                for (var c = colStart; c <= colEnd; ++c) {
+                    $scope.gdo_nodes[r][c].sectionId = newSection.id;
+                    $scope.gdo_nodes[r][c].isSelected = false;
+                    newSection.nodes.push($scope.gdo_nodes[r][c])
+                }
+            }
             $scope.selected_nodes = [];
-            console.log($scope.sections);
+            $scope.currentSlide.sections.push(newSection);
         };
 
 
@@ -75,40 +145,52 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
                 }
             }
         };
-        
-        $scope.selectDataSet = function(dataSet){
-            $scope.selectedDataSet = dataSet;
-            $scope.selectedSection.dataSetId = dataSet.id;
-            $scope.selectedDataSet.possibleAnalytics = $scope.getAnalytics(dataSet.id);
+
+        $scope.selectDataSet = function (section, dataSet) {
+            section.dataSetId = dataSet.id;
+            dataSet.possibleAnalytics = $scope.getAnalytics(dataSet.id);
         };
 
-        $scope.selectAnalytics = function(analytics){
-            $scope.selectedSection.analyticsId = analytics.id;
+        $scope.selectAnalytics = function (section, analytics) {
+            section.analyticsId = analytics.id;
 
         };
-        
-        $scope.createSlide = function(){
-            console.log($scope.currentSlide)
-            Restangular.all('slide').post($scope.currentSlide).then(function(){
-                console.log("slide creation requested");
-                $scope.currentSlide = {"description":null, "sections":[], "description":"MConsole_" + new Date().toLocaleString()}
+
+        $scope.deleteSection = function (section) {
+            var index = $scope.currentSlide.sections.indexOf(section);
+            for (var i = 0; i < section.nodes; ++i) {
+                section.nodes[i].sectionId = -1
+            }
+            $scope.currentSlide.sections.splice(index, 1);
+
+        };
+
+        $scope.createSlide = function () {
+            Restangular.all('slide').post($scope.currentSlide).then(function () {
+                console.log("Slide creation requested");
+                $scope.currentSlide = {
+                    "sections": [],
+                    "description": "MConsole_" + new Date().toLocaleString()
+                };
+                $scope.resetNodes();
+                $scope.$scope.resetNodes();
                 $scope.slides = $scope.getSlides();
-                }, function() {
-                    console.log("Error requesting dataset");
-                });
-        }
+            }, function () {
+                console.log("Error requesting dataset");
+            });
+        };
 
-        $scope.getSlides = function(){
-            return  Restangular.all('slide').getList().$object
-        }
+        $scope.getSlides = function () {
+            return Restangular.all('slide').getList().$object
+        };
 
         $scope.slides = $scope.getSlides();
 
-        $scope.print = function(){
+        $scope.print = function () {
             console.log($scope.slides)
-        }
+        };
 
-        $scope.delete = function(slide){
+        $scope.delete = function (slide) {
             Restangular.one("slide", slide.id).remove().then(function () {
                 $scope.slides = $scope.getSlides();
             });

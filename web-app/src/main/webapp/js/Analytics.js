@@ -12,11 +12,10 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
         $scope.deleteEnabled = false;
         $scope.sortType = 'endDate';
         $scope.sortReverse = false;
-        $scope.selected = {}
+        $scope.selected = {};
         $scope.$watch('deleteEnabled', function () {
             $scope.deleteEnabledText = !$scope.deleteEnabled ? 'Enable Delete' : 'Disable Delete';
         });
-
 
         $scope.analyticsForm = {
             show: false,
@@ -29,16 +28,13 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
         };
 
         $scope.refreshSubTable = function () {
-            //$scope.refreshTable()
             $scope.datasets.forEach(function (e) {
                 e.analytics = $scope.getAnalytics(e)
             })
         };
 
         $scope.chart = function (a) {
-
-            // $window.open('http://localhost:8080/#/charts/' + a.dataset_id + "/" + a.id, '_blank');
-            var url = 'http://' + $window.location.host + '#/chartsIFrame/' + a.dataset_id + "/" + a.id;
+            var url = 'http://' + $window.location.host + '#/charts/' + a.dataset_id + "/" + a.id;
             $window.open(url, '_blank');
 
         };

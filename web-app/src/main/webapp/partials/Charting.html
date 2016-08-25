@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        #wrapper {
+            position: relative;
+            width: 100%;
+            height: 0;
+            overflow: scroll;
+            padding-bottom: 50%;
+        }
+
+        iframe {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div ng-class="!fsService.fsOn ? 'container' : ''">
+
+    <div ng-controller="chartController" data-ng-init="init()">
+        <div ng-show="!chartReady || !fsService.fsOn" class="alert " role="alert"
+             ng-class="!chartReady ? 'alert-info' : 'alert-success'">
+            <span ng-show="!chartReady" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+            <span ng-show="!chartReady">Loading... : (Dataset: {{dsid}}, id:{{id}})</span>
+            <span ng-show="chartReady">Loaded: (Dataset: {{dsid}}, id:{{id}})</span>
+            <div class="pull-right">
+                <button class="btn btn-default btn-sm" ng-click="fsService.fsOn=true"><i
+                        class="glyphicon glyphicon-resize-full"></i></button>
+            </div>
+        </div>
+        <div id="wrapper">
+            <iframe ng-if="IframeManager.Url" ng-src="{{ IframeManager.Url }}" frameborder="no" scrolling="no"></iframe>
+        </div>
+
+
+    </div>
+</div>
+</body>
+</html>

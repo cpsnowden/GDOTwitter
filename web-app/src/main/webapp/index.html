@@ -2,8 +2,7 @@
 <html ng-app="twitterGDOAccess">
 <head>
 
-    <link rel="stylesheet" href="css/raffler.css">
-    <link rel="stylesheet" href="css/customizedbs.css">
+    <link rel="stylesheet" href="css/Bootstrap.css">
 
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -22,43 +21,30 @@
     <script type="text/javascript" src="js/lib/fusioncharts.js"></script>
     <script type="text/javascript" src="js/lib/angular-fusioncharts.min.js"></script>
 
-    <!--<script src="js/lib/ui-bootstrap-tpls-1.3.3.min.js"></script>-->
-    <script src="js/lib/ui-bootstrap-tpls-2.0.1.js"></script>
 
+    <script src="js/lib/ui-bootstrap-tpls-2.0.1.js"></script>
     <script src="js/lib/underscore.min.js"></script>
     <script src="js/lib/FileSaver.min.js"></script>
-    <!--<script src="js/chartApp.js"></script>-->
+
     <script src="js/twitterGDOAccess.js"></script>
     <script src="js/Datasets.js"></script>
     <script src="js/Analytics.js"></script>
     <script src="js/TwitterConsumers.js"></script>
-    <script src="js/Welcome.js"></script>
-    <script src="js/chartIFrameApp.js"></script>
+    <script src="js/Charting.js"></script>
     <script src="js/GDOSlide.js"></script>
+
     <title>Twitter Data Collection</title>
     <link rel="icon" href="assets/pie_chart.png">
     <style type="text/css">
-
-/*td{*/
-  /*vertical-align: top;*/
-  /*height: 10px;    !* table cells obey this height when table-layout is fixed, overflow is hidden and white-space is nowrap*!*/
-  /*overflow: hidden;*/
-  /*text-overflow: ellipsis;*/
-  /*!*white-space: nowrap;*!*/
-/*word-break: break-all;*/
-/*}*/
-</style>
+    </style>
 </head>
 
 <body ng-controller="mainController">
 
-<!--<div id="wrap">-->
-    <header ng-if="!fsService.fsOn">
+<header ng-if="!fsService.fsOn">
 
-    <div class="navbar navbar-inverse" role="navigation" >
+    <div class="navbar navbar-inverse" role="navigation">
         <div class="container">
-
-
             <div class="navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="#/"><i class="fa fa-home"></i> Home</a></li>
@@ -67,7 +53,8 @@
                     <li><a href="#consumers"><i class="fa fa-spinner" aria-hidden="true"></i> Consumers</a></li>
                     <li><a href="#gdo_slide"><i class="fa fa-spinner" aria-hidden="true"></i> GDO Slides</a></li>
                 </ul>
-            </div><!--//--></div>
+            </div>
+        </div>
     </div>
     <div class="container">
         <div class="row clearfix">
@@ -77,18 +64,15 @@
                                     'Stopped':'list-group-item list-group-item-warning'}[d.status]"
                          ng-repeat="d in data_services">
                         <h3 class="panel-title">{{d.name}}
-                            <p class="pull-right">{{d.status}}</p>
+                            <a class="pull-right">{{d.status}}</a>
                         </h3>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </header>
-    <div ng-view></div>
-
-<!--</div>-->
-
+</header>
+<div ng-view></div>
 <div id="footer" ng-if="!fsService.fsOn">
     <div class="container">
         <p class="text-muted">

@@ -10,8 +10,6 @@ public class WebApp{
 
         String webappDirLocation = "src/main/webapp/";
 
-        // The port that we should run on can be set into an environment variable
-        // Look for that variable and default to 8080 if it isn't there.
         String webPort = System.getenv("PORT");
         if (webPort == null || webPort.isEmpty()) {
             webPort = "8080";
@@ -22,15 +20,6 @@ public class WebApp{
         webapp.setContextPath("/");
         webapp.setDescriptor(webappDirLocation + "/WEB-INF/web.xml");
         webapp.setResourceBase(webappDirLocation);
-
-//        HashLoginService loginService = new HashLoginService("JCGRealm");
-//
-//        loginService.setConfig("realm.properties");
-//        System.out.println("I am here");
-//        System.out.printf(loginService.getConfig());
-//        System.out.printf(loginService.getUsers().values().toString());
-//        server.addBean(loginService);
-
         server.setHandler(webapp);
         server.start();
         server.join();
