@@ -8,6 +8,7 @@ root_fields = {
     "uri_twitter_consumer": fields.Url("twitterConsumerList", scheme="http"),
     "uri_data_service": fields.Url("dataServiceList", scheme="http"),
     "uri_analysis_options": fields.Url("analyticsOptions", scheme="http"),
+    "uri_slides": fields.Url("slideList", scheme="http"),
     "msg": fields.String,
     "healthy": fields.Boolean
 }

@@ -49,6 +49,8 @@ class BasicRetweet(Graphing):
         G = self.layout(G)
         self.finalise_graph(G)
 
+        return True
+
     def build_graph(self, cursor, filter_component):
 
         G = nx.DiGraph()

@@ -8,6 +8,7 @@ from api.Resources.Root import RootResource
 from api.Resources.Analytics import *
 from api.Resources.DataSet import DataSet, DatasetList, DatasetStatus, DataServiceR
 from api.Resources.TwitterConsumer import TwitterConsumer, TwitterConsumerList
+from api.Resources.GDOSlide import SlideList, Slide
 from flask import Flask
 
 
@@ -81,6 +82,12 @@ api.add_resource(DataServiceR,
 
 api.add_resource(AnalyticsOptions, '/analytics_options',
                  endpoint = "analyticsOptions")
+
+api.add_resource(SlideList, '/slide',
+                 endpoint="slideList")
+
+api.add_resource(Slide, '/slide/<string:id>',
+                 endpoint="slide")
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False, host = "0.0.0.0")

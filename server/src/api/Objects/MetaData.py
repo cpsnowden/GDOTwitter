@@ -1,7 +1,7 @@
 import datetime
 import yaml
 from flask_restful import fields
-from mongoengine import connect, Document, StringField, ListField, DateTimeField, LongField, DictField
+from mongoengine import connect, Document, StringField, ListField, DateTimeField, LongField, DictField, BooleanField
 
 
 with open("config.yml", 'r') as config_file:
@@ -46,8 +46,17 @@ class AnalyticsMeta(Document):
     chart_id = StringField()
     graph_id = StringField()
     raw_id = StringField()
+    prefered_url = StringField()
+    prefered_app = StringField()
+    gdo_enabled = BooleanField()
     meta = {"db_alias": "meta_data_db"}
 
+
+class Slides(Document):
+    id = StringField(primary_key=True)
+    description = StringField()
+    sections = ListField()
+    meta = {"db_alias": "meta_data_db"}
 
 class DictionaryWrap(fields.Raw):
     def format(self, value):
