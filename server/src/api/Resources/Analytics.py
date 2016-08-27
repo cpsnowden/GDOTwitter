@@ -200,7 +200,7 @@ class AnalyticsDownload(Resource):
             self.logger.info("Get Raw DATA")
             f = self.dbm.gridfs.get_last_version(found.raw_id)
             response = make_response(f.read())
-            response.headers["Content-Disposition"] = "attachment; filename = " + found.raw_id + ".json;"
+            response.headers["Content-Disposition"] = "attachment; filename = " + found.raw_id + ".json"
             response.headers["mimetype"] = "application/json"
             return response
         elif dataType == "html":
@@ -208,21 +208,21 @@ class AnalyticsDownload(Resource):
             print found.html_id
             f = self.dbm.gridfs.get_last_version(found.html_id)
             response = make_response(f.read())
-            response.headers["Content-Disposition"] = "attachment; filename = " + found.html_id + ".html;"
+            response.headers["Content-Disposition"] = "attachment; filename = " + found.html_id + ".html"
             response.headers["mimetype"] = "text/html"
             return response
         elif dataType == "chart":
             self.logger.info("Get Chart DATA")
             f = self.dbm.gridfs.get_last_version(found.chart_id)
             response = make_response(f.read())
-            response.headers["Content-Disposition"] = "attachment; filename = " + found.chart_id + ".json;"
+            response.headers["Content-Disposition"] = "attachment; filename = " + found.chart_id + ".json"
             response.headers["mimetype"] = "application/json"
             return response
         elif dataType == "graph":
             self.logger.info("Get Graph DATA")
             f = self.dbm.gridfs.get_last_version(found.graph_id)
             response = make_response(f.read())
-            response.headers["Content-Disposition"] = "attachment; filename = " + found.graph_id + ".graphml;"
+            response.headers["Content-Disposition"] = "attachment; filename = " + found.graph_id + ".graphml"
             response.headers["mimetype"] = "text/plain"
             return response
         else:
