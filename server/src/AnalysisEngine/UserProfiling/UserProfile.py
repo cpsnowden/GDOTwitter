@@ -67,4 +67,4 @@ class UserProfile(object):
         gb.fillna(0.0, inplace=True)
         data_dict = gb[0].to_dict()
         self.timeDist = [{"label": dt.to_pydatetime().strftime("%c"), "value": count} for (dt, count) in
-                         data_dict.iteritems()]
+                         sorted(data_dict.iteritems(), key=lambda x:x[0])]

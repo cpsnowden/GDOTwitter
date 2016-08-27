@@ -78,7 +78,7 @@ def get_time_dist(u, bc):
     chart["showValues"] = "0"
     chart["slantLabels"] = "1"
     chart["drawAnchors"] = "0"
-    chart["labelStep"] = min(1, int(len(u.timeDist) / 10.0))
+    chart["labelStep"] = max(1, int(len(u.timeDist) / 10.0))
 
     return {
         "chart": chart,
