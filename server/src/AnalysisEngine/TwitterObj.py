@@ -1,5 +1,5 @@
 from dateutil import parser
-
+import datetime
 
 class Status(object):
     T4J = dict(hashtags="hashtagEntities", mentions="userMentionEntities", user="user", text="text",
@@ -178,7 +178,11 @@ class User(object):
         return self.get("description")
 
     def get_profile_creation_date(self):
-        return parser.parse(self.get("created_at"))
+        date = self.get("created_at")
+        if isinstance(date, datetime.datetime):
+            return date
+        else:
+            return parser.parse(date)
 
 class UserMention(object):
     T4J = dict(id="id", name="screenName")

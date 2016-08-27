@@ -10,10 +10,24 @@ from AnalysisEngine.UserProfiling.UserProfile import UserProfile
 
 class UserProfiling(Analysis):
     _logger = logging.getLogger(__name__)
+    _options = ["min", "H", "D", "W"]
     __arguments = [dict(name="user_screen_name", prettyName="User Screen Name", type="string",
                         default="iVoteLeave"),
-                   dict(name="Limit", prettyName="Tweet Limit", type="integer",
-                         default=1000)]
+                   dict(name="Limit", prettyName="Tweet to Process", type="integer",
+                         default=1000),
+                   dict(name="DisplayLimit", prettyName="Tweet to Display", type="integer",
+                        default=100),
+                   dict(name="timeInterval", prettyName="Time interval", type="enum", options=_options, default="Hour"),
+                   dict(name="hashtag_grouping", prettyName="Hashtag Groupings", type="dictionary_list", variable=False,
+                        default=[
+                            dict(name="Leave",
+                                 tags=["no2eu", "notoeu", "betteroffout", "voteout", "eureform", "britainout",
+                                       "leaveeu", "voteleave", "beleave", "loveeuropeleaveeu"], color=None),
+                            dict(name="Remain", tags=["yes2eu", "yestoeu", "betteroffin", "votein", "ukineu", "bremain",
+                                                      "strongerin", "leadnotleave", "voteremain"], color=None)])
+                   ]
+
+
 
     def __init__(self, analytics_meta):
         super(UserProfiling, self).__init__(analytics_meta)
@@ -40,6 +54,12 @@ class UserProfiling(Analysis):
         limit = self.args["Limit"]
         user_name_key = Util.join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                               User.SCHEMA_MAP[self.schema]["name"])
+        time_interval = self.args["timeInterval"]
+        display_limit = self.args["DisplayLimit"]
+        hashtag_args = self.args["hashtag_grouping"]
+
+        hashtag_groupings = dict([(i, -1) for i in hashtag_args[0]["tags"]] +
+                                 [(i, 1) for i in hashtag_args[1]["tags"]])
 
         query = self.get_time_bounded_query({user_name_key: user_screen_name})
         cursor = self.get_sorted_cursor(query, limit, reverse=True)
@@ -48,7 +68,12 @@ class UserProfiling(Analysis):
             self.analytics_meta.save()
             return False
 
-        user_profile = UserProfile(user_screen_name, self.dataset_meta.description)
+        user_profile = UserProfile(user_screen_name,
+                                   self.dataset_meta.description,
+                                   str(hashtag_args[0]["name"]),
+                                   str(hashtag_args[1]["name"]),
+                                   hashtag_groupings,
+                                   display_limit)
 
         n_retweets = 0
         n_original = 0
@@ -77,9 +102,10 @@ class UserProfiling(Analysis):
 
         user_profile.no_retweets = n_retweets
         user_profile.no_original = n_original
+        user_profile.process_time_dist(time_interval)
         self._logger.info("Finished profiling")
 
         self.export_html(user_profile, export_type="userProfile")
-        self.export_json(user_profile.__dict__)
+        # self.export_json(user_profile.__dict__)
 
         return True
