@@ -33,9 +33,10 @@ class HashtagGraph(Graphing):
     def process(self):
         limit = self.args["hashtag_limit"]
         filter_component = self.args["filter_max_component"]
-
+        self._logger.info("Getting the top hashtags")
         top_hashtags = self.get_top_non_retweeted_hashtags(self.col, limit, self.schema)
-
+        self._logger.info("Got " + str(len(top_hashtags)) + " top hashtags")
+        print top_hashtags
         G = self.build_graph(filter_component, top_hashtags)
 
         self._logger.info("Build graph %s", self.analytics_meta.id)
@@ -58,7 +59,8 @@ class HashtagGraph(Graphing):
         cursor = self.col.find({Status.SCHEMA_MAP[self.schema]["retweeted_status"]: {"$exists": False},
                                 Status.SCHEMA_MAP[self.schema]["language"]: "en"})
 
-        for c in cursor:
+        for i,c in enumerate(cursor):
+            print i
             s = Status(c, self.schema)
 
             f_htags = set([i.lower() for i in s.get_hashtags()])
@@ -72,6 +74,7 @@ class HashtagGraph(Graphing):
                         h2_index = top_hashtags_to_id[h2]
                         coocurences_array[h1_index][h2_index] += 1
                         coocurences_array[h2_index][h1_index] += 1
+        print coocurences_array
         row_sum = coocurences_array.sum(axis=1, keepdims=True)
         col_sum = coocurences_array.sum(axis=0, keepdims=True)
         score = coocurences_array.astype(float) / (row_sum + col_sum - coocurences_array)
@@ -100,7 +103,7 @@ class HashtagGraph(Graphing):
 
         hashtag_key = Status.SCHEMA_MAP[schema_id]["hashtags"]
         top_hashtag_query = [
-            {"$match": {Status.SCHEMA_MAP[schema_id]["retweeted_status"]: {"$exists": False}, "lang": "en"}},
+            {"$match": {Status.SCHEMA_MAP[schema_id]["retweeted_status_exists"]: {"$exists": False}, "lang": "en"}},
             {"$unwind": "$" + hashtag_key},
             {"$group": {"_id": {"$toLower": '$' + hashtag_key + '.' + 'text'}, "count": {"$sum": 1}}},
             {"$sort": {"count": -1}},
