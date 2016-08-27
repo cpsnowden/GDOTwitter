@@ -80,7 +80,8 @@ class UserProfiling(Analysis):
         first = True
         self._logger.info("Beginning profiling")
 
-        for c in cursor:
+        for i,c in enumerate(cursor):
+            self._logger.info("Consuming status: " + str(i))
             s = Status(c, self.schema)
             if first:
                 user = s.get_user()

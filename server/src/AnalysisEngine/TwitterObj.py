@@ -18,7 +18,7 @@ class Status(object):
                 "ISO_created_at", user_sub_field=["user-id", "user-utcOffset", "user-friendsCount", "user-screen_name",
                                                   "user-twitterTimeZone", "user-followersCount","language",
                                                   "user-location","user-summary","user-image", "user-name",
-                                                  "created_at"], user="",
+                                                  "user-postedTime"], user="",
                 retweet_user="user", retweeted_status_exists="retweeted_status.text",n_retweeted="retweetCount",
                 coordinates="entities-user-place-coordinates")
 
