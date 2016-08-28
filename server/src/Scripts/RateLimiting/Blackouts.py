@@ -15,20 +15,20 @@ for i in range(len(tableau20)):
     r, g, b = tableau20[i]
     tableau20[i] = (r / 255., g / 255., b / 255.)
 
-full_data_file = "gnip_hourly.json"
-
+# full_data_file = "gnip_hourly.json"
+full_data_file= "RAW_A_TwitterBre_6f.json"
 full_data = json.load(open(full_data_file))
 
 brexit = None
-for series in full_data["data"]["values"]:
-    if series["_id"] == "brexit":
+for series in full_data["values"]:
+    if series["_id"] == "ALL":
         brexit = series["data"]
 
 print brexit[0]
 
 
-start = parser.parse(brexit[0]["dt"].rstrip("Z"))
-end = parser.parse(brexit[-1]["dt"].rstrip("Z"))
+start = parser.parse(full_data["categories"][0].rstrip("Z"))
+end = parser.parse(full_data["categories"][-1].rstrip("Z"))
 x_values = []
 date = start
 while date <= end:
@@ -68,7 +68,7 @@ for i,j in edges:
                 color="b", rotation=270)
 
 plt.ylim([0, 8000])
-ax.plot(full_counts.keys(), full_counts.values(), color=tableau20[10], label="Firehose")
+ax.plot(full_counts.keys(), full_counts.values(), color=tableau20[10], label="Firehose", alpha = 0.5)
 xfmt = md.DateFormatter('%Y-%m-%d\n %H:%M:%S')
 ax.xaxis.set_major_formatter(xfmt)
 

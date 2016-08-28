@@ -27,7 +27,7 @@ class TD_Retweets(TimeAggregation):
 
         p1, p2 = Util.get_date_projection(date_field, time_interval)
         p1["retweet"]={ "$ifNull": [ Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]), "Unspecified" ] }
-        p2["retweeted"] = {"$cond":[{"$ne":["$retweet","Unspecified"]},"Original","Retweet"]}
+        p2["retweeted"] = {"$cond":[{"$eq":["$retweet","Unspecified"]},"Original","Retweet"]}
 
         query = [{"$project": p1},
                  {"$project": p2},
@@ -40,7 +40,6 @@ class TD_Retweets(TimeAggregation):
                                                 "count": "$count"}}}}
                  ]
 
-        print query
         cursor = self.col.aggregate(query, allowDiskUse=True)
 
         result_lst = list(cursor)
