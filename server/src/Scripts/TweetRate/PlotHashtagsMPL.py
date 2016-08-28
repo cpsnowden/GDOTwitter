@@ -34,22 +34,23 @@ for i,series in enumerate(data["values"]):
     #     continue
     for entry in series["data"]:
         y_labels[parser.parse(entry["dt"])] = entry["count"]
-
+    if series["_id"] != "brexit":
+        continue
     l = ax.plot(x_categories, list(y_labels.values()), label=series["_id"], color=tableau20[i])
 
 
-    if series["_id"] == "voteleave":
-        leave = copy.deepcopy(y_labels)
-    elif series["_id"]=="strongerin":
-        remain = copy.deepcopy(y_labels)
+    # if series["_id"] == "voteleave":
+    #     leave = copy.deepcopy(y_labels)
+    # elif series["_id"]=="strongerin":
+    #     remain = copy.deepcopy(y_labels)
     y_labels = OrderedDict.fromkeys(x_categories, 0)
 
 xfmt = md.DateFormatter('%Y-%m-%d\n %H:%M:%S')
 
-json.dump(leave.items(), open("leave.json","w"), default=lambda obj: (obj.isoformat()  if isinstance(obj,
-                                                                                                  datetime.datetime) else None))
-json.dump(remain.items(), open("strongerin.json", "w"), default=lambda obj: (obj.isoformat() if isinstance(obj,
-                                                                                                      datetime.datetime) else None))
+# json.dump(leave.items(), open("leave.json","w"), default=lambda obj: (obj.isoformat()  if isinstance(obj,
+#                                                                                                   datetime.datetime) else None))
+# json.dump(remain.items(), open("strongerin.json", "w"), default=lambda obj: (obj.isoformat() if isinstance(obj,
+#                                                                                                       datetime.datetime) else None))
 
 # fig,axs = plt.subplots(nrows=2)
 # axs[0].plot(x_categories, brexit.values())
