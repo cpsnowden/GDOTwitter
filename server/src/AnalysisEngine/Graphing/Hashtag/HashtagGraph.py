@@ -103,8 +103,8 @@ class HashtagGraph(Graphing):
 
         hashtag_key = Status.SCHEMA_MAP[schema_id]["hashtags"]
         top_hashtag_query = [
-            {"$match": {Status.SCHEMA_MAP[schema_id]["retweeted_status_exists"]: {"$or":[{"$exists": False},
-                                                                                         {"$eq": None}]}}},
+            {"$match": {"$or":[{Status.SCHEMA_MAP[schema_id]["retweeted_status_exists"]:{"$exists": False}},
+                               {Status.SCHEMA_MAP[schema_id]["retweeted_status_exists"]:{"$eq": None}}]}},
             {"$unwind": "$" + hashtag_key},
             {"$group": {"_id": {"$toLower": '$' + hashtag_key + '.' + 'text'}, "count": {"$sum": 1}}},
             {"$sort": {"count": -1}},
