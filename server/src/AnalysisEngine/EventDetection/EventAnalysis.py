@@ -24,9 +24,11 @@ class EventAnalysis(Analysis):
     def get_classification(cls):
         return "EventAnalysis"
 
-    @classmethod
-    def get_prefered_vis(cls):
-        return "url_chart", "FusionChart"
+    def get_prefered_result(self):
+        return "url_chart"
+
+    def get_prefered_gdo_app(self):
+        return "FusionChart"
 
     @classmethod
     def get_type(cls):

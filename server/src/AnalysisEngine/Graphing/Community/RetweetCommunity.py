@@ -168,7 +168,7 @@ class RetweetCommunity(Graphing):
         output = {}
 
         for com, _ in communities:
-            com_nodes = [users[n].get_classification for n in partitions.keys() if partitions[n] == com]
+            com_nodes = [users[n].get_classification() for n in partitions.keys() if partitions[n] == com]
             com_classes = Counter(com_nodes)
 
             self._logger.info("%d: %s", com, com_classes)

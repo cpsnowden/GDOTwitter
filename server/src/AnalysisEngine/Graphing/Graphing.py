@@ -37,9 +37,11 @@ class Graphing(Analysis):
     def get_classification(cls):
         return "Graph"
 
-    @classmethod
-    def get_prefered_vis(cls):
-        return "url_graph","Graph"
+    def get_prefered_result(self):
+        return "url_graph"
+
+    def get_prefered_gdo_app(self):
+        return "Graph"
 
     @classmethod
     def get_type(cls):

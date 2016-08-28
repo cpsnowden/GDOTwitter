@@ -39,7 +39,17 @@ class Analysis(object):
         self.col = self.dbm.data_db.get_collection(self.dataset_meta.db_col)
         self.args = self.parse_args(analytics_meta.specialised_args, self.dataset_meta)
         self.schema = self.dataset_meta.schema
+        self.analytics_meta.prefered_url = self.get_prefered_result()
+        self.analytics_meta.prefered_app = self.get_prefered_gdo_app()
         self._logger.info("Attempting to run %s with arguments %s", self.get_type(), self.get_args())
+
+    @abc.abstractmethod
+    def get_prefered_result(self):
+        return ""
+
+    @abc.abstractmethod
+    def get_prefered_gdo_app(self):
+        return ""
 
     @abc.abstractmethod
     def process(self):

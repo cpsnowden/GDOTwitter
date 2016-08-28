@@ -40,9 +40,11 @@ class UserProfiling(Analysis):
     def get_type(cls):
         return "Profile"
 
-    @classmethod
-    def get_prefered_vis(cls):
-        return "url_html", "StaticHTML"
+    def get_prefered_result(self):
+        return "url_html"
+
+    def get_prefered_gdo_app(self):
+        return "StaticHTML"
 
     @classmethod
     def get_args(cls):
