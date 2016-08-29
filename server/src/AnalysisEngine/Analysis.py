@@ -41,7 +41,7 @@ class Analysis(object):
         self.schema = self.dataset_meta.schema
         self.analytics_meta.prefered_url = self.get_prefered_result()
         self.analytics_meta.prefered_app = self.get_prefered_gdo_app()
-        self._logger.info("Attempting to run %s with arguments %s", self.get_type(), self.get_args())
+        self._logger.info("Attempting to run %s with arguments %s", self.get_type(), self.args)
 
     @abc.abstractmethod
     def get_prefered_result(self):

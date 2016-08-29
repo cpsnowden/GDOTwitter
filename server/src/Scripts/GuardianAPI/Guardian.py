@@ -11,6 +11,7 @@ import json
 import pprint
 a = requests.get(url)
 b = a.json()
+
 pprint.pprint([i["webTitle"] for i in b["response"]["results"]])
 
 

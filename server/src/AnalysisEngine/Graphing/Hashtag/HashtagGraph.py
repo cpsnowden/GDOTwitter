@@ -60,7 +60,6 @@ class HashtagGraph(Graphing):
                                         {Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]: {"$eq": None}}]})
 
         for i,c in enumerate(cursor):
-            print i
             s = Status(c, self.schema)
 
             f_htags = set([i.lower() for i in s.get_hashtags()])

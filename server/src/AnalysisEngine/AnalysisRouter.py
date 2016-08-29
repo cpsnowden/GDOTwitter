@@ -8,6 +8,7 @@ from AnalysisEngine.Analytics.Aggregation.TopAuthors import TopAuthors
 from AnalysisEngine.Analytics.Aggregation.TopHashtags import TopHashtags
 from AnalysisEngine.Analytics.Aggregation.TopMentioned import TopMentioned
 from AnalysisEngine.Analytics.Aggregation.TopRetweeted import TopRetweeted
+from AnalysisEngine.Analytics.Aggregation.TopRelationships import TopRelationships
 from AnalysisEngine.Analytics.Aggregation.TopRetweeting import TopRetweeting
 from AnalysisEngine.Analytics.Aggregation.TopTweetingAuthors import TopTweetingAuthors
 from AnalysisEngine.Analytics.TimeAggregation.TD_Hashtag import TD_Hashtags
@@ -29,7 +30,7 @@ from AnalysisEngine.Graphing.Trends.HashtagTrend import HashtagTrend
 from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet import HashtagTrendReweet
 from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet2 import HashtagTrendReweet2
 from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet3 import HashtagTrendReweet3
-
+from AnalysisEngine.Graphing.Trends.UserRelationship import UserRelationship
 
 class AnalysisRouter():
     def __init__(self):
@@ -44,6 +45,7 @@ class AnalysisRouter():
                TopTweetingAuthors,
                TopMentioned,
                TopRetweeted,
+               TopRelationships,
                TopHashtags,
                TopRetweeting,
                TD_Sentiment,
@@ -56,6 +58,7 @@ class AnalysisRouter():
                ] + [
                 RetweetCommunityWithClassification,
                 RetweetCommunityClassificationUser,
+                UserRelationship,
                   HashtagGraph,
                   BasicRetweet,
                   RetweetCommunity,

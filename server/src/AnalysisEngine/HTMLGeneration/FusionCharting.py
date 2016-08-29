@@ -80,15 +80,35 @@ def create_pie_chart(data, properties, chartType):
 
 
 def create_ranking_chart(data, properties, chartType):
-
     return {"dataSource": {"chart": add_default_properties(properties),
                            "data": [{"label": i["_id"],
                                      "value": i["count"]} for i in data]},
             "chartType": chartType}
 
 
-def create_event_chart(data, properties, chartType):
+def create_pair_ranking_chart(data, properties, chartType):
 
+    properties["plottooltext"] = "<div id='headerdiv'>$label</div><div><table style='color:white' width='120'>" \
+                                 "<tr><td class='labelDiv'>Count</td>" \
+                                 "<td class='allpadding'>$value</td></tr>" \
+                                  "<tr><td class='labelDiv'>Metric</td><td " \
+                                 "class='allpadding'>$displayValue</td></tr></table></div>"
+
+    return {"dataSource": {"chart": add_default_properties(properties),
+                           "categories": [
+                               {"category": [{"label": i["_id"]["A"] + "<->" + i["_id"]["B"]} for i in data]}],
+                           "dataset": [{"seriesname": "A->B",
+                                        "data": [{"value":i["AB"],
+                                                  # "toolText":i["_id"]["A"],
+                                                  "displayValue": i["Metric"]} for i in data]},
+                                       {"seriesname": "B->A",
+                                        "data": [{"value":i["BA"],
+                                                  # "toolText": i["_id"]["B"],
+                                                  "displayValue": i["Metric"]} for i in data]}]
+                           },
+            "chartType": chartType}
+
+def create_event_chart(data, properties, chartType):
     properties["drawAnchors"] = 0
     properties["slantLabels"] = "1"
     properties["showValues"] = "0"
@@ -108,11 +128,12 @@ def create_event_chart(data, properties, chartType):
         annotations["groups"].append(make_annotation(event, x_categories_parsed, divmod(i, 4)[1]))
         v_trend_line["line"].append(make_trend_line(event, x_categories_parsed))
 
-    return {"dataSource":{"chart": add_default_properties(properties),
-                          "data": values,
-                          "annotations": annotations,
-                          "vtrendlines": v_trend_line},
+    return {"dataSource": {"chart": add_default_properties(properties),
+                           "data": values,
+                           "annotations": annotations,
+                           "vtrendlines": v_trend_line},
             "chartType": chartType}
+
 
 def make_trend_line(event, datetime_to_index):
     start_index = datetime_to_index[event.start]
@@ -174,14 +195,14 @@ def make_annotation(event, datetime_to_index, cycle):
     }
 
     if cycle == 0:
-        start_line_annotation["y"] +=  str(top_top)
-        end_line_annotation["y"] +=  str(top_top)
-        label_annotation["y"] +=  str(top_top)
+        start_line_annotation["y"] += str(top_top)
+        end_line_annotation["y"] += str(top_top)
+        label_annotation["y"] += str(top_top)
         label_annotation["vAlign"] = "bottom"
     elif cycle == 1:
-        start_line_annotation["y"] +=  str(top_bottom)
-        end_line_annotation["y"] +=  str(top_bottom)
-        label_annotation["y"] +=  str(top_bottom)
+        start_line_annotation["y"] += str(top_bottom)
+        end_line_annotation["y"] += str(top_bottom)
+        label_annotation["y"] += str(top_bottom)
         label_annotation["vAlign"] = "top"
     elif cycle == 2:
         start_line_annotation["toy"] = "$canvasEndY + " + str(bottom_top)
@@ -198,7 +219,6 @@ def make_annotation(event, datetime_to_index, cycle):
 
 
 def get_fusion_html(data_source, type, width="100%", height="100%"):
-
     s = Template(open(os.path.join(DIR_NAME, "Templates", "Chart.html")).read())
     return s.safe_substitute({'dataSource': json.dumps(data_source, default=AnalysisEngine.Util.date_encoder),
                               "height": height,
@@ -206,13 +226,13 @@ def get_fusion_html(data_source, type, width="100%", height="100%"):
                               "type": type})
 
 
-def get_fusion_chart_data(data, properties, analysisType ,chartType):
-
+def get_fusion_chart_data(data, properties, analysisType, chartType):
     options = {
         "time": create_time_graph,
         "ranking": create_ranking_chart,
         "proportion": create_pie_chart,
         "event": create_event_chart,
+        "pair_ranking": create_pair_ranking_chart,
     }
 
     return options[analysisType](data, properties, chartType)

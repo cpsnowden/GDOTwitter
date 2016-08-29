@@ -148,25 +148,23 @@ class RetweetCommunityClassificationUser(Graphing):
             if include_retweet_edges and retweet is not None:
                 retweeted_user = retweet.get_user(True)
                 retweeted_user_id = str(retweeted_user.get_name())
-                if only_include_top_users and top_users is not None and retweeted_user_id not in top_users:
-                    continue
+                if not(only_include_top_users and top_users is not None and retweeted_user_id not in top_users):
+                    if retweeted_user_id not in users:
+                        users[retweeted_user_id] = CommunityUser(classification_scores=hashtag_scores)
+                        G.add_node(retweeted_user_id, username=retweeted_user.get_name(), node_type="user")
 
-                if retweeted_user_id not in users:
-                    users[retweeted_user_id] = CommunityUser(classification_scores=hashtag_scores)
-                    G.add_node(retweeted_user_id, username=retweeted_user.get_name(), node_type="user")
+                    user_obj = users[retweeted_user_id]
+                    user_obj.retweeted_by(source_user_obj)
+                    user_obj.said(retweet)
+                    G.node[retweeted_user_id]["no_statuses"] = user_obj.get_number_statuses()
+                    G.node[retweeted_user_id]["no_times_retweeted"] = user_obj.number_of_times_retweets
 
-                user_obj = users[retweeted_user_id]
-                user_obj.retweeted_by(source_user_obj)
-                user_obj.said(retweet)
-                G.node[retweeted_user_id]["no_statuses"] = user_obj.get_number_statuses()
-                G.node[retweeted_user_id]["no_times_retweeted"] = user_obj.number_of_times_retweets
-
-                if not G.has_edge(source_user_id, retweeted_user_id):
-                    G.add_edge(source_user_id, retweeted_user_id, type="retweet", number_tweets=1)
-                else:
-                    G[source_user_id][retweeted_user_id]["number_tweets"] += 1
-                    if G[source_user_id][retweeted_user_id]["type"] == "mention":
-                        G[source_user_id][retweeted_user_id]["type"] = "both"
+                    if not G.has_edge(source_user_id, retweeted_user_id):
+                        G.add_edge(source_user_id, retweeted_user_id, type="retweet", number_tweets=1)
+                    else:
+                        G[source_user_id][retweeted_user_id]["number_tweets"] += 1
+                        if G[source_user_id][retweeted_user_id]["type"] == "mention":
+                            G[source_user_id][retweeted_user_id]["type"] = "both"
 
             elif include_mention_edges:
                 for mention in status.get_mentions():
