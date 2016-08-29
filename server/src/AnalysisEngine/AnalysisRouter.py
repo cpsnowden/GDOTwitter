@@ -23,6 +23,7 @@ from AnalysisEngine.UserProfiling.UserProfiling import UserProfiling
 from AnalysisEngine.Graphing.Community.BasicRetweet import BasicRetweet
 from AnalysisEngine.Graphing.Community.RetweetCommunity import RetweetCommunity
 from AnalysisEngine.Graphing.Community.RetweetCommunityClassification import RetweetCommunityWithClassification
+from AnalysisEngine.Graphing.Community.RetweetCommunityClassificationUser import RetweetCommunityClassificationUser
 from AnalysisEngine.Graphing.Hashtag.HashtagGraph import HashtagGraph
 from AnalysisEngine.Graphing.Trends.HashtagTrend import HashtagTrend
 from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet import HashtagTrendReweet
@@ -54,6 +55,7 @@ class AnalysisRouter():
                UserProfiling
                ] + [
                 RetweetCommunityWithClassification,
+                RetweetCommunityClassificationUser,
                   HashtagGraph,
                   BasicRetweet,
                   RetweetCommunity,

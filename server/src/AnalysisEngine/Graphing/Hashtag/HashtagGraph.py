@@ -56,8 +56,7 @@ class HashtagGraph(Graphing):
         for i, h in enumerate(top_hashtags):
             G.add_node(i, label=h, type="hashtag")
 
-        cursor = self.col.find({Status.SCHEMA_MAP[self.schema]["retweeted_status"]: {"$exists": False},
-                                Status.SCHEMA_MAP[self.schema]["language"]: "en"})
+        cursor = self.col.find({Status.SCHEMA_MAP[self.schema]["retweeted_status"]: {"$exists": False}})
 
         for i,c in enumerate(cursor):
             print i
