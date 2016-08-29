@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+<head>
+    <style>
+    .table_element {
+        max-height: 140px;
+        overflow: auto;
+    }
+    </style>
+</head>
+
 <html lang="en">
 <div ng-controller="DataFilterCtrl">
 
@@ -73,10 +82,10 @@
 
                 <table class="table table-striped table-bordered table-hover">
                     <col width="8%">
-                    <col width="9%">
+                    <col width="6%">
+                    <col width="8%">
                     <col width="10%">
-                    <col width="10%">
-                    <col width="10%">
+                    <col width="8%">
                     <col width="8%">
                     <col width="10%">
                     <col width="10%">
@@ -151,16 +160,16 @@
 
                             </div>
                         </td>
-                        <td ng-bind="p['type']"></td>
-                        <td ng-bind="p['description']"></td>
-                        <td ng-bind="p['id']"></td>
-                        <td ng-bind="p['db_col']"></td>
-                        <td ng-bind="p['status']"></td>
-                        <td ng-bind="p['tags']"></td>
-                        <td ng-bind="p['start_time']"></td>
-                        <td ng-bind="p['end_time']"></td>
-                        <td ng-bind="p['collection_size']" align="center"></td>
-                        <td ng-bind="p['schema']" align="center"></td>
+                        <td><div class="table_element" ng-bind="p['type']"></div></td>
+                        <td><div class="table_element" ng-bind="p['description']"></div></td>
+                        <td><div class="table_element" ng-bind="p['id']"></div></td>
+                        <td><div class="table_element" ng-bind="p['db_col']"></div></td>
+                        <td><div class="table_element" ng-bind="p['status']"></div></td>
+                        <td><div class="table_element" ng-bind="p['tags']"></div></td>
+                        <td><div class="table_element" ng-bind="p['start_time']"></div></td>
+                        <td><div class="table_element" ng-bind="p['end_time']"></div></td>
+                        <td><div class="table_element" ng-bind="p['collection_size']" align="center"></div></td>
+                        <td><div class="table_element" ng-bind="p['schema']" align="center"></div></td>
                     </tr>
                     </tbody>
                 </table>

@@ -2,6 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <style>
+    .table_element{
+    max-height:140px;
+    overflow:auto
+    }
+    .sub_table_element{
+        max-height:150px;
+        overflow:auto
+    }
+    </style>
 </head>
 <body>
 
@@ -234,13 +245,13 @@
                                ng-class="{'glyphicon-chevron-down':expanded&&p.analytics.length>0, 'glyphicon-chevron-right':!expanded || (p.analytics==null || p.analytics.length==0)}"></i>
                         </button>
 
-                    <td ng-bind="p['description']"></td>
-                    <td ng-bind="p['id']"></td>
-                    <td ng-bind="p['status']"></td>
-                    <td ng-bind="p['tags']"></td>
-                    <td ng-bind="p['start_time']"></td>
-                    <td ng-bind="p['end_time']"></td>
-                    <td ng-bind="p['collection_size']"></td>
+                    <td><div class="table_element" ng-bind="p['description']"></div></td>
+                    <td><div class="table_element" ng-bind="p['id']"></div></td>
+                    <td><div class="table_element" ng-bind="p['status']"></div></td>
+                    <td><div class="table_element" ng-bind="p['tags']"></div></td>
+                    <td><div class="table_element" ng-bind="p['start_time']"></div></td>
+                    <td><div class="table_element" ng-bind="p['end_time']"></div></td>
+                    <td><div class="table_element" ng-bind="p['collection_size']"></div></td>
                 </tr>
                 <tr ng-repeat-end
                     ng-if="expanded && p.analytics.length != 0">
@@ -256,7 +267,7 @@
                                 <th style="width:10%">Status</th>
                                 <th style="width:10%">Description</th>
                                 <th style="width:10%">End</th>
-                                <th style="width:20%">Specific Paramters</th>
+                                <th style="width:20%">Specific Parameters</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -312,13 +323,13 @@
             </div>
         </div>
     </td>
-    <td style="width:45%" ng-bind="a['id']"></td>
-    <td style="width:45%" ng-bind="a['type']"></td>
-    <td style="width:45%" ng-bind="a['raw_id']"></td>
-    <td style="width:45%" ng-bind="a['status']"></td>
-    <td style="width:45%" ng-bind="a['description']"></td>
-    <td style="width:45%" ng-bind="a['end_time']"></td>
-    <td style="width:45%"><span>{{a['specialised_args']}}</span></td>
+    <td style="width:45%"><div class="sub_table_element" ng-bind="a['id']"></div></td>
+    <td style="width:45%"><div class="sub_table_element" ng-bind="a['type']"></div></td>
+    <td style="width:45%"><div class="sub_table_element" ng-bind="a['raw_id']"></div></td>
+    <td style="width:45%"><div class="sub_table_element" ng-bind="a['status']"></div></td>
+    <td style="width:45%"><div class="sub_table_element" ng-bind="a['description']"></div></td>
+    <td style="width:45%"><div class="sub_table_element" ng-bind="a['end_time']"></div></td>
+    <td style="width:45%"><div class="sub_table_element" > {{a['specialised_args']}}</div></td>
 </script>
 <script type="text/ng-template" id="edit">
     <td>

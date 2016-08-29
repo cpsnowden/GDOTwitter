@@ -30,7 +30,9 @@ class RetweetCommunityClassificationUser(Graphing):
                    dict(name="only_include_top_users", prettyName="Only include top user nodes", type="boolean",
                         default=False),
                    dict(name="UserLimit", prettyName="User limit", type="integer",
-                        default=20000)]
+                        default=20000),
+                   dict(name="get_max_component", prettyName="Max component", type="boolean",
+                        default=True)]
 
     _edges_color = ("type", dict(retweet="powderblue", mention="gold", both="lightsage"))
     _node_color = ("type", dict(retweeted="powderblue", retweeter="lime", both="blueviolet"))
@@ -54,8 +56,7 @@ class RetweetCommunityClassificationUser(Graphing):
         user_name_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                               User.SCHEMA_MAP[self.schema]["name"])
 
-        query = [{"$match": {Status.SCHEMA_MAP[self.schema]["retweeted_status"]: {"$exists": False}}},
-                 {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
+        query = [{"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
                  {"$sort": {"count": -1}},
                  {"$limit": limit}]
 
@@ -69,6 +70,7 @@ class RetweetCommunityClassificationUser(Graphing):
         include_retweet_edges = self.args["retweet"]
         only_include_top_users = self.args["only_include_top_users"]
         include_text = self.args["include_tweet_text"]
+        get_max = self.args["get_max_component"]
         hashtag_scores = dict([(i["name"], i["tags"]) for i in self.args["hashtag_grouping"]])
         node_colors = ("classification", dict([(i["name"], i["color"]["color"]) for i in self.args[
             "hashtag_grouping"]]))
@@ -97,7 +99,7 @@ class RetweetCommunityClassificationUser(Graphing):
             return False
 
         G, users = self.build_graph(cursor, include_retweet_edges, include_mention_edges, hashtag_scores,
-                                    include_text, only_include_top_users, top_users)
+                                    include_text, only_include_top_users, get_max, top_users)
         G = self.assign_classifications(G, users)
 
         self._logger.info("Build graph %s", self.analytics_meta.id)
@@ -112,7 +114,7 @@ class RetweetCommunityClassificationUser(Graphing):
         return True
 
     def build_graph(self, cursor, include_retweet_edges, include_mention_edges, hashtag_scores, include_text,
-                    only_include_top_users, top_users=None):
+                    only_include_top_users, get_max, top_users=None):
 
         G = nx.DiGraph()
         users = {}
@@ -186,8 +188,10 @@ class RetweetCommunityClassificationUser(Graphing):
                         G[source_user_id][mentioned_user_id]["number_tweets"] += 1
                         if G[source_user_id][mentioned_user_id]["type"] == "retweet":
                             G[source_user_id][mentioned_user_id]["type"] = "both"
-
-        return max(nx.strongly_connected_component_subgraphs(G), key=len), users
+        if get_max:
+            return max(nx.strongly_connected_component_subgraphs(G), key=len), users
+        else:
+            return G, users
 
     def assign_classifications(self, graph, users):
         for node in graph.nodes():
