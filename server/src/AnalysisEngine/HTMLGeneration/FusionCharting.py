@@ -87,26 +87,54 @@ def create_ranking_chart(data, properties, chartType):
 
 
 def create_pair_ranking_chart(data, properties, chartType):
-
-    properties["plottooltext"] = "<div id='headerdiv'>$label</div><div><table style='color:white' width='120'>" \
-                                 "<tr><td class='labelDiv'>Count</td>" \
-                                 "<td class='allpadding'>$value</td></tr>" \
-                                  "<tr><td class='labelDiv'>Metric</td><td " \
-                                 "class='allpadding'>$displayValue</td></tr></table></div>"
+    # properties["plottooltext"] = "<div id='headerdiv'>$label</div><div><table style='color:white' width='120'>" \
+    #                              "<tr><td class='labelDiv'>Count</td>" \
+    #                              "<td class='allpadding'>$value</td></tr>" \
+    #                               "<tr><td class='labelDiv'>Metric</td><td " \
+    #                              "class='allpadding'>$displayValue</td></tr></table></div>"
 
     return {"dataSource": {"chart": add_default_properties(properties),
                            "categories": [
                                {"category": [{"label": i["_id"]["A"] + "<->" + i["_id"]["B"]} for i in data]}],
                            "dataset": [{"seriesname": "A->B",
-                                        "data": [{"value":i["AB"],
-                                                  # "toolText":i["_id"]["A"],
+                                        "data": [{"value": i["AB"],
+                                                  "toolText": "<div>" +
+                                                              "<table style='color:white'>" +
+                                                              "<tr style='text-align:center'>" +
+                                                              "<td>" + i["_id"]["A"] + "</td>" +
+                                                              "<td> mentioning </td>" +
+                                                              " <td>" + i["_id"]["B"] + "</td> " +
+                                                              "</tr>" +
+                                                              "<tr style='text-align:center'>" +
+                                                              "<td><img src='" + i["A_pic"] + "'></td>" +
+                                                              "<td> -> </td>" +
+                                                              "<td><img src='" + i["B_pic"] + "'></td>" +
+                                                              "</tr>" +
+                                                              "<tr><td>Metric:" + str(i["Metric"]) + "</td></tr>" +
+                                                              "<table>" +
+                                                              "</div>",
                                                   "displayValue": i["Metric"]} for i in data]},
                                        {"seriesname": "B->A",
-                                        "data": [{"value":i["BA"],
-                                                  # "toolText": i["_id"]["B"],
+                                        "data": [{"value": i["BA"],
+                                                  "toolText": "<div>" +
+                                                              "<table style='color:white'>" +
+                                                              "<tr style='text-align:center'>" +
+                                                              "<td>" + i["_id"]["B"] + "</td>" +
+                                                              "<td> mentioning </td>" +
+                                                              " <td>" + i["_id"]["A"] + "</td> " +
+                                                              "</tr>" +
+                                                              "<tr style='text-align:center'>" +
+                                                              "<td><img src='" + i["B_pic"] + "'></td>" +
+                                                              "<td> -> </td>" +
+                                                              "<td><img src='" + i["A_pic"] + "'></td>" +
+                                                              "</tr>" +
+                                                              "<tr><td>Metric:" + str(i["Metric"]) + "</td></tr>" +
+                                                              "<table>" +
+                                                              "</div>",
                                                   "displayValue": i["Metric"]} for i in data]}]
                            },
             "chartType": chartType}
+
 
 def create_event_chart(data, properties, chartType):
     properties["drawAnchors"] = 0

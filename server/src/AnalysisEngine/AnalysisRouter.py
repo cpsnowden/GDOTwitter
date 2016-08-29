@@ -8,7 +8,7 @@ from AnalysisEngine.Analytics.Aggregation.TopAuthors import TopAuthors
 from AnalysisEngine.Analytics.Aggregation.TopHashtags import TopHashtags
 from AnalysisEngine.Analytics.Aggregation.TopMentioned import TopMentioned
 from AnalysisEngine.Analytics.Aggregation.TopRetweeted import TopRetweeted
-from AnalysisEngine.Analytics.Aggregation.TopRelationships import TopRelationships
+from AnalysisEngine.Analytics.Aggregation.TopMentionRelationships import TopMentionRelationships
 from AnalysisEngine.Analytics.Aggregation.TopRetweeting import TopRetweeting
 from AnalysisEngine.Analytics.Aggregation.TopTweetingAuthors import TopTweetingAuthors
 from AnalysisEngine.Analytics.TimeAggregation.TD_Hashtag import TD_Hashtags
@@ -45,7 +45,7 @@ class AnalysisRouter():
                TopTweetingAuthors,
                TopMentioned,
                TopRetweeted,
-               TopRelationships,
+               TopMentionRelationships,
                TopHashtags,
                TopRetweeting,
                TD_Sentiment,
