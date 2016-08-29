@@ -30,7 +30,7 @@ from AnalysisEngine.Graphing.Trends.HashtagTrend import HashtagTrend
 from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet import HashtagTrendReweet
 from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet2 import HashtagTrendReweet2
 from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet3 import HashtagTrendReweet3
-from AnalysisEngine.Graphing.Trends.UserRelationship import UserRelationship
+from AnalysisEngine.Graphing.Trends.DualUserRelationship import UserRelationship
 
 class AnalysisRouter():
     def __init__(self):
