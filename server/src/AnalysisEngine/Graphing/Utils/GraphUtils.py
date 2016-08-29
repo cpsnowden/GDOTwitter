@@ -10,6 +10,9 @@ sys.setdefaultencoding('utf-8')
 from matplotlib import colors
 
 
+color_names = [i for i in colors.cnames]
+
+
 class GraphUtils(object):
     _logger = logging.getLogger(__name__)
 

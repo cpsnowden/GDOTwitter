@@ -28,6 +28,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
         };
 
         $scope.refreshSubTable = function () {
+
             $scope.datasets.forEach(function (e) {
                 e.analytics = $scope.getAnalytics(e)
             })
@@ -175,6 +176,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
                     }
                 }
             }
+            console.log($scope.analyticsForm)
         };
 
         $scope.getDownloadOptions = function (item) {

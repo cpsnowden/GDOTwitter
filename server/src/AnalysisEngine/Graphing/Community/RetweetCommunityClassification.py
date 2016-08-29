@@ -9,7 +9,7 @@ import networkx as nx
 from AnalysisEngine.Classification.CommunityUser.CommunityUser import CommunityUser
 from AnalysisEngine.Graphing.Graphing import Graphing
 from AnalysisEngine.TwitterObj import Status
-
+from AnalysisEngine.Graphing.Utils.GraphUtils import color_names
 
 class RetweetCommunityWithClassification(Graphing):
     _logger = logging.getLogger(__name__)
@@ -19,9 +19,12 @@ class RetweetCommunityWithClassification(Graphing):
                         default=True),
                    dict(name="hashtag_grouping", prettyName="Hashtag Groupings", type="dictionary_list", variable=True,
                         default=[
-                            dict(name="Trump", tags=["makeamericagreatagain", "trump2016"], color="blue"),
-                            dict(name="Saunders", tags=["feelthebern"], color="lime"),
-                            dict(name="Clinton", tags=["imwithher"], color="red")]),
+                            dict(name="Trump", tags=["makeamericagreatagain", "trump2016"],
+                                 color=dict(color="darkgreen", options=color_names)),
+                            dict(name="Saunders", tags=["feelthebern"],
+                                 color=dict(color="darkviolet", options=color_names)),
+                            dict(name="Clinton", tags=["imwithher"],
+                                 color=dict(color="crimson", options=color_names))]),
                    dict(name="include_tweet_text", prettyName="Include Tweet Text", type="boolean",
                         default=True)]
 
@@ -49,7 +52,8 @@ class RetweetCommunityWithClassification(Graphing):
         include_retweet_edges = self.args["retweet"]
         include_text = self.args["include_tweet_text"]
         hashtag_scores = dict([(i["name"], i["tags"]) for i in self.args["hashtag_grouping"]])
-        node_colors = ("classification", dict([(i["name"], i["color"]) for i in self.args["hashtag_grouping"]]))
+        node_colors = ("classification", dict([(i["name"], i["color"]["color"]) for i in self.args[
+            "hashtag_grouping"]]))
 
         self._logger.info("Got the following tags dictionary: %s", hashtag_scores)
         self._logger.info("Include mention edges: %s", include_mention_edges)
