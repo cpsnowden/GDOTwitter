@@ -23,6 +23,9 @@ analytics_meta_fields = {
     "classification": fields.String,
     "description": fields.String,
     "raw_id": fields.String,
+    "graph_id": fields.String,
+    "chart_id": fields.String,
+    "html_id": fields.String,
     "uri_base": fields.Url("analytics"),
     "uri_data": fields.Url("analyticsData")
 }
