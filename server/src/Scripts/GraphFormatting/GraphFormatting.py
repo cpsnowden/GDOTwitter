@@ -36,8 +36,10 @@ def fix_graphml_format_better(name, out):
 # _node_color = ("type", dict(retweeted="red", retweeter="lime", both="blueviolet"))
 
 _edges_color = ("type", dict(retweet="powderblue", mention="gold", both="lightsage"))
-_node_color = ("classification", dict(Clinton="crimson", Trump="darkgreen", Saunders="darkviolet"))
+# _node_color = ("classification", dict(Clinton="crimson", Trump="darkgreen", Saunders="darkviolet"))
 
+_node_color = ("classification", dict(Leave="crimson", Remain="darkviolet"))
+# , Saunders="darkviolet"))
 path = sys.argv[1]
 print "Input Path", path
 
