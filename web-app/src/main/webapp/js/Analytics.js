@@ -232,6 +232,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
 
                 var fname = result.headers("Content-Disposition").split(';')[1].trim().split("=")[1].trim();
                 data = result.data;
+                console.log(result.headers("mimetype"))
                 if (result.headers("mimetype") == "application/json") {
                     data = Restangular.stripRestangular(data);
                     data = JSON.stringify(data)

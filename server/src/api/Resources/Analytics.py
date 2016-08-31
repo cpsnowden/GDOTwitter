@@ -194,7 +194,7 @@ class AnalyticsDownload(Resource):
 
         self.logger.info("Getting " + dataType)
         filename = getattr(found, dataType)
-        self.logger("Attempting to find file %s", filename)
+        self.logger.info("Attempting to find file %s", filename)
         f = self.dbm.gridfs.get_last_version(filename)
         response = make_response(f.read())
         response.headers["Content-Disposition"] = "attachment; filename = " + f.filename
