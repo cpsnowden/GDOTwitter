@@ -39,7 +39,7 @@ var chartApp = angular.module('chartApp', ['restangular', "ng-fusioncharts", 'ng
         };
 
         var loadChart = function (id, dsid) {
-            Restangular.one("dataset", dsid).one("analytics", id).customGET("data/dl?type=html").then(function (result) {
+            Restangular.one("dataset", dsid).one("analytics", id).customGET("data/dl?type=html_id").then(function (result) {
                 var file = new Blob([result.data], {type: result.headers("mimetype")});
                 var url = window.URL.createObjectURL(file);
                 $scope.IframeManager.Show($sce.trustAsResourceUrl(url));
