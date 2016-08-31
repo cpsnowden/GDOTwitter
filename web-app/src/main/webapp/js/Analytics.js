@@ -227,7 +227,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
         };
 
         $scope.downloadItem = function (url) {
-
+            console.log(url);
             Restangular.oneUrl("temp", url).get().then(function (result) {
 
                 var fname = result.headers("Content-Disposition").split(';')[1].trim().split("=")[1].trim();
