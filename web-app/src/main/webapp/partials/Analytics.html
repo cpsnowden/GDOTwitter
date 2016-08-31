@@ -297,7 +297,7 @@
             </button>
             <button class="btn btn-success"
                     ng-click="chart(a)"
-                    ng-show="a['status']=='FINISHED' && a.classification!='Graph'">
+                    ng-show="a['status']=='FINISHED' && a.html_id != undefined && a.html_id != null">
                 <i class="fa fa-bar-chart" aria-hidden="true"></i>
             </button>
             <div class="btn-group" uib-dropdown keyboard-nav
