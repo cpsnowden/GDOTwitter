@@ -146,8 +146,6 @@ class Analytics(Resource):
     def put(self, dataset_id, id):
 
         args = self.parser.parse_args()
-        print "Here"
-        print args
         try:
             found = AnalyticsMeta.objects.get(id=id, dataset_id=dataset_id)
             found.description = args["description"]
@@ -196,7 +194,7 @@ class AnalyticsDownload(Resource):
 
         self.logger.info("Getting " + dataType)
         filename = getattr(found, dataType)
-        print filename
+        self.logger("Attempting to find file %s", filename)
         f = self.dbm.gridfs.get_last_version(filename)
         response = make_response(f.read())
         response.headers["Content-Disposition"] = "attachment; filename = " + f.filename
