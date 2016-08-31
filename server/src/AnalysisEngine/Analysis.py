@@ -128,7 +128,7 @@ class Analysis(object):
         self.analytics_meta.status = "EXPORTING JSON"
         self.analytics_meta.save()
 
-        self.analytics_meta.raw_id = "RAW_" + self.analytics_meta.db_ref
+        self.analytics_meta.raw_id = "RAW_" + self.analytics_meta.db_ref + ".json"
 
         with self.dbm.gridfs.new_file(filename=self.analytics_meta.raw_id, content_type="application/json") as f:
             f.write(json.dumps(data, default=Util.date_encoder))
@@ -145,7 +145,7 @@ class Analysis(object):
         if export_type == "chart":
             if properties is None:
                 properties = {}
-            self.analytics_meta.chart_id = "CHART_" + self.analytics_meta.db_ref
+            self.analytics_meta.chart_id = "CHART_" + self.analytics_meta.db_ref + ".json"
             fusion_data = get_fusion_chart_data(result,
                                                 properties["chartProperties"],
                                                 properties["analysisType"],
@@ -162,7 +162,7 @@ class Analysis(object):
             self._logger.warning("Unknown HTML export type")
             return
 
-        self.analytics_meta.html_id = "HTML_" + self.analytics_meta.db_ref
+        self.analytics_meta.html_id = "HTML_" + self.analytics_meta.db_ref + ".html"
 
         with self.dbm.gridfs.new_file(filename=self.analytics_meta.html_id,
                                       content_type="text/html",

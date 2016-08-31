@@ -1,6 +1,6 @@
 import json
 
-from Scripts.Charting import get_html
+from AnalysisEngine.HTMLGeneration.FusionCharting import get_fusion_html
 
 raw = json.load(open("gbp-usd.json"))
 
@@ -22,13 +22,46 @@ for day in raw["usd-gbp"]:
 
 
 date_source  = {
-    "chart" : {"setAdaptiveYMin":1,"showValues":"0"},
+
+    "chart": {
+        "baseFont": "Verdana",
+        "baseFontColor": "#FFFFFF",
+        "baseFontSize": "20",
+        "bgAlpha": "100",
+        "bgColor": "#000000,#000000",
+        "canvasBgAlpha": "0",
+        "caption": "GBP-USD FX",
+        "captionAlignment": "left",
+        "captionFont": "Verdana",
+        "captionFontBold": "1",
+        "captionFontColor": "#FFFFFF",
+        "captionFontSize": "30",
+        "captionHorizontalPadding": "2",
+        "captionOnTop": "0",
+        "labelStep": 7,
+        "legendItemFontColor": "#666666",
+        "legendItemFontSize": "20",
+        "plotFillAlpha": "50",
+        "plotHighlightEffect": "fadeout",
+        "showTickMarks": "1",
+        "showValues": "0",
+        "slantLabels": "1",
+        "subcaption": "Source: api.fixer.io",
+        "subcaptionFont": "Verdana",
+        "subcaptionFontBold": "0",
+        "subcaptionFontColor": "#FFFFFF",
+        "subcaptionFontSize": "25",
+        "theme": "fint",
+        "xAxisName": "Date (UTC)",
+        "setAdaptiveYMin": 1
+    },
+    # "chart" : {"setAdaptiveYMin":1,"showValues":"0"},
     "dataset": series,
     "categories": {"category": x_categories}}
 
 
-html = get_html(date_source, "msline")
+html = get_fusion_html(date_source, "msline")
 
 
-with open("gdbfx.html","w") as f:
+with open("fx.html","w") as f:
     f.write(html)

@@ -22,7 +22,7 @@ class Original(Analytics):
     def process(self):
 
         total = self.col.count()
-        retweeted = self.col.find({Status.SCHEMA_MAP[self.schema]["retweet_exists_key"]: {"$exists": True, "$ne": None}}).count()
+        retweeted = self.col.find({Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]: {"$exists": True, "$ne": None}}).count()
 
         distribution = [{"_id": "retweets", "count": retweeted}, {"_id": "non_retweets", "count": total - retweeted}]
 

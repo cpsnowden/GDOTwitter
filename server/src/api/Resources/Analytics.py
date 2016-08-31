@@ -47,19 +47,19 @@ class AnalyticsDataOpt:
         self.prefered_app = prefered_app
         self.urls = {}
         if chart_id is not None:
-            self.urls["url_chart"] = path + "/dl?type=chart"
+            self.urls["url_chart"] = path + "/dl?type=chart_id"
         else:
             self.urls["url_chart"] = None
         if html_id is not None:
-            self.urls["url_html"] = path + "/dl?type=html"
+            self.urls["url_html"] = path + "/dl?type=html_id"
         else:
             self.urls["url_html"] = None
         if raw_id is not None:
-            self.urls["url_raw"] = path + "/dl?type=raw"
+            self.urls["url_raw"] = path + "/dl?type=raw_id"
         else:
             self.urls["url_raw"] = None
         if graph_id is not None:
-            self.urls["url_graph"] = path + "/dl?type=graph"
+            self.urls["url_graph"] = path + "/dl?type=graph_id"
         else:
             self.urls["url_graph"] = None
 
@@ -177,7 +177,7 @@ class AnalyticsDownload(Resource):
     def __init__(self, **kwargs):
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('type', type=str, help="Type of data", location='args',
-                                 choices = ["graph","raw","chart","html"], required = True)
+                                 choices = ["graph_id","raw_id","chart_id","html_id"], required = True)
         self.dbm = kwargs["dbm"]
 
     def get(self, dataset_id, id):
@@ -191,38 +191,46 @@ class AnalyticsDownload(Resource):
         args = self.parser.parse_args()
         dataType = args["type"]
 
-        if dataType == "raw":
-            self.logger.info("Get Raw DATA")
-            f = self.dbm.gridfs.get_last_version(found.raw_id)
-            response = make_response(f.read())
-            response.headers["Content-Disposition"] = "attachment; filename = " + found.raw_id + ".json"
-            response.headers["mimetype"] = "application/json"
-            return response
-        elif dataType == "html":
-            self.logger.info("Get HTML DATA")
-            print found.html_id
-            f = self.dbm.gridfs.get_last_version(found.html_id)
-            response = make_response(f.read())
-            response.headers["Content-Disposition"] = "attachment; filename = " + found.html_id + ".html"
-            response.headers["mimetype"] = "text/html"
-            return response
-        elif dataType == "chart":
-            self.logger.info("Get Chart DATA")
-            f = self.dbm.gridfs.get_last_version(found.chart_id)
-            response = make_response(f.read())
-            response.headers["Content-Disposition"] = "attachment; filename = " + found.chart_id + ".json"
-            response.headers["mimetype"] = "application/json"
-            return response
-        elif dataType == "graph":
-            self.logger.info("Get Graph DATA")
-            f = self.dbm.gridfs.get_last_version(found.graph_id)
-            response = make_response(f.read())
-            response.headers["Content-Disposition"] = "attachment; filename = " + found.graph_id + ".graphml"
-            response.headers["mimetype"] = "text/plain"
-            return response
-        else:
-            self.logger.error("Why am I here")
-            abort(404, message="Should never get here")
+        self.logger.info("Getting " + dataType)
+        filename = getattr(found, dataType)
+        print filename
+        f = self.dbm.gridfs.get_last_version(filename)
+        response = make_response(f.read())
+        response.headers["Content-Disposition"] = "attachment; filename = " + f.filename
+        response.headers["mimetype"] = f.contentType
+        return response
+
+        # if dataType == "raw":
+        #     self.logger.info("Getting " + dataType)
+        #     f = self.dbm.gridfs.get_last_version(found.raw_id)
+        #     response = make_response(f.read())
+        #     response.headers["Content-Disposition"] = "attachment; filename = " + found.raw_id
+        #     response.headers["mimetype"] = f.contentType
+        #     return response
+        # elif dataType == "html":
+        #     self.logger.info("Get HTML DATA")
+        #     f = self.dbm.gridfs.get_last_version(found.html_id)
+        #     response = make_response(f.read())
+        #     response.headers["Content-Disposition"] = "attachment; filename = " + found.html_id
+        #     response.headers["mimetype"] = "text/html"
+        #     return response
+        # elif dataType == "chart":
+        #     self.logger.info("Get Chart DATA")
+        #     f = self.dbm.gridfs.get_last_version(found.chart_id)
+        #     response = make_response(f.read())
+        #     response.headers["Content-Disposition"] = "attachment; filename = " + found.chart_id
+        #     response.headers["mimetype"] = "application/json"
+        #     return response
+        # elif dataType == "graph":
+        #     self.logger.info("Get Graph DATA")
+        #     f = self.dbm.gridfs.get_last_version(found.graph_id)
+        #     response = make_response(f.read())
+        #     response.headers["Content-Disposition"] = "attachment; filename = " + found.graph_id
+        #     response.headers["mimetype"] = "text/plain"
+        #     return response
+        # else:
+        #     self.logger.error("Why am I here")
+        #     abort(404, message="Should never get here")
 
 
 class AnalyticsOptions(Resource):

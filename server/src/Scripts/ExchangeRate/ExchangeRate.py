@@ -23,11 +23,13 @@ while date <= end:
     dates.append(date)
     rate.append(get_rate(date))
     date += timedelta(days=1)
+    print rate
 
 
-json.dump({"usd-gbp":rate,"dates":dates}, open("gbp-usd.json","w"), default=lambda obj: (obj.isoformat() if isinstance(
-    obj,
-                                                                                                  datetime) else None))
+#
+# json.dump({"usd-gbp":rate,"dates":dates}, open("gbp-usd.json","w"), default=lambda obj: (obj.isoformat() if isinstance(
+#     obj,
+#                                                                                                   datetime) else None))
 
 gdb_usd = [i["USD"] for i in rate]
 xfmt = md.DateFormatter('%Y-%m-%d\n %H:%M:%S')
