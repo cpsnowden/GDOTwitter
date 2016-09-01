@@ -2,7 +2,7 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
 
     .config(function (RestangularProvider) {
         RestangularProvider.setBaseUrl('/API');
-        RestangularProvider.setFullResponse(true);
+        // RestangularProvider.setFullResponse(true);
         RestangularProvider.setDefaultHeaders({Authorization: "Basic Y3BzMTVfYWRtaW46c2VjcmV0"});
     })
 
@@ -45,6 +45,7 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
         };
 
         $scope.resetNodes = function () {
+            $scope.gdo_nodes = [];
             for (var j = 0; j < $scope.gdoHeight; ++j) {
                 var row = [];
                 for (var i = 0; i < $scope.gdoWidth; ++i) {
@@ -53,7 +54,7 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
                 $scope.gdo_nodes.push(row);
             }
         };
-        
+
         $scope.canCreateSection = function () {
             if ($scope.selected_nodes.length <= 0) {
                 return false;
@@ -148,12 +149,13 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
 
         $scope.selectDataSet = function (section, dataSet) {
             section.dataSetId = dataSet.id;
+            section.dataset = Restangular.stripRestangular(dataSet);
             dataSet.possibleAnalytics = $scope.getAnalytics(dataSet.id);
         };
 
         $scope.selectAnalytics = function (section, analytics) {
             section.analyticsId = analytics.id;
-
+            section.analytics = Restangular.stripRestangular(analytics);
         };
 
         $scope.deleteSection = function (section) {
@@ -166,6 +168,10 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
         };
 
         $scope.createSlide = function () {
+            // Restangular.stripRestangular($scope.currentSlide)
+            console.log($scope.currentSlide);
+
+
             Restangular.all('slide').post($scope.currentSlide).then(function () {
                 console.log("Slide creation requested");
                 $scope.currentSlide = {
@@ -173,7 +179,6 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
                     "description": "MConsole_" + new Date().toLocaleString()
                 };
                 $scope.resetNodes();
-                $scope.$scope.resetNodes();
                 $scope.slides = $scope.getSlides();
             }, function () {
                 console.log("Error requesting dataset");
