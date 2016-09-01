@@ -149,7 +149,8 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
 
         $scope.selectDataSet = function (section, dataSet) {
             section.dataSetId = dataSet.id;
-            section.dataset = Restangular.stripRestangular(dataSet);
+            section.dataset = {};
+            section.dataset.description = dataSet.description;
             dataSet.possibleAnalytics = $scope.getAnalytics(dataSet.id);
         };
 
