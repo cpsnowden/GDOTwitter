@@ -13,7 +13,10 @@ class HashtagGraph(Graphing):
                    dict(name="threshold", prettyName="Link Threshold", type="integer",
                         default=0.3),
                    dict(name="filter_max_component", prettyName="Filter max component", type="boolean",
-                        default=True)]
+                        default=True),
+                   dict(name="StrongerGravity", prettyName="Stronger Gravity", type="boolean",
+                        default=False)
+                   ]
 
     _edges_color = ("type", {"colocation": "gold"})
     _node_color = ("type", {"hashtag": "blue"})
@@ -46,7 +49,7 @@ class HashtagGraph(Graphing):
         self.analytics_meta.status = "BUILT"
         self.analytics_meta.save()
 
-        G = self.layout(G, {"EDGE_WEIGHT_INFLUENCE": 3.0})
+        G = self.layout(G, {"EDGE_WEIGHT_INFLUENCE": 3.0, "STRONGER_GRAVITY":self.args["StrongerGravity"]})
         self.finalise_graph(G)
         return True
 

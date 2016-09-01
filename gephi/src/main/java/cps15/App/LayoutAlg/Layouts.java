@@ -23,19 +23,26 @@ public class Layouts {
                 MsForceAtlas2Args args = (MsForceAtlas2Args) layoutArgs;
                 layout.setGraphModel(graphModel);
                 layout.resetPropertiesValues();
-                layout.initAlgo();
-//                layout.setScalingRatio(args.getLayoutScale());
-//                layout.setBarnesHutOptimize(args.getBarnesHuttOptimize());
-//                layout.setBarnesHutTheta(args.getBarnesHutTheta());
-//                layout.setStrongGravityMode(args.getStrongerGravity());
-//                layout.setGravity(args.getGravity());
-//                layout.setAdjustSizes(args.getAdjustSizes());
-//                layout.setEdgeWeightInfluence(args.getEdgeWeightInfluence());
+                layout.setScalingRatio(args.getLayoutScale());
+                layout.setBarnesHutOptimize(args.getBarnesHuttOptimize());
+                layout.setBarnesHutTheta(args.getBarnesHutTheta());
+                layout.setStrongGravityMode(args.getStrongerGravity());
+                layout.setGravity(args.getGravity());
+                layout.setAdjustSizes(args.getAdjustSizes());
+                layout.setEdgeWeightInfluence(args.getEdgeWeightInfluence());
 //                layout.setThreadsCount(args.getThreadsCount());
-//                layout.setGravityXRatio(args.getGravityXScaling());
-//                layout.setGravityYRatio(args.getGravityYScaling());
-//                layout.setLinLogMode(args.getLinLogMode());
-//                layout.setAdjustSizes(args.getPreventOverlap());
+                layout.setGravityXRatio(args.getGravityXScaling());
+                layout.setGravityYRatio(args.getGravityYScaling());
+                layout.setLinLogMode(args.getLinLogMode());
+                layout.setAdjustSizes(args.getPreventOverlap());
+                layout.initAlgo();
+                logger.info("Scaling Ratio " + layout.getScalingRatio());
+                logger.info("Barnes Hut " + layout.isBarnesHutOptimize());
+                logger.info("Barnes Hut Theta " + layout.getBarnesHutTheta());
+                logger.info("Strong Gravity " + layout.isStrongGravityMode());
+                logger.info("Gravity " + layout.getGravity());
+                logger.info("Adjust Size " + layout.isAdjustSizes());
+                logger.info("LinLog Mode " + layout.isLinLogMode());
                 return layout;
             }
             case OpenOrdArgs.LAYOUT_ALGO: {

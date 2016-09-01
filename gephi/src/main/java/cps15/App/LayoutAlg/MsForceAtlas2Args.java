@@ -17,7 +17,7 @@ public class MsForceAtlas2Args extends LayoutArgs {
     private static final Double BARNES_HUT_THETA = 1.2;
     private static final Boolean STRONGER_GRAVITY = true;
     private static final Double GRAVITY = 1.0;
-    private static final Boolean ADJUST_SIZES = true;
+    private static final Boolean ADJUST_SIZES = false;
     private static final Long LAYOUT_ITERATIONS = 10000L;
     private static final Double EDGE_WEIGHT_INFLUENCE = 1.0;
     private static final Integer THREADS_COUNT = 7;
