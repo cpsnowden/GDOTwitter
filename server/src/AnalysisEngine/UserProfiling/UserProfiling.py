@@ -17,7 +17,7 @@ class UserProfiling(Analysis):
                          default=1000),
                    dict(name="DisplayLimit", prettyName="Tweet to Display", type="integer",
                         default=100),
-                   dict(name="timeInterval", prettyName="Time interval", type="enum", options=_options, default="Hour"),
+                   dict(name="timeInterval", prettyName="Time interval", type="enum", options=_options, default="H"),
                    dict(name="hashtag_grouping", prettyName="Hashtag Groupings", type="dictionary_list", variable=False,
                         default=[
                             dict(name="Leave",

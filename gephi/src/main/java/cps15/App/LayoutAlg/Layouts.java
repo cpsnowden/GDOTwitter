@@ -24,18 +24,18 @@ public class Layouts {
                 layout.setGraphModel(graphModel);
                 layout.resetPropertiesValues();
                 layout.initAlgo();
-                layout.setScalingRatio(args.getLayoutScale());
-                layout.setBarnesHutOptimize(args.getBarnesHuttOptimize());
-                layout.setBarnesHutTheta(args.getBarnesHutTheta());
-                layout.setStrongGravityMode(args.getStrongerGravity());
-                layout.setGravity(args.getGravity());
-                layout.setAdjustSizes(args.getAdjustSizes());
-                layout.setEdgeWeightInfluence(args.getEdgeWeightInfluence());
-                layout.setThreadsCount(args.getThreadsCount());
-                layout.setGravityXRatio(args.getGravityXScaling());
-                layout.setGravityYRatio(args.getGravityYScaling());
-                layout.setLinLogMode(args.getLinLogMode());
-                layout.setAdjustSizes(args.getPreventOverlap());
+//                layout.setScalingRatio(args.getLayoutScale());
+//                layout.setBarnesHutOptimize(args.getBarnesHuttOptimize());
+//                layout.setBarnesHutTheta(args.getBarnesHutTheta());
+//                layout.setStrongGravityMode(args.getStrongerGravity());
+//                layout.setGravity(args.getGravity());
+//                layout.setAdjustSizes(args.getAdjustSizes());
+//                layout.setEdgeWeightInfluence(args.getEdgeWeightInfluence());
+//                layout.setThreadsCount(args.getThreadsCount());
+//                layout.setGravityXRatio(args.getGravityXScaling());
+//                layout.setGravityYRatio(args.getGravityYScaling());
+//                layout.setLinLogMode(args.getLinLogMode());
+//                layout.setAdjustSizes(args.getPreventOverlap());
                 return layout;
             }
             case OpenOrdArgs.LAYOUT_ALGO: {
