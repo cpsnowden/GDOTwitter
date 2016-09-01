@@ -10,6 +10,8 @@ class HashtagGraph(Graphing):
     _logger = logging.getLogger(__name__)
     __arguments = [dict(name="hashtag_limit", prettyName="Number of hashtags", type="integer",
                         default=250),
+                   dict(name="threshold", prettyName="Link Threshold", type="integer",
+                        default=0.3),
                    dict(name="filter_max_component", prettyName="Filter max component", type="boolean",
                         default=True)]
 
@@ -33,11 +35,12 @@ class HashtagGraph(Graphing):
     def process(self):
         limit = self.args["hashtag_limit"]
         filter_component = self.args["filter_max_component"]
+        threshold = self.args["threshold"]
         self._logger.info("Getting the top hashtags")
         top_hashtags = self.get_top_non_retweeted_hashtags(self.col, limit, self.schema)
         self._logger.info("Got " + str(len(top_hashtags)) + " top hashtags")
         print top_hashtags
-        G = self.build_graph(filter_component, top_hashtags)
+        G = self.build_graph(filter_component, top_hashtags, threshold)
 
         self._logger.info("Build graph %s", self.analytics_meta.id)
         self.analytics_meta.status = "BUILT"
@@ -47,7 +50,7 @@ class HashtagGraph(Graphing):
         self.finalise_graph(G)
         return True
 
-    def build_graph(self, filter_component, top_hashtags):
+    def build_graph(self, filter_component, top_hashtags, threshold):
         G = nx.Graph()
 
         n = len(top_hashtags)
@@ -91,7 +94,7 @@ class HashtagGraph(Graphing):
 
         for row in xrange(0, n):
             for col in xrange(row + 1, n):
-                if score[row][col] != 0:
+                if score[row][col] > threshold:
                     G.add_edge(row, col, weight=float(score[row][col]), type="colocation")
         if filter_component:
             G = max(nx.connected_component_subgraphs(G), key=len)

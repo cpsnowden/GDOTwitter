@@ -16,7 +16,12 @@ class Graphing(Analysis):
                    dict(name="layoutIterations", prettyName="Layout Iterations", type="integer",
                         default=-1),
                    dict(name="LAYOUT_ALGO", prettyName="Layout Algorithm", type="enum", options=["FA2MS", "OPENORD"],
-                        default="FA2MS")]
+                        default="FA2MS"),
+                   dict(name="LinLogMode", prettyName="FAMS2 Lin Log Mode", type="boolean",
+                        default=False),
+                   dict(name="PreventOverlap", prettyName="FAMS2 Prevent Overlap", type="boolean",
+                        default=False),
+                   ]
 
     def __init__(self, analytics_meta):
         super(Graphing, self).__init__(analytics_meta)
@@ -53,7 +58,7 @@ class Graphing(Analysis):
 
     def layout(self, G, extra_params=None):
 
-        self.analytics_meta.graph_id = "GRAPH_" + self.analytics_meta.db_ref
+        self.analytics_meta.graph_id = "GRAPH_" + self.analytics_meta.db_ref + ".graphml"
         self.analytics_meta.save()
 
         n_iterations = self.args["layoutIterations"]
@@ -73,7 +78,11 @@ class Graphing(Analysis):
         self.analytics_meta.save()
 
         params = {"LAYOUT_ITERATIONS": n_iterations,
-                  "LAYOUT_ALGO": self.args["LAYOUT_ALGO"]}
+                  "LAYOUT_ALGO": self.args["LAYOUT_ALGO"],
+                  "PREVENT_OVERLAP": self.args["PreventOverlap"],
+                  "LIN_LOG_MODE":self.args["LinLogMode"]}
+
+        self._logger.info("Using Gephi Parameters %s", params)
 
         if extra_params is not None:
             for i in extra_params.keys():
@@ -95,7 +104,7 @@ class Graphing(Analysis):
     def finalise_graph(self, G, color = None):
 
         if self.analytics_meta.graph_id is None:
-            self.analytics_meta.graph_id = "GRAPH_" + self.analytics_meta.db_ref
+            self.analytics_meta.graph_id = "GRAPH_" + self.analytics_meta.db_ref + ".graphml"
             self.analytics_meta.save()
             self._logger.info("Found graph collection which hasn't had a name registered to it")
 

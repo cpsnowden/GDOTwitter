@@ -34,6 +34,8 @@ public class Layouts {
                 layout.setThreadsCount(args.getThreadsCount());
                 layout.setGravityXRatio(args.getGravityXScaling());
                 layout.setGravityYRatio(args.getGravityYScaling());
+                layout.setLinLogMode(args.getLinLogMode());
+                layout.setAdjustSizes(args.getPreventOverlap());
                 return layout;
             }
             case OpenOrdArgs.LAYOUT_ALGO: {

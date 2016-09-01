@@ -23,6 +23,8 @@ public class MsForceAtlas2Args extends LayoutArgs {
     private static final Integer THREADS_COUNT = 7;
     private static final Double GRAVITY_X_SCALING = 1.0;
     private static final Double GRAVITY_Y_SCALING = 1.0;
+    private static final Boolean LIN_LOG_MODE = false;
+    private static final Boolean PREVENT_OVERLAP = false;
 
     public MsForceAtlas2Args(JSONObject jsonObject) {
         super(jsonObject);
@@ -41,6 +43,8 @@ public class MsForceAtlas2Args extends LayoutArgs {
         settings.put("THREADS_COUNT", THREADS_COUNT);
         settings.put("GRAVITY_X_SCALING", GRAVITY_X_SCALING);
         settings.put("GRAVITY_Y_SCALING", GRAVITY_Y_SCALING);
+        settings.put("LIN_LOG_MODE", LIN_LOG_MODE);
+        settings.put("PREVENT_OVERLAP", PREVENT_OVERLAP);
     }
 
     public Double getGravityXScaling() {
@@ -95,5 +99,11 @@ public class MsForceAtlas2Args extends LayoutArgs {
     }
 
 
+    public Boolean getLinLogMode() {
+        return (Boolean) settings.get("LIN_LOG_MODE");
+    }
 
+    public Boolean getPreventOverlap() {
+        return (Boolean) settings.get("PREVENT_OVERLAP");
+    }
 }
