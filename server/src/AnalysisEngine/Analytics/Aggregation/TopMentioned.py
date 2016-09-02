@@ -42,7 +42,9 @@ class TopMentioned(Analytics):
                          properties={"chartProperties": {"yAxisName": "Number of Times Mentioned",
                                                          "xAxisName": "User",
                                                          "caption": self.dataset_meta.description,
-                                                         "subcaption": "Top " + str(limit) + " mentioned users"},
+                                                         "subcaption": "Top " + str(limit) + " mentioned users from " +
+                                                                       str(self.args["startDateCutOff"]) + " to " +
+                                                                           str(self.args["endDateCutOff"])},
                                      "analysisType": "ranking",
                                      "chartType": "bar2d"},
                          export_type="chart")

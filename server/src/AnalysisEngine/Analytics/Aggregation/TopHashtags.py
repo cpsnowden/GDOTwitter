@@ -30,7 +30,9 @@ class TopHashtags(Analytics):
                          properties={"chartProperties": {"yAxisName": "Number of Occurences",
                                                          "xAxisName": "Hashtag",
                                                          "caption": self.dataset_meta.description,
-                                                         "subcaption": "Top " + str(limit) + " hashtags"},
+                                                         "subcaption": "Top " + str(limit) + " hashtags from " +
+                                                                       str(self.args["startDateCutOff"]) + " to " +
+                                                                           str(self.args["endDateCutOff"])},
                                      "analysisType": "ranking",
                                      "chartType": "bar2d"},
                          export_type="chart")
