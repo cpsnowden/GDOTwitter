@@ -34,6 +34,8 @@ class TopMentioned(Analytics):
                  {"$sort": {"count": -1}},
                  {"$limit": limit}]
 
+        self._logger.info("Query: %s", query)
+
         data = list(self.col.aggregate(query, allowDiskUse=True))
 
         self.export_html(result=data,
