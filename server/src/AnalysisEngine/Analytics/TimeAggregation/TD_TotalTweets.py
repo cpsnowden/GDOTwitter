@@ -26,7 +26,8 @@ class TD_TotalTweets(TimeAggregation):
         date_field = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["ISO_date"])
         p1, p2 = Util.get_date_projection(date_field, time_interval)
 
-        cursor = self.col.aggregate([{"$project": p1},
+        cursor = self.col.aggregate([{"$match": self.time_bound_aggr()},
+                                     {"$project": p1},
                                      {"$project": p2},
                                      {"$group": {"_id": "$date",
                                                  "count": {"$sum": 1}}},

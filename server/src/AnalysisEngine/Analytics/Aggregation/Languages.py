@@ -1,5 +1,5 @@
 import logging
-
+import pycountry
 from AnalysisEngine import Util
 from AnalysisEngine.Analytics.Analytics import Analytics
 from AnalysisEngine.TwitterObj import Status
@@ -23,10 +23,17 @@ class Languages(Analytics):
     def process(self):
         lang_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["language"])
 
-        query = [{"$group": {"_id": lang_key, "count": {"$sum": 1}}},
+        query = [{"$match": self.time_bound_aggr()},
+                 {"$group": {"_id": lang_key, "count": {"$sum": 1}}},
                  {"$sort": {"count": -1}}]
 
         data = list(self.col.aggregate(query, allowDiskUse=True))
+
+        for entry in data:
+            try:
+                entry["_id"] = pycountry.languages.get(iso639_1_code=entry["_id"]).name
+            except KeyError:
+                continue
 
         self.export_html(result=data,
                          properties={"chartProperties": {"caption": self.dataset_meta.description,

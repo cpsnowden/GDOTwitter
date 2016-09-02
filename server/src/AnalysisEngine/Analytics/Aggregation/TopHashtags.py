@@ -24,7 +24,7 @@ class TopHashtags(Analytics):
     def process(self):
         limit = self.args["Limit"]
 
-        data = self.get_top_hashtags(self.schema, limit, self.col)
+        data = self.get_top_hashtags(self.schema, limit, self.col, self.time_bound_aggr)
 
         self.export_html(result=data,
                          properties={"chartProperties": {"yAxisName": "Number of Occurences",
@@ -38,10 +38,11 @@ class TopHashtags(Analytics):
         return True
 
     @staticmethod
-    def get_top_hashtags(schema, limit, col):
+    def get_top_hashtags(schema, limit, col, time_bound):
 
         hashtag_key = Util.dollar_join_keys(Status.SCHEMA_MAP[schema]["hashtags"])
         query = [
+            {"$match": time_bound()},
             {"$unwind":  hashtag_key},
             {"$group": {"_id": {"$toLower": hashtag_key + '.' + 'text'}, "count": {"$sum": 1}}},
             {"$sort": {"count": -1}},

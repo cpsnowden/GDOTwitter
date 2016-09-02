@@ -97,6 +97,20 @@ class Analysis(object):
 
         return query
 
+    def time_bound_aggr(self):
+
+        if type(self.args["startDateCutOff"]) is datetime:
+            self._logger.info("Using datetime fields")
+            start = self.args["startDateCutOff"]
+            end = self.args["endDateCutOff"]
+        else:
+            self._logger.info("Using string datetime conversion")
+            start = parser.parse(self.args["startDateCutOff"])
+            end = parser.parse(self.args["endDateCutOff"])
+
+        return {Status.SCHEMA_MAP[self.schema]["ISO_date"]: {"$gte": start,
+                                                             "$lte": end}}
+
     def get_sorted_cursor(self, query, limit=0, projection=None, reverse=False):
 
         self._logger.info("Querying DATA database, collection %s with query %s and projection %s", self.col.name,
@@ -137,7 +151,7 @@ class Analysis(object):
         self.analytics_meta.end_time = datetime.now()
         self.analytics_meta.save()
 
-    def export_html(self, result, properties = None, export_type="chart"):
+    def export_html(self, result, properties=None, export_type="chart"):
 
         self.analytics_meta.status = "EXPORTING HTML"
         self.analytics_meta.save()

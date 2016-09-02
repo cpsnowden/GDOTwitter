@@ -27,7 +27,8 @@ class TopTweetingAuthors(Analytics):
         user_name_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                               User.SCHEMA_MAP[self.schema]["name"])
 
-        query = [{"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
+        query = [{"$match": self.time_bound_aggr()},
+                 {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
                  {"$sort": {"count": -1}},
                  {"$limit": limit}]
 

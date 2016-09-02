@@ -29,7 +29,7 @@ class TD_Hashtags(TimeAggregation):
         limit = self.args["Limit"]
         time_interval = self.args["timeInterval"]
 
-        top_hashtags_list = TopHashtags.get_top_hashtags(self.schema, limit, self.col)
+        top_hashtags_list = TopHashtags.get_top_hashtags(self.schema, limit, self.col, self.time_bound_aggr)
         top_hashtags = list(set([i['_id'] for i in top_hashtags_list] + ["_ALL"]))
 
         date_field = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["ISO_date"])
@@ -41,7 +41,8 @@ class TD_Hashtags(TimeAggregation):
         p1["hashtag"] = {"$toLower": hashtag_dollar_text_key}
         p2["hashtag"] = "$hashtag"
 
-        cursor = self.col.aggregate([{"$unwind": hashtag_dollar_key},
+        cursor = self.col.aggregate([{"$match": self.time_bound_aggr()},
+                                     {"$unwind": hashtag_dollar_key},
                                      {"$project": p1},
                                      {"$match": {"hashtag": {"$in": top_hashtags}}},
                                      {"$project": p2},

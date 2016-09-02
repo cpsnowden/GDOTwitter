@@ -25,7 +25,8 @@ class TimeZone(Analytics):
         utc_offset_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                                User.SCHEMA_MAP[self.schema]["utc_offset"])
 
-        query = [{"$group": {"_id": utc_offset_key, "count": {"$sum": 1}}},
+        query = [{"$match": self.time_bound_aggr()},
+                 {"$group": {"_id": utc_offset_key, "count": {"$sum": 1}}},
                  {"$sort": {"count": -1}}]
 
         data = self.col.aggregate(query, allowDiskUse=True)

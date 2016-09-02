@@ -27,7 +27,9 @@ class TopAuthors(Analytics):
         user_name_key = Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                               User.SCHEMA_MAP[self.schema]["name"])
 
-        query = [{"$match": {"$or": [{Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]: {"$exists": False}},
+        query = [{"$match": self.time_bound_aggr()},
+                 {"$match": {"$or": [{Status.SCHEMA_MAP[self.schema][
+                                          "retweeted_status_exists"]: {"$exists": False}},
                                      {Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]: {"$eq": None}}]}},
                  {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
                  {"$sort": {"count": -1}},

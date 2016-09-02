@@ -32,7 +32,8 @@ class TD_TimeZone(TimeAggregation):
         p1["utc_offset"] = utc_offset_key
         p2["utc_offset"] = "$utc_offset"
 
-        cursor = self.col.aggregate([{"$project": p1},
+        cursor = self.col.aggregate([{"$match": self.time_bound_aggr()},
+                                     {"$project": p1},
                                      {"$project": p2},
                                      {"$group": {"_id": {"dt": "$date",
                                                          "series": "$utc_offset"},

@@ -30,7 +30,8 @@ class TopRetweeted(Analytics):
                                               Status.SCHEMA_MAP[self.schema]["retweet_user"],
                                               User.SCHEMA_MAP[self.schema]["retweet_screen_name"])
 
-        query = [{"$match": {retweet_exists_key: {"$exists": True, "$ne": None}}},
+        query = [{"$match": self.time_bound_aggr()},
+                 {"$match": {retweet_exists_key: {"$exists": True, "$ne": None}}},
                  {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
                  {"$sort": {"count": -1}},
                  {"$limit": limit}]

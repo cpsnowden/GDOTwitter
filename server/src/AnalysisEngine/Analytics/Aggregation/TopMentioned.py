@@ -28,7 +28,8 @@ class TopMentioned(Analytics):
         user_name_key = Util.join_keys(mention_key,
                                        UserMention.SCHEMA_MAP[self.schema]["name"])
 
-        query = [{"$unwind": mention_key},
+        query = [{"$match": self.time_bound_aggr()},
+                 {"$unwind": mention_key},
                  {"$group": {"_id": user_name_key, "count": {"$sum": 1}}},
                  {"$sort": {"count": -1}},
                  {"$limit": limit}]

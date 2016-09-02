@@ -31,6 +31,7 @@ class TopMentionRelationships(Analytics):
                                        UserMention.SCHEMA_MAP[self.schema]["name"])
 
         query = [
+            {"$match": self.time_bound_aggr()},
             {"$match": {"$or": [{Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]: {"$exists": False}},
                                 {Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]: {"$eq": None}}]}},
             {"$unwind": Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["mentions"])},

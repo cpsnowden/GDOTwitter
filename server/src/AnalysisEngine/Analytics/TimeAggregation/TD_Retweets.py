@@ -29,7 +29,8 @@ class TD_Retweets(TimeAggregation):
         p1["retweet"]={ "$ifNull": [ Util.dollar_join_keys(Status.SCHEMA_MAP[self.schema]["retweeted_status_exists"]), "Unspecified" ] }
         p2["retweeted"] = {"$cond":[{"$eq":["$retweet","Unspecified"]},"Original","Retweet"]}
 
-        query = [{"$project": p1},
+        query = [{"$match": self.time_bound_aggr()},
+                 {"$project": p1},
                  {"$project": p2},
                  {"$group": {"_id": {"dt": "$date",
                                      "series": "$retweeted"},
