@@ -1,4 +1,4 @@
-var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootstrap', 'ngRoute'])
+var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootstrap','ngRoute'])
 
     .config(function (RestangularProvider) {
         RestangularProvider.setBaseUrl('/API');
@@ -162,6 +162,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
                     for (var j = 0; j < option.args.length; j++) {
                         setting = option.args[j];
                         if (setting.type == "datetime") {
+                            console.log($scope.analyticsForm.dataset[setting.default_dataset_field])
                             $scope.analyticsForm.order.specialised_args[setting.name] = new Date(
                                 $scope.analyticsForm.dataset[setting.default_dataset_field]
                             )

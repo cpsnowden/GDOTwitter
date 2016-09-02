@@ -13,6 +13,7 @@
         overflow:auto
     }
     </style>
+
 </head>
 <body>
 
@@ -87,9 +88,11 @@
                              ng-repeat="option in analyticsForm.specialised_args | filter: {'type': 'datetime'}">
                             <div class="input-group">
                                 <div class="input-group-addon">{{option.prettyName}}</div>
-                                <input type="text" class="form-control" uib-datepicker-popup="EEE MMM d HH:mm:ss yyyy Z"
+                                <input type="text" class="form-control" uib-datepicker-popup="EEE, dd MMM yyyy HH:mm:ss Z"
                                        ng-model="analyticsForm.order.specialised_args[option.name]">
+                                {{analyticsForm.order.specialised_args[option.name]}}
                             </div>
+
                         </div>
 
                         <div class="form-group"
