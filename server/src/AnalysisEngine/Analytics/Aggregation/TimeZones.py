@@ -44,7 +44,9 @@ class TimeZone(Analytics):
 
         self.export_html(result=utc_offsets,
                          properties={"chartProperties": {"caption": self.dataset_meta.description,
-                                                         "subcaption": "Time Zones"},
+                                                         "subcaption": "Time Zones from " +
+                                                                       str(self.args["startDateCutOff"]) + " to " +
+                                                                       str(self.args["endDateCutOff"])},
                                      "analysisType": "proportion",
                                      "chartType": "doughnut3d"},
                          export_type="chart")

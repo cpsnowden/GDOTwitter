@@ -32,7 +32,7 @@ class TopHashtags(Analytics):
                                                          "caption": self.dataset_meta.description,
                                                          "subcaption": "Top " + str(limit) + " hashtags from " +
                                                                        str(self.args["startDateCutOff"]) + " to " +
-                                                                           str(self.args["endDateCutOff"])},
+                                                                       str(self.args["endDateCutOff"])},
                                      "analysisType": "ranking",
                                      "chartType": "bar2d"},
                          export_type="chart")
@@ -41,11 +41,10 @@ class TopHashtags(Analytics):
 
     @staticmethod
     def get_top_hashtags(schema, limit, col, time_bound):
-
         hashtag_key = Util.dollar_join_keys(Status.SCHEMA_MAP[schema]["hashtags"])
         query = [
             {"$match": time_bound()},
-            {"$unwind":  hashtag_key},
+            {"$unwind": hashtag_key},
             {"$group": {"_id": {"$toLower": hashtag_key + '.' + 'text'}, "count": {"$sum": 1}}},
             {"$sort": {"count": -1}},
             {"$limit": limit}]

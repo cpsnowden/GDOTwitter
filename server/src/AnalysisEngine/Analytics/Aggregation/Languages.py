@@ -37,7 +37,9 @@ class Languages(Analytics):
 
         self.export_html(result=data,
                          properties={"chartProperties": {"caption": self.dataset_meta.description,
-                                                         "subcaption": "Languages"},
+                                                         "subcaption": "Languages from " +
+                                                                       str(self.args["startDateCutOff"]) + " to " +
+                                                                       str(self.args["endDateCutOff"])},
                                      "analysisType": "proportion",
                                      "chartType": "doughnut3d"},
                          export_type="chart")
