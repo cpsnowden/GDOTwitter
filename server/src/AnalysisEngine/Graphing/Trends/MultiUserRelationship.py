@@ -59,7 +59,7 @@ class MultiUserRelationship(TrendGraph):
                                                  {retweet_user_key: {"$in": user_names}}
                                              ]})
 
-        self._logger.info("Query %s" + query)
+        self._logger.info("Query %s" ,query)
 
         cursor = self.get_sorted_cursor(query)
         if cursor is None:
