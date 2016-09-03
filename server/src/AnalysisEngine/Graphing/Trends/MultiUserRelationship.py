@@ -4,11 +4,11 @@ import networkx as nx
 
 from AnalysisEngine import Util
 from AnalysisEngine.Graphing.Trends.TrendGraph import TrendGraph
+from AnalysisEngine.Graphing.Utils.GraphUtils import color_names
 from AnalysisEngine.TwitterObj import Status, User, UserMention
-from AnalysisEngine.Graphing.Utils.GraphUtils import color_names
-from AnalysisEngine.Graphing.Utils.GraphUtils import color_names
 
-class UserRelationship(TrendGraph):
+
+class MultiUserRelationship(TrendGraph):
     _logger = logging.getLogger(__name__)
     __arguments = [dict(name="users", prettyName="Users", type="dictionary_list", variable=True,
                         default=[
@@ -19,13 +19,13 @@ class UserRelationship(TrendGraph):
                             dict(name="NickStevenson63", tags=[],
                                  color=dict(color="crimson", options=color_names)),
                             dict(name="mjs64", tags=[],
-                                   color=dict(color="crimson", options=color_names))])]
+                                 color=dict(color="crimson", options=color_names))])]
 
     _node_color = ("type", {"source": "red", "target": "lime", "TimeIndicator": "purple"})
     _edges_color = ("type", {"retweet": "powderblue", "user": "sienna", "mention": "gold", "authored": "grey"})
 
     def __init__(self, analytics_meta):
-        super(UserRelationship, self).__init__(analytics_meta)
+        super(MultiUserRelationship, self).__init__(analytics_meta)
 
     @classmethod
     def get_type(cls):
@@ -33,7 +33,7 @@ class UserRelationship(TrendGraph):
 
     @classmethod
     def get_args(cls):
-        return cls.__arguments + super(UserRelationship, cls).get_args()
+        return cls.__arguments + super(MultiUserRelationship, cls).get_args()
 
     def get_color(self):
         return self._node_color, self._edges_color
