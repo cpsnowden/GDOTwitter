@@ -41,7 +41,7 @@ for t in x_values:
 
 fig,ax = plt.subplots()
 
-ax.plot(x_values, sampled_counts.values(), color = tableau20[0], label ="StreamingAPI")
+# ax.plot(x_values, sampled_counts.values(), color = tableau20[0], label ="StreamingAPI")
 ax.plot(x_values, full_counts.values(), color=tableau20[10], label="Firehose")
 xfmt = md.DateFormatter('%Y-%m-%d\n %H:%M:%S')
 ax.xaxis.set_major_formatter(xfmt)

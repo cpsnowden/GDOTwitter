@@ -25,7 +25,7 @@ class UserRelationship(TrendGraph):
 
     @classmethod
     def get_type(cls):
-        return "User Relationship"
+        return "Dual User Relationship"
 
     @classmethod
     def get_args(cls):

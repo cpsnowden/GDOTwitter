@@ -54,7 +54,7 @@ class TweetPreprocessor(BaseTokenizer):
 class SVMClassifier(TweetClassifier):
     _logger = logging.getLogger(__name__)
 
-    def __init__(self, class_mapping, training_path, training_n = -1):
+    def __init__(self, class_mapping, training_path = None, training_n = -1):
 
         self.class_mapping = class_mapping
         self.reverse_mapping = {v: k for k, v in self.class_mapping.items()}
@@ -64,15 +64,16 @@ class SVMClassifier(TweetClassifier):
         self.tokenizer = TweetPreprocessor()
         # self.cv = TfidfVectorizer(tokenizer=self.tokenizer.tokenize, max_features=500)
         self.cv = CountVectorizer(tokenizer=self.tokenizer.tokenize, max_features=500)
-        self.train_from_csv(training_path, training_n)
+        if training_path is not None:
+            self.train_from_csv(training_path, training_n)
 
     def predict(self, status):
         if not isinstance(status,str):
             status = status.get_text()
 
         feature_vector = self.cv.transform([status])
-        classification = self.clf.predict(feature_vector)
-        score = self.clf.decision_function(feature_vector)
+        classification = self.clf.predict(feature_vector)[0]
+        score = self.clf.decision_function(feature_vector)[0]
         return ClassificationScore(classification, abs(score))
 
     def train(self, data, labels):
@@ -126,19 +127,23 @@ class SVMClassifier(TweetClassifier):
         true_labels = []
         predicted_labels = []
         for i, row in enumerate(data):
-            if row[0] == "unknown":
-                continue
+            # if row[0] == "unknown":
+            #     continue
             if 0 < row_count < i:
                 break
             truth = self.class_mapping[row[0]]
             score = self.predict(row[1])
             predicted = score.classification
+            if abs(score.confidence) < 1:
+                predicted=-1
+                print "Ignore"
+                # continue
             predicted_labels.append(predicted)
             true_labels.append(truth)
             print score.confidence, score.classification, predicted, truth
             if truth != predicted:
                 print "================================================================"
-                print "Truth:", self.reverse_mapping[truth], "Predicted:", self.reverse_mapping[predicted], score.score, \
+                print "Truth:", self.reverse_mapping[truth], "Predicted:", self.reverse_mapping[predicted], score.classification, \
                     "-->", \
                     row[1]
 
@@ -175,16 +180,17 @@ if __name__ == '__main__':
     # exit()
     import pprint
     from collections import OrderedDict
-    classifier = SVMClassifier(OrderedDict([("leave",0),("remain",1)]),"../Training/TRAINING_DATA_OUT.csv")
+    classifier = SVMClassifier(OrderedDict([("leave",0),("remain",1),("unknown",-1)]),
+    "../Training/TRAINING_DATA_OUT.csv")
     #, ("unknown",2)]), False)
     # print classifier.class_mapping.keys()
     # print classifier.tokenizer.tokenize("50,000 :),")
-    # classifier.cross_validate("../TRAINING_DATA_OUT.csv")
+    # print classifier.cross_validate("../Training/TRAINING_DATA_OUT.csv")
     #
     # pprint.pprint(classifier.get_features())
     print classifier.get_informative_features()
     #
-    print classifier.test_from_csv("../Training/labelling_text_BREXIT.dat", -1)
+    # print classifier.test_from_csv("../Training/labelling_text_BREXIT.dat", -1)
     # print classifier.test_from_csv("../TEST_DATA_OUT.csv", -1)
     #
     #

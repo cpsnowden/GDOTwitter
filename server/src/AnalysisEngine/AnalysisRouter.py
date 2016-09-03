@@ -31,6 +31,7 @@ from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet import HashtagTrendRewee
 from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet2 import HashtagTrendReweet2
 from AnalysisEngine.Graphing.Trends.HashtagTrendRetweet3 import HashtagTrendReweet3
 from AnalysisEngine.Graphing.Trends.DualUserRelationship import UserRelationship
+from AnalysisEngine.Graphing.Trends.UserRelationship import UserRelationship as MultiUserRelationship
 
 class AnalysisRouter():
     def __init__(self):
@@ -54,7 +55,8 @@ class AnalysisRouter():
                TD_TotalTweets,
                TD_Retweets,
                HashtagEventDetection,
-               UserProfiling
+               UserProfiling,
+               MultiUserRelationship
                ] + [
                 RetweetCommunityWithClassification,
                 RetweetCommunityClassificationUser,
