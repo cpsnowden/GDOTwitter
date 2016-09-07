@@ -102,9 +102,14 @@ if __name__ == "__main__":
     import json
     from pymongo import MongoClient
     from AnalysisEngine.HTMLGeneration.FusionCharting import get_fusion_chart_data, get_fusion_html
-
-    data = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/strongerin.json")))
-    htag = "strongerin"
+    #
+    # data = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/strongerin.json")))
+    # htag = "strongerin"
+    #
+    data = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/leave.json")))
+    htag = "voteleave"
+    # data = json.load(open(os.path.join(os.path.dirname(__file__), "DATA/brexit.json")))
+    # htag = "brexit"
 
     client = MongoClient("146.169.32.151", 27017)
     db = client.get_database("DATA")
@@ -115,14 +120,17 @@ if __name__ == "__main__":
     print "Getting events"
     events = ed.map_events(OrderedDict([(parser.parse(i[0]), i[1]) for i in data]), htag, "GNIP")
 
-    fcd = get_fusion_chart_data({"series": [[parser.parse(i[0]), i[1]] for i in data], "events": events},
-                                {"yAxisName": "Tweets per hour",
-                                 "xAxisName": "Date (UTC)",
-                                 "caption": "Brexit",
-                                 "subcaption": "'#" + htag + "'" + " event dectection",
-                                 "labelStep": int(len(data) / 20.0)},
-                                "event",
-                                "line")
-    html = get_fusion_html(fcd["dataSource"], fcd["chartType"])
-    with open("out3.html", "w") as f:
-        f.write(html)
+    json.dump({"event":[i.__dict__ for i in events],"data":data}, open("voteleave_events.json","w"),
+              default=Util.date_encoder)
+    #
+    # fcd = get_fusion_chart_data({"series": [[parser.parse(i[0]), i[1]] for i in data], "events": events},
+    #                             {"yAxisName": "Tweets per hour",
+    #                              "xAxisName": "Date (UTC)",
+    #                              "caption": "Brexit",
+    #                              "subcaption": "'#" + htag + "'" + " event dectection",
+    #                              "labelStep": int(len(data) / 20.0)},
+    #                             "event",
+    #                             "line")
+    # html = get_fusion_html(fcd["dataSource"], fcd["chartType"])
+    # with open("out3.html", "w") as f:
+    #     f.write(html)

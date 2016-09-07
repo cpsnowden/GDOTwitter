@@ -4,8 +4,6 @@ from xml.etree import ElementTree
 
 import networkx as nx
 
-from AnalysisEngine.Graphing.Utils.GraphUtils import GraphColor
-
 
 def fix_graphml_format_better(name, out):
 
@@ -29,34 +27,29 @@ def fix_graphml_format_better(name, out):
     with open(out, "w") as des:
         tree.write(des, encoding='utf-8', method='xml')
 
-# _node_color = ("type", {"source": "red", "target": "lime", "TimeIndicator": "purple"})
-# _edges_color = ("type", {"retweet": "gold", "user": "steelblue"})
-
-# _edges_color = ("type", dict(retweet="blue", mention="gold", both="red"))
-# _node_color = ("type", dict(retweeted="red", retweeter="lime", both="blueviolet"))
-
-_edges_color = ("type", dict(retweet="powderblue", mention="gold", user="grey"))
-# _node_color = ("classification", dict(Clinton="crimson", Trump="darkgreen", Saunders="darkviolet"))
-
-# _node_color = ("classification", dict(Leave="crimson", Remain="darkviolet"))
-_node_color = ("username", dict(mjs64="crimson", RickPoleway="darkviolet",NickStevenson63="lime",
-                                FederalBritain="darkgreen"))
-# , Saunders="darkviolet"))
 path = sys.argv[1]
 print "Input Path", path
 
 
 G = nx.read_graphml(path)
-print "Coloring"
-GraphColor.color_graph(G, (_node_color,_edges_color))
 
+for nid in G.nodes():
+    node = G.node[nid]
+    try:
+        node["y"] = -node["y"]
+    except KeyError:
+        print "AAAHHH", node
+
+# print "Coloring"
+GraphColor.color_graph(G, (_node_color,_edges_color))
+#
 
 prefix = os.path.splitext(path)[0]
-temp_path =  prefix + "_temp.graphml"
+temp_path =  prefix + "_inv_temp.graphml"
 
 print "Output temp"
 nx.write_graphml(G, temp_path)
 
 
 print "Fixing"
-fix_graphml_format_better(temp_path, prefix + "_fmt.graphml")
+fix_graphml_format_better(temp_path, prefix + "_inv_fmt.graphml")

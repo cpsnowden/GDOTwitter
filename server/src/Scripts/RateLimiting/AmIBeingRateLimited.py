@@ -39,19 +39,39 @@ for t in x_values:
     sampled_counts[t] = sample_c[t]
     full_counts[t] = full_c[t]
 
-fig,ax = plt.subplots()
+fig,ax = plt.subplots(nrows=2)
 
-# ax.plot(x_values, sampled_counts.values(), color = tableau20[0], label ="StreamingAPI")
-ax.plot(x_values, full_counts.values(), color=tableau20[10], label="Firehose")
-xfmt = md.DateFormatter('%Y-%m-%d\n %H:%M:%S')
-ax.xaxis.set_major_formatter(xfmt)
 
-ax.spines["top"].set_visible(False)
-ax.spines["right"].set_visible(False)
-ax.get_xaxis().tick_bottom()
-ax.get_yaxis().tick_left()
-plt.xlabel("Date UTC")
-plt.ylabel("Tweet Rate /min")
+ax[0].plot(x_values, sampled_counts.values(), color = tableau20[0], label ="StreamingAPI")
+ax[0].plot(x_values, full_counts.values(), color=tableau20[10], label="Firehose")
+ax[0].spines["top"].set_visible(False)
+ax[0].spines["right"].set_visible(False)
+ax[0].get_xaxis().tick_bottom()
+ax[0].get_yaxis().tick_left()
+ax[0].set_xticks([])
+plt.legend()
+ax[0].set_ylabel("Tweet Rate /min", fontsize = 14)
+fontsize = 14
+# ax[0].tick_params(axis='x', labelsize=fontsize)
+ax[0].yaxis.set_ticks(xrange(0, 11000, 2000))
+ax[0].tick_params(axis='y', labelsize=fontsize)
 
+ax[1].plot(x_values, np.array(sampled_counts.values()).astype(float) / np.array(full_counts.values()) * 100,
+           color = tableau20[0])
+ax[1].plot([min(x_values), max(x_values)], [100,100], "--", lw=0.5, color="black", alpha=0.3)
+xfmt = md.DateFormatter("%a %H:%M")
+ax[1].xaxis.set_major_formatter(xfmt)
+ax[1].spines["top"].set_visible(False)
+ax[1].spines["right"].set_visible(False)
+ax[1].get_xaxis().tick_bottom()
+ax[1].get_yaxis().tick_left()
+
+
+
+ax[1].tick_params(axis='x', labelsize=fontsize)
+ax[1].tick_params(axis='y', labelsize=fontsize)
+plt.xlabel("Date UTC", fontsize = 14)
+plt.ylim([0, 110])
+plt.ylabel("Coverage /%", fontsize = 14)
 
 plt.show()

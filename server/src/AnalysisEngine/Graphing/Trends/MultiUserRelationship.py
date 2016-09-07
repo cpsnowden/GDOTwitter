@@ -19,7 +19,7 @@ class MultiUserRelationship(TrendGraph):
                             dict(name="NickStevenson63", tags=[],
                                  color=dict(color="crimson", options=color_names)),
                             dict(name="mjs64", tags=[],
-                                 color=dict(color="crimson", options=color_names))])]
+                                 color=dict(color="lime", options=color_names))])]
 
     _node_color = ("type", {"source": "red", "target": "lime", "TimeIndicator": "purple"})
     _edges_color = ("type", {"retweet": "powderblue", "user": "sienna", "mention": "gold", "authored": "grey"})

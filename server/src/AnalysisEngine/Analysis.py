@@ -108,8 +108,7 @@ class Analysis(object):
             start = parser.parse(self.args["startDateCutOff"])
             end = parser.parse(self.args["endDateCutOff"])
 
-        return {Status.SCHEMA_MAP[self.schema]["ISO_date"]: {"$gte": start,
-                                                             "$lte": end}}
+        return {}
 
     def get_sorted_cursor(self, query, limit=0, projection=None, reverse=False):
 

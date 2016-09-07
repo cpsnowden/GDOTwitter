@@ -51,7 +51,7 @@ class HashtagEventDetection(EventAnalysis):
         eventDetector = EventDetection(self.col, "4d547cbd-99e2-4b00-a40e-987c67c252b8")
         events = eventDetector.map_events(y_labels, hashtag, self.schema)
 
-        data = {"series": y_labels.items(), "events": events}
+        data = {"series": y_labels.items(), "events": [i.__dict__ for i in events]}
 
         self.export_html(result=data,
                          properties={"chartProperties": {"yAxisName": "Tweets per hour",
