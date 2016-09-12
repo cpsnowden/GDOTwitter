@@ -90,4 +90,4 @@ api.add_resource(Slide, '/slide/<string:id>',
                  endpoint="slide")
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False, host = "0.0.0.0")
+    app.run(debug=True, use_reloader=False, host = "0.0.0.0", threaded=True)
