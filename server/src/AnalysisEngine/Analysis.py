@@ -147,7 +147,6 @@ class Analysis(object):
             f.write(json.dumps(data, default=Util.date_encoder))
 
         self.analytics_meta.status = "SAVED"
-        self.analytics_meta.end_time = datetime.now()
         self.analytics_meta.save()
 
     def export_html(self, result, properties=None, export_type="chart"):

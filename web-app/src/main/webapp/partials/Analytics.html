@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
 
     <style>
-    .table_element{
-    max-height:140px;
-    overflow:auto
-    }
-    .sub_table_element{
-        max-height:150px;
-        overflow:auto
-    }
+        .table_element {
+            max-height: 140px;
+            overflow: auto
+        }
+
+        .sub_table_element {
+            max-height: 150px;
+            overflow: auto
+        }
     </style>
 
 </head>
@@ -88,7 +89,8 @@
                              ng-repeat="option in analyticsForm.specialised_args | filter: {'type': 'datetime'}">
                             <div class="input-group">
                                 <div class="input-group-addon">{{option.prettyName}}</div>
-                                <input type="text" class="form-control" uib-datepicker-popup="EEE, dd MMM yyyy HH:mm:ss Z"
+                                <input type="text" class="form-control"
+                                       uib-datepicker-popup="EEE, dd MMM yyyy HH:mm:ss Z"
                                        ng-model="analyticsForm.order.specialised_args[option.name]">
                                 {{analyticsForm.order.specialised_args[option.name]}}
                             </div>
@@ -130,226 +132,260 @@
                                         </div>
                                     </div>
                                     <div class="col-xs-2">
-                                    <div class="input-group">
-                                    <div class="input-group-addon">Color</div>
-                                    <select class="form-control"
-                                    ng-model="analyticsForm.order.specialised_args[option.name][key]['color'].color"
-                                    ng-options="o for o in analyticsForm.order.specialised_args[option.name][key]['color'].options"
-                                    ng-init="analyticsForm.order.specialised_args[option.name][key][color].color">
-                                    </select>
-                                    </div>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">Color</div>
+                                            <select class="form-control"
+                                                    ng-model="analyticsForm.order.specialised_args[option.name][key]['color'].color"
+                                                    ng-options="o for o in analyticsForm.order.specialised_args[option.name][key]['color'].options"
+                                                    ng-init="analyticsForm.order.specialised_args[option.name][key][color].color">
+                                            </select>
                                         </div>
+                                    </div>
                                     <!--<div class="input-group">-->
-                                        <!--<div class="input-group-addon">Colors</div>-->
-                                        <!--<input type="text" class="form-control"-->
-                                               <!--ng-model="analyticsForm.order.specialised_args[option.name][key]['color']">-->
+                                    <!--<div class="input-group-addon">Colors</div>-->
+                                    <!--<input type="text" class="form-control"-->
+                                    <!--ng-model="analyticsForm.order.specialised_args[option.name][key]['color']">-->
                                     <!--</div>-->
 
-                                <div class="col-xs-2" ng-show="option.variable">
-                                    <button type="button" class="btn btn-danger"
-                                            ng-click="removeChoice(option.name, key)"><i
-                                            class="glyphicon glyphicon-minus"></i></button>
-                                    <button type="button" class="btn btn-default" ng-show="$last"
-                                            ng-click="addNewChoice(option.name)"><i
-                                            class="glyphicon glyphicon-plus"></i></button>
+                                    <div class="col-xs-2" ng-show="option.variable">
+                                        <button type="button" class="btn btn-danger"
+                                                ng-click="removeChoice(option.name, key)"><i
+                                                class="glyphicon glyphicon-minus"></i></button>
+                                        <button type="button" class="btn btn-default" ng-show="$last"
+                                                ng-click="addNewChoice(option.name)"><i
+                                                class="glyphicon glyphicon-plus"></i></button>
+                                    </div>
                                 </div>
                             </div>
+
+                            <hr ng-show="$last">
                         </div>
 
-                        <hr ng-show="$last">
+
+                        <button type="submit" class="btn btn-primary">Start</button>
+                        <button type="button" class="btn" ng-click="cancel()">Cancel</button>
+
+                    </form>
                 </div>
 
-
-                <button type="submit" class="btn btn-primary">Start</button>
-                <button type="button" class="btn" ng-click="cancel()">Cancel</button>
-
-                </form>
             </div>
-
         </div>
     </div>
-</div>
 
 
-<div class="container">
-    <div class="row">
-        <div class="panel panel-primary">
-            <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Data Sets Ready for Analytics</h3>
-                <div class="pull-right">
-                    <button ng-click="deleteEnabled = !deleteEnabled"
-                            ng-class="{'btn btn-danger':deleteEnabled, 'btn btn-success':!deleteEnabled}"
-                    ><i class="fa fa-bullseye"></i>{{deleteEnabledText}}
-                    </button>
-                    <button class="btn btn-success"
-                            ng-click="refreshTable()"><i class="fa fa-refresh"></i></button>
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-primary">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left" style="padding-top: 7.5px;">Data Sets Ready for Analytics</h3>
+                    <div class="pull-right">
+                        <button ng-click="deleteEnabled = !deleteEnabled"
+                                ng-class="{'btn btn-danger':deleteEnabled, 'btn btn-success':!deleteEnabled}"
+                        ><i class="fa fa-bullseye"></i>{{deleteEnabledText}}
+                        </button>
+                        <button class="btn btn-success"
+                                ng-click="refreshTable()"><i class="fa fa-refresh"></i></button>
+                    </div>
                 </div>
-            </div>
 
-            <table class="table table-striped  table-bordered table-hover">
-                <col width="7%">
-                <col width="8%">
-                <col width="10%">
-                <col width="7%">
-                <col width="16%">
-                <col width="10%">
-                <col width="10%">
-                <col width="6%">
-                <thead>
-                <tr>
-                    <th>Operation</th>
-                    <th>
-                        <a href="" ng-click="sortType = 'description' ; sortReverse = !sortReverse ">Description</a>
+                <table class="table table-striped  table-bordered table-hover">
+                    <col width="7%">
+                    <col width="8%">
+                    <col width="10%">
+                    <col width="7%">
+                    <col width="16%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="6%">
+                    <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>
+                            <a href="" ng-click="sortType = 'description' ; sortReverse = !sortReverse ">Description</a>
                             <span ng-show="sortType=='description'">
                                 <span ng-show="sortReverse" class="fa fa-caret-down"></span>
                                 <span ng-show="!sortReverse" class="fa fa-caret-up"></span>
                             </span>
-                    </th>
-                    <th width="200">
-                        Id
-                    </th>
-                    <th>
-                        <a href="" ng-click="sortType = 'status';  ; sortReverse = !sortReverse">Status</a>
+                        </th>
+                        <th width="200">
+                            Id
+                        </th>
+                        <th>
+                            <a href="" ng-click="sortType = 'status';  ; sortReverse = !sortReverse">Status</a>
                             <span ng-show="sortType=='status'">
                                 <span ng-show="sortReverse" class="fa fa-caret-down"></span>
                                 <span ng-show="!sortReverse" class="fa fa-caret-up"></span>
                             </span>
-                    </th>
+                        </th>
 
-                    <th>Tags</th>
-                    <th>
-                        <a href="" ng-click="sortType = 'startDate';  ; sortReverse = !sortReverse">Start Date</a>
+                        <th>Tags</th>
+                        <th>
+                            <a href="" ng-click="sortType = 'startDate';  ; sortReverse = !sortReverse">Start Date</a>
                             <span ng-show="sortType=='startDate'">
                                 <span ng-show="sortReverse" class="fa fa-caret-down"></span>
                                 <span ng-show="!sortReverse" class="fa fa-caret-up"></span>
                             </span>
-                    </th>
-                    <th>
-                        <a href="" ng-click="sortType = 'endDate';  ; sortReverse = !sortReverse">End Date</a>
+                        </th>
+                        <th>
+                            <a href="" ng-click="sortType = 'endDate';  ; sortReverse = !sortReverse">End Date</a>
                             <span ng-show="sortType=='endDate'">
                                 <span ng-show="sortReverse" class="fa fa-caret-down"></span>
                                 <span ng-show="!sortReverse" class="fa fa-caret-up"></span>
                             </span>
-                    </th>
-                    <th>Size</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat-start="p in datasets | orderBy:'name' | filter:searchText | orderBy:sortType:sortReverse">
-                    <td style="width:8%">
-                        <button class="btn"
-                                ng-class="{true:'btn-success', false: 'btn-info'}[analyticsForm.order.id==p.id]"
-                                ng-click="orderAnalytics(p) ">
-                            <i class="glyphicon glyphicon-pencil"></i>
-                        </button>
-                        <button class="btn btn-success"
-                                ng-click="p.analytics=getAnalytics(p); expanded=!expanded;">
-                            <i class="glyphicon"
-                               ng-class="{'glyphicon-chevron-down':expanded&&p.analytics.length>0, 'glyphicon-chevron-right':!expanded || (p.analytics==null || p.analytics.length==0)}"></i>
-                        </button>
+                        </th>
+                        <th>Size</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat-start="p in datasets | orderBy:'name' | orderBy:sortType:sortReverse">
+                        <td style="width:8%">
+                            <button class="btn"
+                                    ng-class="{true:'btn-success', false: 'btn-info'}[analyticsForm.order.id==p.id]"
+                                    ng-click="orderAnalytics(p) ">
+                                <i class="glyphicon glyphicon-pencil"></i>
+                            </button>
+                            <button class="btn btn-success"
+                                    ng-click="p.analytics=getAnalytics(p); expanded=!expanded;">
+                                <i class="glyphicon"
+                                   ng-class="{'glyphicon-chevron-down':expanded&&p.analytics.length>0, 'glyphicon-chevron-right':!expanded || (p.analytics==null || p.analytics.length==0)}"></i>
+                            </button>
 
-                    <td><div class="table_element" ng-bind="p['description']"></div></td>
-                    <td><div class="table_element" ng-bind="p['id']"></div></td>
-                    <td><div class="table_element" ng-bind="p['status']"></div></td>
-                    <td><div class="table_element" ng-bind="p['tags']"></div></td>
-                    <td><div class="table_element" ng-bind="p['start_time']"></div></td>
-                    <td><div class="table_element" ng-bind="p['end_time']"></div></td>
-                    <td><div class="table_element" ng-bind="p['collection_size']"></div></td>
-                </tr>
-                <tr ng-repeat-end
-                    ng-if="expanded && p.analytics.length != 0">
+                        <td>
+                            <div class="table_element" ng-bind="p['description']"></div>
+                        </td>
+                        <td>
+                            <div class="table_element" ng-bind="p['id']"></div>
+                        </td>
+                        <td>
+                            <div class="table_element" ng-bind="p['status']"></div>
+                        </td>
+                        <td>
+                            <div class="table_element" ng-bind="p['tags']"></div>
+                        </td>
+                        <td>
+                            <div class="table_element" ng-bind="p['start_time']"></div>
+                        </td>
+                        <td>
+                            <div class="table_element" ng-bind="p['end_time']"></div>
+                        </td>
+                        <td>
+                            <div class="table_element" ng-bind="p['collection_size']"></div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end
+                        ng-if="expanded && p.analytics.length != 0">
+                        <td colspan="8">
+                            <!--<div class="pull-right">-->
+                            <div style="width:100%">
+                                <input class="form-control" type="text" ng-model="searchText.$"
+                                       placeholder="Filter the list..">
+                            </div>
 
-                    <td colspan="8">
-                        <table class="table  table-bordered">
-                            <thead>
-                            <tr>
-                                <th style="width:5%"></th>
-                                <th style="width:15%">Id</th>
-                                <th style="width:15%">Type</th>
-                                <th style="width:15%">Raw id</th>
-                                <th style="width:10%">Status</th>
-                                <th style="width:10%">Description</th>
-                                <th style="width:10%">End</th>
-                                <th style="width:20%">Specific Parameters</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="a in p.analytics | orderBy:endDate:true" ng-include="getTemplate(a)">
-                            </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                </tbody>
+                            <table class="table  table-bordered">
+                                <thead>
+                                <tr>
+                                    <th style="width:5%"></th>
+                                    <th style="width:15%">Id</th>
+                                    <th style="width:15%">Type</th>
+                                    <th style="width:15%">Raw id</th>
+                                    <th style="width:10%">Status</th>
+                                    <th style="width:10%">Description</th>
+                                    <th style="width:10%">End</th>
+                                    <th style="width:20%">Specific Parameters</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="a in p.analytics | filter:searchText|  orderBy:endDate:true" ng-include="getTemplate(a)">
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
 
-            </table>
+                </table>
 
 
-        </div>
-    </div>
-
-</div>
-
-<script type="text/ng-template" id="display">
-    <td>
-        <div class="btn-group-vertical">
-            <button class="btn btn-danger"
-                    ng-disabled="!deleteEnabled"
-                    ng-click="delete(a,p)">
-                <i class="glyphicon glyphicon-trash"></i>
-            </button>
-            <button class="btn btn-success"
-                    ng-click="chart(a)"
-                    ng-show="a['status']=='FINISHED' && a.html_id != undefined && a.html_id != null">
-                <i class="fa fa-bar-chart" aria-hidden="true"></i>
-            </button>
-            <div class="btn-group" uib-dropdown keyboard-nav
-                 ng-show="a['status']=='FINISHED'">
-                <button id="simple-btn-keyboard-nav" type="button"
-                        class="btn btn-primary" uib-dropdown-toggle
-                        ng-click="getDownloadOptions(a)">
-                    <i class="glyphicon glyphicon-download"></i><span
-                        class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" uib-dropdown-menu role="menu"
-                    aria-labelledby="simple-btn-keyboard-nav">
-                    <li role="menuitem" ng-repeat="o in a.downloadOptions"><a
-                            ng-click="downloadItem(o.value)">{{o.name}}
-                        <i ng-if="a.defaultDownload==o.name"
-                           class="fa fa-star"></i>
-                    </a>
-                    </li>
-                    <li class="divider" ng-if="a.downloadOptions.length>1"></li>
-                    <li role="menuitem" ng-if="a.downloadOptions.length>1"><a ng-click="download(a)">All</a></li>
-                </ul>
-                <button class="btn btn-default" ng-click="editAnalytics(a)"><i class="fa fa-pencil"></i></button>
             </div>
         </div>
-    </td>
-    <td style="width:45%"><div class="sub_table_element" ng-bind="a['id']"></div></td>
-    <td style="width:45%"><div class="sub_table_element" ng-bind="a['type']"></div></td>
-    <td style="width:45%"><div class="sub_table_element" ng-bind="a['raw_id']"></div></td>
-    <td style="width:45%"><div class="sub_table_element" ng-bind="a['status']"></div></td>
-    <td style="width:45%"><div class="sub_table_element" ng-bind="a['description']"></div></td>
-    <td style="width:45%"><div class="sub_table_element" ng-bind="a['end_time']"></div></td>
-    <td style="width:45%"><div class="sub_table_element" > {{a['specialised_args']}}</div></td>
-</script>
-<script type="text/ng-template" id="edit">
-    <td>
-        <div class="btn-group-vertical">
-            <button class="btn btn-success" ng-click="saveUpdate(p,a.id)"><i class="fa fa-floppy-o"></i></button>
-            <button class="btn btn-danger" ng-click="reset()"><i class="fa fa-undo"></i></button>
-        </div>
 
-    </td>
-    <td ng-bind="selected['id']"></td>
-    <td ng-bind="selected['type']"></td>
-    <td ng-bind="selected['raw_id']"></td>
-    <td ng-bind="selected['status']"></td>
-    <td><textarea ng-model="selected.description" style="width:100%; height:100%" rows="6"></textarea></td>
-    <td ng-bind="selected['end_time']"></td>
-    <td><span>{{selected['specialised_args']}}</span></td>
-</script>
+    </div>
+
+    <script type="text/ng-template" id="display">
+
+        <td>
+            <div class="btn-group-vertical">
+                <button class="btn btn-danger"
+                        ng-disabled="!deleteEnabled"
+                        ng-click="delete(a,p)">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </button>
+                <button class="btn btn-success"
+                        ng-click="chart(a)"
+                        ng-show="a['status']=='FINISHED' && a.html_id != undefined && a.html_id != null">
+                    <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                </button>
+                <div class="btn-group" uib-dropdown keyboard-nav
+                     ng-show="a['status']=='FINISHED'">
+                    <button id="simple-btn-keyboard-nav" type="button"
+                            class="btn btn-primary" uib-dropdown-toggle
+                            ng-click="getDownloadOptions(a)">
+                        <i class="glyphicon glyphicon-download"></i><span
+                            class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" uib-dropdown-menu role="menu"
+                        aria-labelledby="simple-btn-keyboard-nav">
+                        <li role="menuitem" ng-repeat="o in a.downloadOptions"><a
+                                ng-click="downloadItem(o.value)">{{o.name}}
+                            <i ng-if="a.defaultDownload==o.name"
+                               class="fa fa-star"></i>
+                        </a>
+                        </li>
+                        <li class="divider" ng-if="a.downloadOptions.length>1"></li>
+                        <li role="menuitem" ng-if="a.downloadOptions.length>1"><a ng-click="download(a)">All</a></li>
+                    </ul>
+                    <button class="btn btn-default" ng-click="editAnalytics(a)"><i class="fa fa-pencil"></i></button>
+                </div>
+            </div>
+        </td>
+        <td style="width:45%">
+            <div class="sub_table_element" ng-bind="a['id']"></div>
+        </td>
+        <td style="width:45%">
+            <div class="sub_table_element" ng-bind="a['type']"></div>
+        </td>
+        <td style="width:45%">
+            <div class="sub_table_element" ng-bind="a['raw_id']"></div>
+        </td>
+        <td style="width:45%">
+            <div class="sub_table_element" ng-bind="a['status']"></div>
+        </td>
+        <td style="width:45%">
+            <div class="sub_table_element" ng-bind="a['description']"></div>
+        </td>
+        <td style="width:45%">
+            <div class="sub_table_element" ng-bind="a['end_time']"></div>
+        </td>
+        <td style="width:45%">
+            <div class="sub_table_element"> {{a['specialised_args']}}</div>
+        </td>
+    </script>
+    <script type="text/ng-template" id="edit">
+        <td>
+            <div class="btn-group-vertical">
+                <button class="btn btn-success" ng-click="saveUpdate(p,a.id)"><i class="fa fa-floppy-o"></i></button>
+                <button class="btn btn-danger" ng-click="reset()"><i class="fa fa-undo"></i></button>
+            </div>
+
+        </td>
+        <td ng-bind="selected['id']"></td>
+        <td ng-bind="selected['type']"></td>
+        <td ng-bind="selected['raw_id']"></td>
+        <td ng-bind="selected['status']"></td>
+        <td><textarea ng-model="selected.description" style="width:100%; height:100%" rows="6"></textarea></td>
+        <td ng-bind="selected['end_time']"></td>
+        <td><span>{{selected['specialised_args']}}</span></td>
+    </script>
 </div>
 </body>
 </html>

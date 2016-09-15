@@ -73,6 +73,7 @@ class Graphing(Analysis):
         n_iterations = self.args["layoutIterations"]
         if n_iterations <= 0:
             self._logger.info("Not laying out as number of iterations <=0")
+            self.analytics_meta.description += " (NOT layed out)"
             return G
 
         self.export_to_gridfs(G, self.analytics_meta.graph_id)
@@ -109,6 +110,7 @@ class Graphing(Analysis):
 
         self._logger.info("Build graph %s", self.analytics_meta.id)
         self.analytics_meta.status = "LAYOUT COMPLETE"
+        self.analytics_meta.description += " (layed out)"
         self.analytics_meta.save()
 
         with self.dbm.gridfs.get_last_version(self.analytics_meta.graph_id) as f:

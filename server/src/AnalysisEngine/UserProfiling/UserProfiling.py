@@ -53,6 +53,7 @@ class UserProfiling(Analysis):
     def process(self):
 
         user_screen_name = self.args["user_screen_name"]
+        self.analytics_meta.description += "(" + user_screen_name + ")"
         limit = self.args["Limit"]
         user_name_key = Util.join_keys(Status.SCHEMA_MAP[self.schema]["user"],
                                               User.SCHEMA_MAP[self.schema]["name"])
