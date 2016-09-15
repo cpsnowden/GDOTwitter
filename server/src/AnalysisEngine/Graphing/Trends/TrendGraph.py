@@ -13,9 +13,9 @@ class TrendGraph(Graphing):
     _logger = logging.getLogger(__name__)
 
     __arguments = [dict(name="timeLabelInterval", prettyName="Time between time indicator labels (s)", type="integer",
-                        default=3600.0),
+                        default=604800),
                    dict(name="timeInterval", prettyName="Time interval to classify source of gravity (s)",
-                        type="integer", default=1.0)]
+                        type="integer", default=604800)]
 
     def __init__(self, analytics_meta):
         super(TrendGraph, self).__init__(analytics_meta)

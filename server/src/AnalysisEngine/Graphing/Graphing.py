@@ -27,6 +27,8 @@ class Graphing(Analysis):
                         default=1),
                    dict(name="GRAVITY_Y_SCALING", prettyName="Gravity Y Scaling", type="integer",
                         default=1),
+                   dict(name="SCALING", prettyName="Scaling", type="integer",
+                        default=2),
 
                    ]
 
@@ -90,7 +92,8 @@ class Graphing(Analysis):
                   "LIN_LOG_MODE":self.args["LinLogMode"],
                   "GRAVITY": self.args["gravity_strength"],
                   "GRAVITY_X_SCALING":self.args["GRAVITY_X_SCALING"],
-                  "GRAVITY_Y_SCALING":self.args["GRAVITY_Y_SCALING"]}
+                  "GRAVITY_Y_SCALING":self.args["GRAVITY_Y_SCALING"],
+                  "LAYOUT_SCALE":self.args["SCALING"]}
 
         self._logger.info("Using Gephi Parameters %s", params)
 
