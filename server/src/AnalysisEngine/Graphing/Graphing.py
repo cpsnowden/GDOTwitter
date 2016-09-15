@@ -21,6 +21,13 @@ class Graphing(Analysis):
                         default=False),
                    dict(name="PreventOverlap", prettyName="FAMS2 Prevent Overlap", type="boolean",
                         default=False),
+                   dict(name="gravity_strength", prettyName="Gravity Strength", type="integer",
+                        default=1),
+                   dict(name="GRAVITY_X_SCALING", prettyName="Gravity X Scaling", type="integer",
+                        default=1),
+                   dict(name="GRAVITY_Y_SCALING", prettyName="Gravity Y Scaling", type="integer",
+                        default=1),
+
                    ]
 
     def __init__(self, analytics_meta):
@@ -80,7 +87,10 @@ class Graphing(Analysis):
         params = {"LAYOUT_ITERATIONS": n_iterations,
                   "LAYOUT_ALGO": self.args["LAYOUT_ALGO"],
                   "PREVENT_OVERLAP": self.args["PreventOverlap"],
-                  "LIN_LOG_MODE":self.args["LinLogMode"]}
+                  "LIN_LOG_MODE":self.args["LinLogMode"],
+                  "GRAVITY": self.args["gravity_strength"],
+                  "GRAVITY_X_SCALING":self.args["GRAVITY_X_SCALING"],
+                  "GRAVITY_Y_SCALING":self.args["GRAVITY_Y_SCALING"]}
 
         self._logger.info("Using Gephi Parameters %s", params)
 

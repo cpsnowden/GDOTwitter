@@ -19,7 +19,10 @@ class MultiUserRelationship(TrendGraph):
                             dict(name="NickStevenson63", tags=[],
                                  color=dict(color="crimson", options=color_names)),
                             dict(name="mjs64", tags=[],
-                                 color=dict(color="lime", options=color_names))])]
+                                 color=dict(color="lime", options=color_names))]),
+                   dict(name="all", prettyName="Show All Nodes", type="boolean",
+                        default=False)
+                   ]
 
     _node_color = ("type", {"source": "red", "target": "lime", "TimeIndicator": "purple"})
     _edges_color = ("type", {"retweet": "powderblue", "user": "sienna", "mention": "gold", "authored": "grey"})
@@ -53,13 +56,17 @@ class MultiUserRelationship(TrendGraph):
         node_colors = ("type", dict([("user:" + i["name"], i["color"]["color"]) for i in self.args["users"]]))
         user_names = [i["name"] for i in self.args["users"]]
 
-        query = self.get_time_bounded_query({user_name_key: {"$in": user_names},
-                                             "$or": [
-                                                 {mention_key: {"$in": user_names}},
-                                                 {retweet_user_key: {"$in": user_names}}
-                                             ]})
+        base_query = {user_name_key: {"$in": user_names}}
 
-        self._logger.info("Query %s" ,query)
+        if( not self.args["all"]):
+            base_query["$or"] = [
+                {mention_key: {"$in": user_names}},
+                {retweet_user_key: {"$in": user_names}}
+            ]
+
+        query = self.get_time_bounded_query(base_query)
+
+        self._logger.info("Query %s", query)
 
         cursor = self.get_sorted_cursor(query)
         if cursor is None:
@@ -74,7 +81,7 @@ class MultiUserRelationship(TrendGraph):
         self.analytics_meta.save()
 
         G = self.layout(G)
-        # G = self.add_time_indicator_nodes(G, start_date)
+        G = self.add_time_indicator_nodes(G, start_date)
 
         self.finalise_graph(G, (node_colors, self._edges_color))
 
@@ -107,6 +114,7 @@ class MultiUserRelationship(TrendGraph):
                        node_type="user",
                        date=str(date),
                        gravity_x=float(time_step),
+                       gravity_y=float(0),
                        gravity_x_strength=float(1))
 
             self.link_node_to_history(G, history, source_node_id, source_user_id)
@@ -125,6 +133,7 @@ class MultiUserRelationship(TrendGraph):
                                    node_type="user",
                                    username=user.get_name(),
                                    gravity_x=float(time_step),
+                                   gravity_y=float(0),
                                    gravity_x_strength=float(1))
 
                         self.link_node_to_history(G, history, target_node_id, retweeted_user_id)
@@ -142,6 +151,7 @@ class MultiUserRelationship(TrendGraph):
                                node_type="user",
                                username=mentioned_user_id,
                                gravity_x=float(time_step),
+                               gravity_y=float(0),
                                gravity_x_strength=float(1))
 
                     self.link_node_to_history(G, history, target_node_id, mentioned_user_id)
