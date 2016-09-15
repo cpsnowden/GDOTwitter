@@ -1,25 +1,27 @@
 from dateutil import parser
 import datetime
 
+
 class Status(object):
     T4J = dict(hashtags="hashtagEntities", mentions="userMentionEntities", user="user", text="text",
                created_at="createdAt", id="id", retweeted_status="retweetedStatus", language="lang", ISO_date=
                "createdAt", coordinates="geoLocation", user_sub_field="user", retweet_user="user",
-               retweeted_status_exists="retweetedStatus.text",n_retweeted="retweetCount")
+               retweeted_status_exists="retweetedStatus.text", n_retweeted="retweetCount")
 
     RAW = dict(hashtags="entities.hashtags", mentions="entities.user_mentions", user="user", text="text",
+               raw_date="created_at",
                created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="lang", ISO_date=
                "ISO_created_at", coordinates="coordinates.coordinates", user_sub_field="user", retweet_user="user",
-               retweeted_status_exists="retweeted_status.text",n_retweeted="retweet_count")
+               retweeted_status_exists="retweeted_status.text", n_retweeted="retweet_count")
 
     GNIP = dict(hashtags="entities-hashtags", mentions="entities-user_mentions", text="clean-text",
                 created_at="ISO_created_at", id="id", retweeted_status="retweeted_status", language="language",
                 ISO_date=
                 "ISO_created_at", user_sub_field=["user-id", "user-utcOffset", "user-friendsCount", "user-screen_name",
-                                                  "user-twitterTimeZone", "user-followersCount","language",
-                                                  "user-location","user-summary","user-image", "user-name",
+                                                  "user-twitterTimeZone", "user-followersCount", "language",
+                                                  "user-location", "user-summary", "user-image", "user-name",
                                                   "user-postedTime"], user="",
-                retweet_user="user", retweeted_status_exists="retweeted_status.text",n_retweeted="retweetCount",
+                retweet_user="user", retweeted_status_exists="retweeted_status.text", n_retweeted="retweetCount",
                 coordinates="entities-user-place-coordinates")
 
     SCHEMA_MAP = {
@@ -108,17 +110,18 @@ class GeoLocation(object):
 
 class User(object):
     T4J = dict(id="id", name="screenName", follower_count="followersCount", friends_count="friendsCount", lang="lang",
-               utc_offset="utcOffset", time_zone="timeZone", retweet_screen_name = "screenName",
-               image_url="originalProfileImageURL", created_at = "createdAt",
-               real_name="name", location="location", description = "description")
+               utc_offset="utcOffset", time_zone="timeZone", retweet_screen_name="screenName",
+               image_url="originalProfileImageURL", created_at="createdAt",
+               real_name="name", location="location", description="description")
     RAW = dict(id="id", name="screen_name", follower_count="followers_count", friends_count="friends_count",
                lang="lang", utc_offset="utc_offset", time_zone="time_zone", retweet_screen_name="screen_name",
-               image_url="profile_image_url",real_name="name", location="location", description = "description",
+               image_url="profile_image_url", real_name="name", location="location", description="description",
                created_at="created_at")
-    GNIP = dict(id="user-id", name="user-screen_name", follower_count="user-followersCount", friends_count="user-friendsCount",
-                utc_offset="user-utcOffset", time_zone="user-twitterTimeZone", lang="language", retweet_screen_name =
-                "screen_name",image_url="user-image",real_name="user-name", location="user-location", description =
-                "user-summary", created_at = "user-postedTime")
+    GNIP = dict(id="user-id", name="user-screen_name", follower_count="user-followersCount",
+                friends_count="user-friendsCount",
+                utc_offset="user-utcOffset", time_zone="user-twitterTimeZone", lang="language", retweet_screen_name=
+                "screen_name", image_url="user-image", real_name="user-name", location="user-location", description=
+                "user-summary", created_at="user-postedTime")
     RTWT_GNIP = dict(name="screen_name", real_name="name")
 
     SCHEMA_MAP = {
@@ -183,6 +186,7 @@ class User(object):
             return date
         else:
             return parser.parse(date)
+
 
 class UserMention(object):
     T4J = dict(id="id", name="screenName")

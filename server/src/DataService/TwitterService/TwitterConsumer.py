@@ -125,7 +125,7 @@ class Router(object):
             hashtags = [h["text"].lower() for h in json_status["entities"]["hashtags"]]
 
             if any(ht in hashtags for ht in f.keys):
-                created_date_string = json_status[Status.SCHEMA_MAP[f.schema]["created_at"]]
+                created_date_string = json_status[Status.SCHEMA_MAP[f.schema]["raw_date"]]
                 json_status["ISO_created_at"] = parser.parse(created_date_string)
                 try:
                     self.dbm.data_db.get_collection(f.db_col).insert(json_status)
