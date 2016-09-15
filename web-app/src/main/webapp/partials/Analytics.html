@@ -287,10 +287,11 @@
                                     <th style="width:5%"></th>
                                     <th style="width:10%">Id</th>
                                     <th style="width:12%">Type</th>
-                                    <th style="width:18%">Info</th>
+
                                     <th style="width:10%">Status</th>
                                     <th style="width:10%">Description</th>
                                     <th style="width:10%">End</th>
+                                    <th style="width:18%">Info</th>
                                     <th style="width:20%">Specific Parameters</th>
                                 </tr>
                                 </thead>
@@ -354,6 +355,16 @@
         <td style="width:45%">
             <div class="sub_table_element" ng-bind="a['type']"></div>
         </td>
+
+        <td style="width:45%">
+            <div class="sub_table_element" ng-bind="a['status']"></div>
+        </td>
+        <td style="width:45%">
+            <div class="sub_table_element" ng-bind="a['description']"></div>
+        </td>
+        <td style="width:45%">
+            <div class="sub_table_element" ng-bind="a['end_time']"></div>
+        </td>
         <td style="width:45%">
             <div class="sub_table_element" style="font-size: x-small">
                 <div><b>Class</b> <span  ng-bind="a['classification']"></span></div>
@@ -366,16 +377,7 @@
             </div>
         </td>
         <td style="width:45%">
-            <div class="sub_table_element" ng-bind="a['status']"></div>
-        </td>
-        <td style="width:45%">
-            <div class="sub_table_element" ng-bind="a['description']"></div>
-        </td>
-        <td style="width:45%">
-            <div class="sub_table_element" ng-bind="a['end_time']"></div>
-        </td>
-        <td style="width:45%">
-            <div class="sub_table_element"> {{a['specialised_args']}}</div>
+            <div class="sub_table_element" style="font-size: x-small"> {{a['specialised_args']}}</div>
         </td>
     </script>
     <script type="text/ng-template" id="edit">
