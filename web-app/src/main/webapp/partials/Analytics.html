@@ -355,12 +355,13 @@
             <div class="sub_table_element" ng-bind="a['type']"></div>
         </td>
         <td style="width:45%">
-            <div class="sub_table_element" style="font-size: smaller">
-                <p><b>Class</b> <span  ng-bind="a['classification']"></span></p>
-                <p ng-show="a['raw_id']!=null"><b>RID</b> <span  ng-bind="a['raw_id']"></span></p>
-                <p ng-show="a['raw_id']!=null"><b>CID</b> <span  ng-bind="a['chart_id']"></span></p>
-                <p ng-show="a['raw_id']!=null"><b>GID</b> <span  ng-bind="a['graph_id']"></span></p>
-                <p ng-show="a['raw_id']!=null"><b>HID</b> <span  ng-bind="a['html_id']"></span></p>
+            <div class="sub_table_element" style="font-size: x-small">
+                <div><b>Class</b> <span  ng-bind="a['classification']"></span></div>
+                <div><b>App</b> <span  ng-bind="a['prefered_app']"></span></div>
+                <div ng-show="a['raw_id']!=null"><b>RID</b> <span  ng-bind="a['raw_id']"></span></div>
+                <div ng-show="a['chart_id']!=null"><b>CID</b> <span  ng-bind="a['chart_id']"></span></div>
+                <div ng-show="a['graph_id']!=null"><b>GID</b> <span  ng-bind="a['graph_id']"></span></div>
+                <div ng-show="a['html_id']!=null"><b>HID</b> <span  ng-bind="a['html_id']"></span></div>
 
             </div>
         </td>
