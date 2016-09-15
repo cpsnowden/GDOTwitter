@@ -27,7 +27,8 @@ analytics_meta_fields = {
     "chart_id": fields.String,
     "html_id": fields.String,
     "uri_base": fields.Url("analytics"),
-    "uri_data": fields.Url("analyticsData")
+    "uri_data": fields.Url("analyticsData"),
+    "prefered_app": fields.String
 }
 
 analytics_data_urls_fields = {
