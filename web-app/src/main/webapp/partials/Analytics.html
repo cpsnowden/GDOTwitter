@@ -286,8 +286,8 @@
                                 <tr>
                                     <th style="width:5%"></th>
                                     <th style="width:15%">Id</th>
-                                    <th style="width:15%">Type</th>
-                                    <th style="width:15%">Raw id</th>
+                                    <th style="width:12%">Type</th>
+                                    <th style="width:15%">Info</th>
                                     <th style="width:10%">Status</th>
                                     <th style="width:10%">Description</th>
                                     <th style="width:10%">End</th>
@@ -355,7 +355,14 @@
             <div class="sub_table_element" ng-bind="a['type']"></div>
         </td>
         <td style="width:45%">
-            <div class="sub_table_element" ng-bind="a['raw_id']"></div>
+            <div class="sub_table_element" style="font-size: smaller">
+                <p><b>Class</b> <span  ng-bind="a['classification']"></span></p>
+                <p ng-show="a['raw_id']!=null"><b>RID</b> <span  ng-bind="a['raw_id']"></span></p>
+                <p ng-show="a['raw_id']!=null"><b>CID</b> <span  ng-bind="a['chart_id']"></span></p>
+                <p ng-show="a['raw_id']!=null"><b>GID</b> <span  ng-bind="a['graph_id']"></span></p>
+                <p ng-show="a['raw_id']!=null"><b>HID</b> <span  ng-bind="a['html_id']"></span></p>
+
+            </div>
         </td>
         <td style="width:45%">
             <div class="sub_table_element" ng-bind="a['status']"></div>
