@@ -24,6 +24,7 @@ def createGraph(p, q, n, N):
     G = nx.Graph()
     sub_graphs = []
     for i in xrange(N):
+        print i
         H = createCluster(p, i * n, i * n + n)
         sub_graphs.append(H)
         G = nx.compose(G, H)
@@ -42,7 +43,7 @@ def createTestGraph(p, q, n, N):
     nx.write_graphml(G, "test_" + str(p) + "_" + str(q) + "_" + str(n) + "_" + str(N) + ".graphml")
 
 
-# createTestGraph(0.1, 0.005, 100, 5)
+createTestGraph(0.001, 0.00005, 4000, 5)
 # print G
 # nx.draw_networkx(G)
 
@@ -120,6 +121,6 @@ def get_distance(n1, n2):
 # testGraph("test_fa2.graphml")
 # testGraph("test_oo.graphml")
 
-testGraph("large_test_fa2.graphml")
-print "Open Ord"
-testGraph("large_test_oo.graphml")
+# testGraph("large_test_fa2.graphml")
+# print "Open Ord"
+# testGraph("large_test_oo.graphml")

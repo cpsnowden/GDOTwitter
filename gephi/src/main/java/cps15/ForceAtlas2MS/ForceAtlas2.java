@@ -99,6 +99,7 @@ public class ForceAtlas2 implements Layout {
     private double gravityXRatio;
     private double gravityYRatio;
 
+
     public ForceAtlas2(ForceAtlas2Builder layoutBuilder) {
         this.layoutBuilder = layoutBuilder;
         this.threadCount = Math.min(4, Math.max(1, Runtime.getRuntime().availableProcessors() - 1));

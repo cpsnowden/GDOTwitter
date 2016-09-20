@@ -18,10 +18,10 @@ import org.gephi.project.api.ProjectController;
 import org.gephi.project.api.Workspace;
 import org.openide.util.Lookup;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -32,7 +32,8 @@ public class GephiWorker {
     private Workspace workspace;
     private GraphModel graphModel;
     private LayoutArgs layoutArgs;
-
+    private boolean performanceMonitor = true;
+    private List<Long> nanoStepTimes = new ArrayList<>();
     public GephiWorker(LayoutArgs layoutArgs) {
 
         pc = Lookup.getDefault().lookup(ProjectController.class);
@@ -58,7 +59,7 @@ public class GephiWorker {
     }
 
 
-    public void runLayout() {
+    public void runLayout(String fileName) {
 
         logger.info("Attempting to run layout");
         Layout layout = Layouts.getLayout(graphModel, layoutArgs);
@@ -70,19 +71,43 @@ public class GephiWorker {
 //            if(j++ > 10) break;
 //        }
 
+        long prev_time = System.nanoTime();
+        long duration = 0;
         if(null != layout) {
             for (int i = 0; i < layoutIterations; i++) {
                 if(!layout.canAlgo()) {
                     logger.info("Stopping algorithm at step " + i);
                     break;
                 }
+
                 layout.goAlgo();
+                duration = System.nanoTime() - prev_time;
+                logger.info("Took " + duration);
+                if(performanceMonitor){
+                    nanoStepTimes.add(duration);
+                }
+
                 if (i % 100 == 0) {
                     logger.info("Step " + i);
                 }
+                prev_time = System.nanoTime();
             }
             layout.endAlgo();
             logger.info("Finished running layout");
+            if(performanceMonitor){
+                logger.info("Writing performance file");
+                try {
+                    FileWriter writer = new FileWriter("Performance_" + fileName + ".dat");
+                    writer.write("[");
+                    for(Long l:nanoStepTimes){
+                        writer.write(l + ",");
+                    }
+                    writer.write("-1]");
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 //        j = 0;
 //        for(Node n: graphModel.getUndirectedGraph().getNodes()) {

@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-MongoClient().get_database().coll
+
 # client = MongoClient("146.169.32.151", 27017)
 #
 # db = client.get_database("DATA")
@@ -32,7 +32,7 @@ col = db.get_collection("Twitter_Brexit_GNIP")
 
 sample_query = [
     {"$match": {"user-id": {"$in": users}}},
-    {"$sample": {"size": 100000}},
+    {"$sample": {"size": 150000}},
     {"$out": "GNIP_50000_sample_top1000users"}
 ]
 

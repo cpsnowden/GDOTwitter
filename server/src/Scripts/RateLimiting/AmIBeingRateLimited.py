@@ -49,7 +49,7 @@ ax[0].spines["right"].set_visible(False)
 ax[0].get_xaxis().tick_bottom()
 ax[0].get_yaxis().tick_left()
 ax[0].set_xticks([])
-plt.legend()
+ax[0].legend()
 ax[0].set_ylabel("Tweet Rate /min", fontsize = 14)
 fontsize = 14
 # ax[0].tick_params(axis='x', labelsize=fontsize)

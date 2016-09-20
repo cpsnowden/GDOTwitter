@@ -69,7 +69,7 @@ for i,j in edges:
 
 plt.ylim([0, 8000])
 ax.plot(full_counts.keys(), full_counts.values(), color=tableau20[10], label="Firehose", alpha = 0.5)
-xfmt = md.DateFormatter('%Y-%m-%d\n %H:%M:%S')
+xfmt = md.DateFormatter("%a %d %b")
 ax.xaxis.set_major_formatter(xfmt)
 
 ax.spines["top"].set_visible(False)

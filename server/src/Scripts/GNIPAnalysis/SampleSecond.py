@@ -31,7 +31,7 @@ auth = db.authenticate("twitterApplication", "gdotwitter", source="admin")
 col = db.get_collection("Twitter_Brexit_GNIP")
 
 sample_query = [
-    {"$match": {"user-id": {"$in": users}}},
+    {"$match": {"$or":[{"user-id": {"$in": users}}]}},
     {"$sample": {"size": 150000}},
     {"$out": "GNIP_150000_sample_second1000users"}
 ]
