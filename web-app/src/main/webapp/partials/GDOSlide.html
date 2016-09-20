@@ -13,6 +13,17 @@
         font-weight: bold;
     }
 
+    .reserved_section {
+        background-color: green;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        border-style: double;
+        border-color: black;
+    }
+
+
+
     .table-striped > tbody > tr:nth-child(4n-2) > td,
         /*.table-striped>tbody>tr:nth-child(4n-1)>th,*/
     .table-striped > tbody > tr:nth-child(4n-3) > td
@@ -194,7 +205,37 @@
                                 </div>
                             </td>
                         </tr>
+                        <tr ng-if="slide.expand">
+                            <td colspan="3">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <col style="width: 3.25%" ng-repeat="col in gdo_node_plain[0]">
+                                        <tbody>
+                                        <tr ng-repeat="row in gdo_node_plain">
+                                            <td  ng-repeat="node in row"
+                                                ng-class="{reserved_section: inSection(node, slide) != null}" ng-show="topLeft(node,slide) || inSection(node,slide) == null"
+                                                rowspan ="{{inSection(node,slide).rowEnd - inSection(node,slide).rowStart + 1}}"
+                                                colspan ="{{inSection(node,slide).colEnd - inSection(node,slide).colStart + 1}}">
+
+                                                <div ng-show="inSection(node,slide) != null">S{{inSection(node,slide).id}}</div>
+                                                <div style="font-size: xx-small" ng-show="inSection(node,slide) != null">
+                                                    <div> {{inSection(node,slide).analytics.classification}}</div>
+                                                    <div> {{inSection(node,slide).analytics.type}}</div>
+                                                    <div> {{inSection(node,slide).analytics.description}}</div>
+                                                </div>
+                                                <div ng-show="inSection(node,slide) == null">
+                                                    {{node.row}},{{node.col}}
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
                         <tr ng-repeat-end ng-if="slide.expand">
+
                             <td colspan="3">
                                 <table class="table  table-striped table-bordered table-hover">
                                     <col width="3%">

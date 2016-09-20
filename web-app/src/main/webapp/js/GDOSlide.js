@@ -11,6 +11,9 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
         $scope.gdoWidth = 16;
         $scope.gdoHeight = 4;
 
+        $scope.gdo_node_plain = [];
+
+
         $scope.gdo_nodes = [];
         $scope.selected_nodes = [];
         $scope.sections = [];
@@ -41,17 +44,18 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
         $scope.slides = [{"description": "Test", "nSections": 10}];
 
         $scope.init = function () {
-            $scope.resetNodes();
+            $scope.resetNodes($scope.gdo_nodes);
+            $scope.resetNodes($scope.gdo_node_plain);
         };
 
-        $scope.resetNodes = function () {
-            $scope.gdo_nodes = [];
+        $scope.resetNodes = function (nodes) {
+            nodes.length = 0;
             for (var j = 0; j < $scope.gdoHeight; ++j) {
                 var row = [];
                 for (var i = 0; i < $scope.gdoWidth; ++i) {
                     row.push({"row": j, "col": i, "isSelected": false, "sectionId": -1, "section": null})
                 }
-                $scope.gdo_nodes.push(row);
+                nodes.push(row);
             }
         };
 
@@ -115,7 +119,7 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
                 return o.col;
             }));
             var newSection = {
-                "id": $scope.sections.length,
+                "id": $scope.currentSlide.sections.length,
                 "nodes": [],
                 "rowStart": rowStart,
                 "rowEnd": rowEnd,
@@ -133,6 +137,33 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
             $scope.currentSlide.sections.push(newSection);
         };
 
+        $scope.topLeft = function(node, slide) {
+             var sections = slide.sections;
+            for(var i = 0; i < sections.length; ++i){
+                if( node.row == sections[i].rowStart &&
+                    node.col == sections[i].colStart) {
+                    return true;
+
+                }
+            }
+            return false;
+
+        };
+        
+        $scope.inSection = function(node, slide){
+            var sections = slide.sections;
+            for(var i = 0; i < sections.length; ++i){
+                if(node.row <= sections[i].rowEnd &&
+                    node.row >= sections[i].rowStart &&
+                    node.col <= sections[i].colEnd &&
+                    node.col >= sections[i].colStart) {
+                    return sections[i];
+
+                }
+            }
+            return null;
+
+        };
 
         $scope.selectNode = function (node) {
             if (node.sectionId == -1) {
@@ -172,14 +203,13 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
             // Restangular.stripRestangular($scope.currentSlide)
             console.log($scope.currentSlide);
 
-
             Restangular.all('slide').post($scope.currentSlide).then(function () {
                 console.log("Slide creation requested");
                 $scope.currentSlide = {
                     "sections": [],
                     "description": "MConsole_" + new Date().toLocaleString()
                 };
-                $scope.resetNodes();
+                $scope.resetNodes($scope.gdo_nodes);
                 $scope.slides = $scope.getSlides();
             }, function () {
                 console.log("Error requesting dataset");
@@ -187,7 +217,9 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
         };
 
         $scope.getSlides = function () {
-            return Restangular.all('slide').getList().$object
+            var i  = Restangular.all('slide').getList().$object
+            console.log(i)
+            return i
         };
 
         $scope.slides = $scope.getSlides();
