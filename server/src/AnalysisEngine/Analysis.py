@@ -35,7 +35,7 @@ class Analysis(object):
 
         self.dataset_meta = DatasetMeta.objects.get(id=analytics_meta.dataset_id)
         self.analytics_meta = analytics_meta
-        self.dbm = DatabaseManager(mongo_settings["dataDb"], mongo_settings["managementDb"])
+        self.dbm = DatabaseManager(mongo_settings["raw"], mongo_settings["results"])
         self.col = self.dbm.data_db.get_collection(self.dataset_meta.db_col)
         self.args = self.parse_args(analytics_meta.specialised_args, self.dataset_meta)
         self.schema = self.dataset_meta.schema

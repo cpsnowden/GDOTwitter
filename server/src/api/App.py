@@ -26,7 +26,7 @@ with open("config.yml", 'r') as config_file:
     cfg = yaml.load(config_file)
 mongo_settings = cfg["mongo"]
 
-dbm = DatabaseManager(mongo_settings["dataDb"], mongo_settings["managementDb"])
+dbm = DatabaseManager(mongo_settings["raw"], mongo_settings["results"])
 data_service = DataService(dbm, cfg["data_service_cfg"])
 
 api.add_resource(RootResource,

@@ -7,31 +7,31 @@ import logging
 class DatabaseManager(object):
     logger = logging.getLogger(__name__)
 
-    def __init__(self, data_db_credentials, management_db_credentials):
-        self.logger.info("Mongo: datadb %s, management db %s", data_db_credentials, management_db_credentials)
+    def __init__(self, raw_data_db, results_db):
+        self.logger.info("Mongo: datadb %s, management db %s", raw_data_db, results_db)
 
-        self.data_db_client = MongoClient(data_db_credentials["host"],
-                                          data_db_credentials["port"],
+        self.data_db_client = MongoClient(raw_data_db["host"],
+                                          raw_data_db["port"],
                                           connect=False)
-        self.managementDB_client = MongoClient(management_db_credentials["host"],
-                                               management_db_credentials["port"],
+        self.managementDB_client = MongoClient(results_db["host"],
+                                               results_db["port"],
                                                connect=False)
 
         self.data_db = self.data_db_client.get_database("DATA")
-        self.data_db.authenticate(data_db_credentials["username"], data_db_credentials["password"], source="admin")
+        self.data_db.authenticate(raw_data_db["username"], raw_data_db["password"], source=raw_data_db["auth_db"])
         try:
             self.data_db.command("ping")
         except ConfigurationError:
-            self.logger.critical("Cannot connect to " + data_db_credentials["host"])
+            self.logger.critical("Cannot connect to " + raw_data_db["host"])
 
-        self.fdb = self.managementDB_client.get_database("FILE_DATA")
-        self.fdb.authenticate(management_db_credentials["username"],
-                              management_db_credentials["password"],
-                              source="admin")
+        self.fdb = self.managementDB_client.get_database(results_db["name"])
+        self.fdb.authenticate(results_db["username"],
+                              results_db["password"],
+                              source=results_db["auth_db"])
         try:
             self.fdb.command("ping")
         except ConfigurationError:
-            self.logger.critical("Cannot connect to " + management_db_credentials["host"])
+            self.logger.critical("Cannot connect to " + results_db["host"])
 
         self.gridfs = gridfs.GridFS(self.fdb)
 
