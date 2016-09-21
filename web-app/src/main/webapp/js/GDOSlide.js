@@ -40,6 +40,7 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
             return null;
         };
 
+        
         $scope.selectedDataSet = null;
         $scope.slides = [{"description": "Test", "nSections": 10}];
 
@@ -192,12 +193,23 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
 
         $scope.deleteSection = function (section) {
             var index = $scope.currentSlide.sections.indexOf(section);
-            for (var i = 0; i < section.nodes; ++i) {
-                section.nodes[i].sectionId = -1
+            console.log(section)
+            for (var i = 0; i < section.nodes.length; ++i) {
+                section.nodes[i].sectionId = -1;
+                // $scope.gdo_nodes[section.node[i].row][section.node[i].col].sectionId = -1;
             }
             $scope.currentSlide.sections.splice(index, 1);
 
         };
+
+        $scope.getRowHeight = function(section){
+            if(section==null){
+                return "30px"
+            } else {
+                return (section.rowEnd - section.rowStart + 1) * 30 + "px"
+            }
+
+        }
 
         $scope.createSlide = function () {
             // Restangular.stripRestangular($scope.currentSlide)
@@ -226,6 +238,7 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
 
         $scope.print = function () {
             console.log($scope.slides)
+            console.log($scope.gdo_nodes)
         };
 
         $scope.delete = function (slide) {

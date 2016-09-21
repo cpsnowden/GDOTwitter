@@ -15,6 +15,7 @@
 
     .reserved_section {
         background-color: green;
+        opacity: 0.3;
         color: white;
         font-weight: bold;
         text-align: center;
@@ -25,12 +26,11 @@
 
 
     .table-striped > tbody > tr:nth-child(4n-2) > td,
-        /*.table-striped>tbody>tr:nth-child(4n-1)>th,*/
+
     .table-striped > tbody > tr:nth-child(4n-3) > td
-        /*.table-striped>tbody>tr:nth-child(4n)>th {*/
     {
         background-color: #e7e7e7;
-    / / Choose your own color here
+
     }
 </style>
 
@@ -41,15 +41,39 @@
                 <div class="panel-body">
                     <div class="table-responsive">
                         <table class="table">
+
+                            <col style="width: 3.25%" ng-repeat="col in gdo_nodes[0]">
                             <tbody>
-                            <tr ng-repeat="row in gdo_nodes">
-                                <td style="width:3.25%" ng-repeat="node in row"
-                                    ng-click="selectNode(node)"
-                                    ng-class="{selected: node.isSelected, section: node.sectionId >= 0 && !node.isSelected}">
-                                    {{node.row}},{{node.col}} <span
-                                        ng-show="node.sectionId >=0">S{{node.sectionId}}</span>
-                                </td>
-                            </tr>
+                            <!--<tr ng-repeat="row in gdo_nodes">-->
+                                <!--<td ng-repeat="node in row"-->
+                                    <!--ng-click="selectNode(node)"-->
+                                    <!--ng-class="{selected: node.isSelected, section: node.sectionId >= 0 && !node.isSelected}">-->
+                                    <!--{{node.row}},{{node.col}} <span-->
+                                        <!--ng-show="node.sectionId >=0">S{{node.sectionId}}</span>-->
+                                <!--</td>-->
+                            <!--</tr>-->
+
+                             <tr ng-repeat="row in gdo_nodes">
+                                            <td  ng-repeat="node in row"
+                                                ng-click="selectNode(node)"
+                                                ng-class="{selected: node.isSelected, reserved_section: inSection(node, currentSlide) != null}" ng-show="topLeft(node,currentSlide) || node.sectionId < 0"
+                                                rowspan ="{{inSection(node, currentSlide).rowEnd - inSection(node, currentSlide).rowStart + 1}}"
+                                                colspan ="{{inSection(node, currentSlide).colEnd - inSection(node, currentSlide).colStart + 1}}">
+                                                <div ng-style="{'min-height': getRowHeight(inSection(node, currentSlide))}" >
+                                                <div ng-show="node.sectionId >= 0">S{{inSection(node,currentSlide).id}}</div>
+                                                <div style="font-size: xx-small" ng-show="node.sectionId >= 0">
+                                                    <div> {{inSection(node, currentSlide).analytics.classification}}</div>
+                                                    <div> {{inSection(node, currentSlide).analytics.type}}</div>
+                                                    <div> {{inSection(node, currentSlide).analytics.description}}</div>
+                                                </div>
+                                                <div ng-show="node.sectionId < 0">
+                                                    {{node.row}},{{node.col}}
+                                                </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
                             </tbody>
                         </table>
                     </div>
@@ -183,7 +207,7 @@
                         <tr>
 
                             <th>Description</th>
-                            <th>Number of Sections</th>
+                            <th>Id</th>
                             <th></th>
                         </tr>
                         </thead>
