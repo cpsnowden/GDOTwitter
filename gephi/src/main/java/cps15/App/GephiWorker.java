@@ -81,9 +81,10 @@ public class GephiWorker {
                 }
 
                 layout.goAlgo();
-                duration = System.nanoTime() - prev_time;
-                logger.info("Took " + duration);
+                logger.info("Step: (" + i + ") of " + layoutIterations);
                 if(performanceMonitor){
+                    duration = System.nanoTime() - prev_time;
+
                     nanoStepTimes.add(duration);
                 }
 
