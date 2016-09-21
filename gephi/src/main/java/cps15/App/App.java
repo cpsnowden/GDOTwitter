@@ -162,8 +162,8 @@ public class App {
             gephiWorker.importFile(file.getInputStream());
             gephiWorker.runLayout(fileName);
 
-//            GridFSInputFile gridFSInputFile = gridFS.createFile(gephiWorker.export(), fileName);
-//            gridFSInputFile.save();
+            GridFSInputFile gridFSInputFile = gridFS.createFile(gephiWorker.export(), fileName);
+            gridFSInputFile.save();
             gephiWorker.clearWorkspace();
 
             return getResponse(fileName, true);
