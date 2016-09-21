@@ -17,7 +17,7 @@ class DatabaseManager(object):
                                                results_db["port"],
                                                connect=False)
 
-        self.data_db = self.data_db_client.get_database("DATA")
+        self.data_db = self.data_db_client.get_database(raw_data_db["name"])
         self.data_db.authenticate(raw_data_db["username"], raw_data_db["password"], source=raw_data_db["auth_db"])
         try:
             self.data_db.command("ping")
