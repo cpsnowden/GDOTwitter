@@ -30,3 +30,5 @@ class GephiRpcClient(object):
         while self.response is None:
             self.connection.process_data_events()
         return self.response
+
+
