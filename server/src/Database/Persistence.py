@@ -36,9 +36,15 @@ class DatabaseManager(object):
         self.gridfs = gridfs.GridFS(self.fdb)
 
     def deleteGridFSFile(self, file_name):
-
+        found = False
         try:
-            f = self.gridfs.get_last_version(file_name)
-            self.gridfs.delete(f._id)
-        except gridfs.NoFile:
-            self.logger.warning("No file associated with analytics %s", file_name)
+            for file in self.gridfs.find({"filename": file_name}):
+                self.logger.info("Deleting " + file.filename + " " + str(file._id) + " uploaded at " + str(
+                    file.upload_date))
+                self.gridfs.delete(file._id)
+                found = True
+        except Exception:
+            self.logger.exception()
+        finally:
+            if not found:
+                self.logger.warning("No file associated with analytics %s", file_name)
