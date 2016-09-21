@@ -32,7 +32,7 @@ public class GephiWorker {
     private Workspace workspace;
     private GraphModel graphModel;
     private LayoutArgs layoutArgs;
-    private boolean performanceMonitor = true;
+    private boolean performanceMonitor = false;
     private List<Long> nanoStepTimes = new ArrayList<>();
     public GephiWorker(LayoutArgs layoutArgs) {
 
