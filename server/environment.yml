@@ -170,12 +170,13 @@ dependencies:
   - mongoengine==0.10.6
   - oauthlib==1.1.2
   - pika==0.10.0
+  - pycountry==1.20
   - pymongo==3.3.0
   - python-louvain==0.5
   - requests-oauthlib==0.6.2
   - tables==3.2.2
   - textblob==0.11.1
-  - tweepy==3.5.0
+  - tweepy==3.4.0
   - wsgiref==0.1.2
 prefix: /home/cps15/anaconda2/envs/GDOvenv
 
