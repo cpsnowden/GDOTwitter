@@ -26,8 +26,8 @@ import java.util.logging.Logger;
  */
 public class App {
     private static final Logger logger = Logger.getLogger(App.class.getName());
-    private static final String MONGO_HOST = "";
-    private static final String MONGO_DB = "FILE_DATA";
+//    private static final String MONGO_HOST = "";
+//    private static final String MONGO_DB = "FILE_DATA";
     private static final String DEFAULT_CONFIG_FILE = "config.properties";
 
     private JSONParser jsonParser;
@@ -40,6 +40,7 @@ public class App {
     private static String host;
     private static int port;
     private static String authDB;
+    private static String database;
 
     public static void main(String[] args){
 
@@ -59,6 +60,7 @@ public class App {
             password = prop.getProperty("password");
             host = prop.getProperty("host", "localhost");
             authDB = prop.getProperty("authDB", "admin");
+            database = prop.getProperty("database","Twitter_RESULTS");
             port = Integer.parseInt(prop.getProperty("port", "27017"));
             logger.info("Username: " + userName + ",host: " + host + ",authDB: " + authDB + ",port: " + port);
         } catch (IOException e) {
@@ -78,7 +80,7 @@ public class App {
 
         App gephi_worker = null;
         try {
-            gephi_worker = new App(host, port,userName, password, authDB);
+            gephi_worker = new App(database, host, port,userName, password, authDB);
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
             logger.log(Level.SEVERE, "Exception", e);
@@ -95,14 +97,14 @@ public class App {
     }
 
     public App(String userName, String password) throws IOException, TimeoutException {
-        this("localhost",27017, userName, password, "admin");
+        this("Twitter_RESULTS","localhost",27017, userName, password, "admin");
     }
 
-    public App(String host, int port, String userName, String password, String authDB) throws IOException, TimeoutException {
+    public App(String database, String host, int port, String userName, String password, String authDB) throws IOException, TimeoutException {
 	logger.info("Using db: " + host + " port: " + port + " username: " + userName);
         jsonParser = new JSONParser();
         MongoCredential credential = MongoCredential.createCredential(userName, authDB, password.toCharArray());
-        DB db = new MongoClient(new ServerAddress(host, port), Arrays.asList(credential)).getDB(MONGO_DB);
+        DB db = new MongoClient(new ServerAddress(host, port), Arrays.asList(credential)).getDB(database);
         logger.info("Found collections " + db.getCollectionNames());
         try {
             db.command("ping");
