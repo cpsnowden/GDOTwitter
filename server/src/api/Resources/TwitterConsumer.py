@@ -50,8 +50,8 @@ class TwitterConsumer(Resource):
         except KeyError:
             abort(404, message="Consumer {} does not exist".format(id))
 
-    def delete(self, consumer_id):
+    def delete(self, id):
 
-        self.twitter_service.router.spin_down(int(consumer_id))
+        self.twitter_service.router.spin_down(int(id))
 
         return "", 204
