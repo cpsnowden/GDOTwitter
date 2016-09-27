@@ -21,4 +21,4 @@ class RootResource(Resource):
     def get(self):
 
         address = request.remote_addr
-        return {"msg": "Welcome " + address + " to the GDO Twitter API", "healthy":True}
+        return {"msg": "Connected to the GDO Twitter API", "healthy":True}
