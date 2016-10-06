@@ -1,8 +1,7 @@
 var myApp = angular.module('dataFilter', ['restangular', 'ngResource', 'ui.bootstrap', 'ngRoute'])
 
     .config(function ($httpProvider, RestangularProvider) {
-
-        //$httpProvider.defaults.headers.common['Authorization'] = "Basic Y3BzMTVfYWRtaW46c2VjcmV0";
+        
         RestangularProvider.setBaseUrl('/API');
         RestangularProvider.setDefaultHeaders({Authorization: "Basic Y3BzMTVfYWRtaW46c2VjcmV0"});
 

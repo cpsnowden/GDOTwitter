@@ -29,13 +29,14 @@ class SlideList(Resource):
     @marshal_with(slide_fields)
     def post(self):
         args = self.parser.parse_args()
-        # print args
+
         slide = Slides(description=args["description"],
                        id=str(uuid.uuid4()),
                        sections=args["sections"])
 
         slide.save()
         return slide
+
 
 class Slide(Resource):
     logging = logging.getLogger(__name__)

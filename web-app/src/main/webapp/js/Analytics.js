@@ -162,7 +162,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
                     for (var j = 0; j < option.args.length; j++) {
                         setting = option.args[j];
                         if (setting.type == "datetime") {
-                            console.log($scope.analyticsForm.dataset[setting.default_dataset_field])
+                            console.log($scope.analyticsForm.dataset[setting.default_dataset_field]);
                             $scope.analyticsForm.order.specialised_args[setting.name] = new Date(
                                 $scope.analyticsForm.dataset[setting.default_dataset_field]
                             )
@@ -233,7 +233,7 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
 
                 var fname = result.headers("Content-Disposition").split(';')[1].trim().split("=")[1].trim();
                 data = result.data;
-                console.log(result.headers("mimetype"))
+                console.log(result.headers("mimetype"));
                 if (result.headers("mimetype") == "application/json") {
                     data = Restangular.stripRestangular(data);
                     data = JSON.stringify(data)
@@ -244,20 +244,13 @@ var myApp = angular.module('analytics', ['restangular', 'ngResource', 'ui.bootst
         };
 
         $scope.delete = function (analytics, dataset) {
-            // var msgbox = $dialog.messageBox('Delete Item', 'Are you sure?', [{
-            //     label: 'Yes, I\'m sure',
-            //     result: 'yes'
-            // }, {label: 'Nope', result: 'no'}]);
-            // msgbox.open().then(function (result) {
-            //     if (result === 'yes') {
+            
             Restangular.one("dataset", analytics.dataset_id).one('analytics', analytics.id).remove().then(function () {
                 dataset.analytics = $scope.getAnalytics(dataset)
             });
-            //     }
-            // })
+            
         };
-
-
+        
         $scope.print_p = function (p) {
             console.log(p)
         };

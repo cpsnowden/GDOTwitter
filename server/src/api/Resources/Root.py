@@ -20,5 +20,5 @@ class RootResource(Resource):
     @marshal_with(root_fields)
     def get(self):
 
-        address = request.remote_addr
+        # address = request.remote_addr
         return {"msg": "Connected to the GDO Twitter API", "healthy":True}

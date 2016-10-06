@@ -2,7 +2,6 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
 
     .config(function (RestangularProvider) {
         RestangularProvider.setBaseUrl('/API');
-        // RestangularProvider.setFullResponse(true);
         RestangularProvider.setDefaultHeaders({Authorization: "Basic Y3BzMTVfYWRtaW46c2VjcmV0"});
     })
 
@@ -193,10 +192,8 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
 
         $scope.deleteSection = function (section) {
             var index = $scope.currentSlide.sections.indexOf(section);
-            console.log(section)
             for (var i = 0; i < section.nodes.length; ++i) {
                 section.nodes[i].sectionId = -1;
-                // $scope.gdo_nodes[section.node[i].row][section.node[i].col].sectionId = -1;
             }
             $scope.currentSlide.sections.splice(index, 1);
 
@@ -204,17 +201,14 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
 
         $scope.getRowHeight = function(section){
             if(section==null){
-                return "30px"
+                return "30px";
             } else {
-                return (section.rowEnd - section.rowStart + 1) * 30 + "px"
+                return (section.rowEnd - section.rowStart + 1) * 30 + "px";
             }
-
-        }
+        };
 
         $scope.createSlide = function () {
-            // Restangular.stripRestangular($scope.currentSlide)
-            console.log($scope.currentSlide);
-
+            
             Restangular.all('slide').post($scope.currentSlide).then(function () {
                 console.log("Slide creation requested");
                 $scope.currentSlide = {
@@ -229,16 +223,14 @@ var myApp = angular.module('GDOSlide', ['restangular', 'ngResource', 'ui.bootstr
         };
 
         $scope.getSlides = function () {
-            var i  = Restangular.all('slide').getList().$object
-            console.log(i)
-            return i
+            return Restangular.all('slide').getList().$object;
         };
 
         $scope.slides = $scope.getSlides();
 
         $scope.print = function () {
-            console.log($scope.slides)
-            console.log($scope.gdo_nodes)
+            console.log($scope.slides);
+            console.log($scope.gdo_nodes);
         };
 
         $scope.delete = function (slide) {

@@ -202,39 +202,6 @@ class AnalyticsDownload(Resource):
         response.headers["mimetype"] = f.contentType
         return response
 
-        # if dataType == "raw":
-        #     self.logger.info("Getting " + dataType)
-        #     f = self.dbm.gridfs.get_last_version(found.raw_id)
-        #     response = make_response(f.read())
-        #     response.headers["Content-Disposition"] = "attachment; filename = " + found.raw_id
-        #     response.headers["mimetype"] = f.contentType
-        #     return response
-        # elif dataType == "html":
-        #     self.logger.info("Get HTML DATA")
-        #     f = self.dbm.gridfs.get_last_version(found.html_id)
-        #     response = make_response(f.read())
-        #     response.headers["Content-Disposition"] = "attachment; filename = " + found.html_id
-        #     response.headers["mimetype"] = "text/html"
-        #     return response
-        # elif dataType == "chart":
-        #     self.logger.info("Get Chart DATA")
-        #     f = self.dbm.gridfs.get_last_version(found.chart_id)
-        #     response = make_response(f.read())
-        #     response.headers["Content-Disposition"] = "attachment; filename = " + found.chart_id
-        #     response.headers["mimetype"] = "application/json"
-        #     return response
-        # elif dataType == "graph":
-        #     self.logger.info("Get Graph DATA")
-        #     f = self.dbm.gridfs.get_last_version(found.graph_id)
-        #     response = make_response(f.read())
-        #     response.headers["Content-Disposition"] = "attachment; filename = " + found.graph_id
-        #     response.headers["mimetype"] = "text/plain"
-        #     return response
-        # else:
-        #     self.logger.error("Why am I here")
-        #     abort(404, message="Should never get here")
-
-
 class AnalyticsOptions(Resource):
     logging = logging.getLogger(__name__)
 
